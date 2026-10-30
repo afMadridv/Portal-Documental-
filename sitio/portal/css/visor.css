@@ -1,0 +1,172 @@
+/*! Portal Documental · visor.html
+  Word como visor de PDF (barra oscura, páginas sobre gris) y hojas como
+  Excel (barra verde, pestañas abajo). Siempre en claro.
+  Andrés Madrid · andresmadrid.vercel.app */
+*{ box-sizing: border-box; }
+html, body{ margin: 0; height: 100%; }
+body{
+    background: #F3F3F3; color: #1F1F1F;
+    font: 14px/1.4 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+button{ font: inherit; }
+[hidden]{ display: none !important; }
+
+/* ---- Cargando / error ---- */
+.v-estado{
+    height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; padding: 24px; text-align: center; color: #444;
+}
+.v-estado p{ margin: 0; font-size: 16px; max-width: 46ch; word-break: break-word; }
+.v-estado .v-estado__nota{ font-size: 14px; color: #666; }
+.v-estado--error p:first-of-type{ color: #8A1C1C; font-weight: 600; }
+.v-estado__descargar{
+    display: inline-flex; align-items: center; min-height: 40px; margin-top: 6px; padding: 0 20px;
+    border-radius: 8px; background: #00798C; color: #fff; font-weight: 600; text-decoration: none;
+}
+.v-estado__descargar:hover{ background: #00667A; }
+.v-estado__descargar:focus-visible{ outline: 3px solid #7FD3E0; outline-offset: 2px; }
+.v-ruedita{
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 3px solid #D6D6D6; border-top-color: #00A1B8;
+    animation: v-gira .8s linear infinite;
+}
+@keyframes v-gira{ to{ transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){ .v-ruedita{ animation-duration: 2.4s; } }
+
+.v-app{ height: 100%; display: flex; flex-direction: column; }
+
+.v-aviso{
+    position: fixed; left: 50%; bottom: 56px; transform: translateX(-50%); z-index: 20;
+    max-width: min(92vw, 520px); padding: 10px 16px; border-radius: 8px;
+    background: #2B2B2B; color: #fff; font-size: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.25);
+}
+
+/* ============ WORD ============ */
+.v-word{ background: #525659; }
+.vw-barra{
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    min-height: 48px; padding: 0 12px 0 16px;
+    background: #323639; color: #F1F3F4; box-shadow: 0 1px 4px rgba(0,0,0,.35);
+    position: relative; z-index: 2;
+}
+.vw-archivo{ display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 0; }
+.vw-logo{
+    display: grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 4px;
+    background: #185ABD; color: #fff; font-weight: 700; font-size: 13px;
+}
+.vw-nombre{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.vw-centro{ display: flex; align-items: center; gap: 4px; flex: none; }
+.vw-paginas{ font-variant-numeric: tabular-nums; padding: 0 6px; white-space: nowrap; }
+.vw-sep{ width: 1px; height: 20px; background: rgba(255,255,255,.25); margin: 0 8px; }
+.vw-zoom{ min-width: 52px; text-align: center; font-variant-numeric: tabular-nums; }
+.vw-acciones{ display: flex; align-items: center; justify-content: flex-end; gap: 4px; flex: 1 1 0; }
+.vw-boton{
+    display: inline-grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%;
+    background: transparent; color: inherit; cursor: pointer; text-decoration: none;
+}
+.vw-boton:hover{ background: rgba(255,255,255,.1); }
+.vw-boton:focus-visible{ outline: 2px solid #8AB4F8; outline-offset: 1px; }
+.vw-hojas{ flex: 1; overflow: auto; outline: none; }
+/* Gris y sombra del visor de PDF en vez de los de docx-preview */
+.vw-hojas .docx-wrapper{ background: transparent; padding: 16px 12px 4px; }
+.vw-hojas .docx-wrapper > section.docx{ box-shadow: 0 2px 8px rgba(0,0,0,.45); margin-bottom: 12px; }
+.vw-hojas .docx{ color: #111; }
+
+@media (max-width: 640px){
+    .vw-barra{ flex-wrap: wrap; padding: 6px 8px; row-gap: 2px; }
+    .vw-archivo{ flex-basis: 100%; }
+    .vw-acciones{ flex: 1 1 auto; }
+    .vw-sep, #vw-ajustar{ display: none; }
+}
+
+/* ============ HOJA DE CÁLCULO ============ */
+.v-hoja{ background: #fff; color: #000; }
+.hx-barra{
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    min-height: 46px; padding: 6px 12px 6px 14px; background: #107C41; color: #fff;
+}
+.hx-archivo{ display: flex; align-items: center; gap: 10px; min-width: 0; }
+.hx-logo{
+    display: grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 4px;
+    background: #fff; color: #107C41; font-weight: 800; font-size: 13px;
+}
+.hx-nombre{ font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hx-nota{ font-size: 12px; opacity: .85; white-space: nowrap; }
+.hx-acciones{ display: flex; align-items: center; gap: 8px; flex: none; }
+.hx-zoom{ display: flex; align-items: center; gap: 4px; }
+#hx-zoom{ min-width: 48px; text-align: center; font-variant-numeric: tabular-nums; }
+.hx-boton{
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    min-width: 32px; height: 30px; padding: 0 6px; border: 1px solid rgba(255,255,255,.5); border-radius: 4px;
+    background: transparent; color: #fff; cursor: pointer; text-decoration: none; font-size: 13px; white-space: nowrap;
+}
+.hx-boton--texto{ padding: 0 10px; }
+.hx-boton:hover{ background: rgba(255,255,255,.15); }
+.hx-boton:focus-visible{ outline: 2px solid #fff; outline-offset: 1px; }
+.hx-boton:disabled{ opacity: .7; cursor: progress; }
+
+.hx-formula{
+    display: flex; align-items: stretch; min-height: 30px; flex: none;
+    border-bottom: 1px solid #D4D4D4; font-size: 13px; background: #fff;
+}
+.hx-dir{ display: flex; align-items: center; width: 90px; flex: none; padding: 0 10px; border-right: 1px solid #D4D4D4; color: #333; }
+.hx-fx{ display: flex; align-items: center; padding: 0 10px; color: #777; font-style: italic; border-right: 1px solid #E1E1E1; }
+.hx-val{ padding: 5px 10px; white-space: pre-wrap; word-break: break-word; overflow: auto; max-height: 4.6em; font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; font-size: 14px; }
+
+.hx-hojas{ flex: 1; overflow: auto; background: #fff; outline: none; }
+.hx-hoja{ font: 11pt Calibri, Carlito, "Segoe UI", Arial, sans-serif; }
+.hx-tabla{ border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+.hx-tabla thead th{
+    position: sticky; top: 0; z-index: 3; height: 22px;
+    background: #F5F5F5; color: #444; font: 12px "Segoe UI", system-ui, sans-serif;
+    border-right: 1px solid #D4D4D4; border-bottom: 1px solid #C6C6C6;
+}
+.hx-tabla tbody th{
+    position: sticky; left: 0; z-index: 2; padding: 0 4px; text-align: center;
+    background: #F5F5F5; color: #444; font: 12px "Segoe UI", system-ui, sans-serif;
+    border-right: 1px solid #C6C6C6; border-bottom: 1px solid #D4D4D4;
+}
+.hx-tabla th.hx-esquina{ left: 0; z-index: 4; }
+.hx-tabla th.hx-cab-activa{ background: #D3E3D7; color: #0B5A2E; font-weight: 600; }
+.hx-tabla td{
+    padding: 0 3px; overflow: hidden; white-space: pre; vertical-align: bottom;
+    line-height: 1.2; text-overflow: clip; cursor: cell;
+}
+.hx-tabla td.hx-ajusta{ white-space: pre-wrap; overflow-wrap: anywhere; }
+.hx-tabla td.hx-desborda{ overflow: visible; }
+.hx-tabla td.hx-sel{ outline: 2px solid #107C41; outline-offset: -1px; position: relative; z-index: 1; }
+.hx-tabla td a{ color: #0563C1; }
+.hx-aviso{
+    margin: 10px 14px; padding: 8px 12px; border-radius: 6px;
+    background: #FFF4CE; color: #5C4400; font: 13px "Segoe UI", system-ui, sans-serif;
+}
+
+.hx-pestanas{
+    display: flex; gap: 2px; flex: none; align-items: stretch; min-height: 36px; overflow-x: auto;
+    padding: 0 8px; background: #F3F3F3; border-top: 1px solid #D4D4D4;
+}
+.hx-pestanas button{
+    border: 0; border-bottom: 3px solid transparent; background: transparent; padding: 0 16px;
+    font-size: 13px; color: #333; cursor: pointer; white-space: nowrap;
+}
+.hx-pestanas button:hover{ background: #E8E8E8; }
+.hx-pestanas button.hx-activa{ background: #fff; color: #107C41; font-weight: 600; border-bottom-color: #107C41; }
+.hx-pestanas button:focus-visible{ outline: 2px solid #107C41; outline-offset: -2px; }
+
+@media (max-width: 640px){
+    .hx-barra{ flex-wrap: wrap; }
+    .hx-nota, .hx-zoom{ display: none; }
+    .hx-boton--texto span{ display: none; }
+}
+
+/* ============ IMPRIMIR ============ */
+@media print{
+    body, .v-word, .v-hoja{ background: #fff; }
+    .vw-barra, .hx-barra, .hx-formula, .hx-pestanas, .v-aviso{ display: none !important; }
+    .v-app{ height: auto; display: block; }
+    .vw-hojas, .hx-hojas{ overflow: visible; }
+    .vw-hojas .docx-wrapper{ padding: 0; zoom: 1 !important; }
+    .vw-hojas .docx-wrapper > section.docx{ box-shadow: none; margin: 0; break-after: page; }
+    .vw-hojas .docx-wrapper > section.docx:last-child{ break-after: auto; }
+    @page{ margin: 0; }
+}

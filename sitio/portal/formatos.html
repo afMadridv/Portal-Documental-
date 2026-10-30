@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--
+     _    __  __
+    / \  |  \/  |   Portal Documental
+   / _ \ | |\/| |   Desarrollado por Andrés Madrid
+  / ___ \| |  | |   andresmadrid.vercel.app
+ /_/   \_\_|  |_|
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Andrés Madrid">
+    <script src="js/firma.js?v=138" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300A1B8'/%3E%3Cpath d='M7 10.5a1.5 1.5 0 0 1 1.5-1.5h4l2 2.5h9a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 23.5 23h-15A1.5 1.5 0 0 1 7 21.5z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M12 16.5h8M12 19.5h5' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
+    <!-- Uso interno de las notarías: no se indexa -->
+    <meta name="robots" content="noindex, nofollow">
+    <title>Portal Documental | Formatos de correo</title>
+    <script>(function(){try{if(localStorage.getItem('portal_tema')==='oscuro')document.documentElement.dataset.tema='oscuro';}catch(e){}})();</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Krub:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css?v=138">
+    <link rel="stylesheet" href="css/diseno.css?v=138">
+    <link rel="stylesheet" href="css/pie.css?v=138">
+    <style>
+        .fm-rejilla{ display:grid; grid-template-columns: 34rem minmax(0,1fr); gap:2.4rem; align-items:start; }
+        @media (max-width: 900px){ .fm-rejilla{ grid-template-columns: 1fr; } }
+        .fm-panel{ position:sticky; top:2rem; }
+        .fm-vista{ border:1px solid var(--pt-borde); border-radius:12px; overflow:auto; background:#EDF1F3; color-scheme:light; }
+        .fm-acciones{ display:flex; gap:.8rem; flex-wrap:wrap; margin:1.2rem 0; }
+        .fm-asunto{ font-family:inherit; }
+    </style>
+</head>
+<body class="pt-app">
+<div class="pt-marco pt-marco--plegado"><div class="pt-principal"><main class="pt-contenido">
+
+    <h2 class="pt-titulo">Formatos de correo</h2>
+    <p class="pt-nota" style="max-width:70rem">
+        Los tres mensajes que la notaría manda todo el tiempo. Rellena los datos, elige el
+        formato y pulsa <b>Copiar con formato</b>: se pega en Gmail tal como se ve aquí.
+        Desde el portal, en <b>Usuarios → Correo</b>, salen ya rellenados con los datos de
+        cada persona.
+    </p>
+
+    <div class="pt-sub-pestanas" id="fm-formatos" style="margin:2rem 0 1.6rem">
+        <button class="activa" data-formato="bienvenida">Bienvenida</button>
+        <button data-formato="credenciales">Contraseña nueva</button>
+        <button data-formato="documentos">Ver documentos del trámite</button>
+    </div>
+
+    <div class="fm-rejilla">
+        <div class="fm-panel">
+            <label class="pt-campo"><span>Rol</span>
+                <select id="fm-rol">
+                    <option value="cliente">Cliente</option>
+                    <option value="acreedor">Acreedor</option>
+                    <option value="operador">Operador</option>
+                    <option value="monitor">Monitor</option>
+                    <option value="administrador">Administrador</option>
+                </select></label>
+            <label class="pt-campo"><span>Nombre de la persona</span>
+                <input type="text" id="fm-nombre" value="María Fernanda Pérez"></label>
+            <label class="pt-campo"><span>Usuario</span>
+                <input type="text" id="fm-usuario" value="mperez"></label>
+            <label class="pt-campo"><span>Contraseña</span>
+                <input type="text" id="fm-clave" value="kumbre4RTQ729!"></label>
+            <label class="pt-campo"><span>Carpeta del proceso (opcional)</span>
+                <input type="text" id="fm-carpeta" value="María Fernanda Pérez RA-409404049"></label>
+            <label class="pt-campo"><span>Notaría</span>
+                <input type="text" id="fm-notaria" value="Santa Marta · Notaría 2"></label>
+            <label class="pt-campo"><span>Dirección del portal</span>
+                <input type="text" id="fm-portal"></label>
+        </div>
+
+        <div>
+            <label class="pt-campo"><span>Asunto</span>
+                <input type="text" id="fm-asunto" class="fm-asunto" readonly></label>
+            <div class="fm-acciones">
+                <button class="pt-boton" id="fm-copiar-texto">Copiar como texto</button>
+                <button class="pt-boton pt-boton--primario" id="fm-copiar">Copiar con formato</button>
+                <button class="pt-boton pt-boton--fantasma" id="fm-imprimir">Imprimir</button>
+                <a class="pt-boton pt-boton--fantasma" href="app.html">Volver al portal</a>
+            </div>
+            <div class="fm-vista" id="fm-vista"></div>
+        </div>
+    </div>
+
+    <div id="pie-legal"></div>
+</main></div></div>
+
+<script src="js/correos.js?v=138"></script>
+<script>
+(function () {
+    var formato = 'bienvenida';
+    var campos = ['rol','nombre','usuario','clave','carpeta','notaria','portal'];
+    var vista = document.getElementById('fm-vista');
+
+    // Dirección real del portal para el enlace del correo
+    try { document.getElementById('fm-portal').value = new URL('.', location.href).href; } catch (e) {}
+
+    function datos() {
+        var d = {};
+        campos.forEach(function (c) { d[c] = document.getElementById('fm-' + c).value.trim(); });
+        return d;
+    }
+    function armar() { return FORMATOS_CORREO[formato].arma(datos()); }
+    function pintar() {
+        var correo = armar();
+        document.getElementById('fm-asunto').value = correo.asunto;
+        vista.innerHTML = correo.html;
+    }
+
+    campos.forEach(function (c) {
+        document.getElementById('fm-' + c).addEventListener('input', pintar);
+    });
+    document.querySelectorAll('#fm-formatos button').forEach(function (b) {
+        b.addEventListener('click', function () {
+            formato = b.dataset.formato;
+            document.querySelectorAll('#fm-formatos button').forEach(function (o) {
+                o.classList.toggle('activa', o === b);
+            });
+            pintar();
+        });
+    });
+
+    function avisarBoton(boton, texto) {
+        var antes = boton.textContent;
+        boton.textContent = texto;
+        setTimeout(function () { boton.textContent = antes; }, 2000);
+    }
+
+    document.getElementById('fm-copiar').addEventListener('click', async function () {
+        var correo = armar(), boton = this;
+        try {
+            if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+                await navigator.clipboard.write([new ClipboardItem({
+                    'text/html': new Blob([correo.html], { type: 'text/html' }),
+                    'text/plain': new Blob([correo.texto], { type: 'text/plain' })
+                })]);
+            } else {
+                // Sin ClipboardItem: se copia la selección (con formato)
+                var r = document.createRange();
+                r.selectNodeContents(vista);
+                var s = window.getSelection();
+                s.removeAllRanges(); s.addRange(r);
+                document.execCommand('copy');
+                s.removeAllRanges();
+            }
+            avisarBoton(boton, 'Copiado ✓');
+        } catch (e) {
+            avisarBoton(boton, 'Usa Ctrl+C');
+        }
+    });
+
+    document.getElementById('fm-copiar-texto').addEventListener('click', async function () {
+        try {
+            await navigator.clipboard.writeText(armar().texto);
+            avisarBoton(this, 'Copiado ✓');
+        } catch (e) { avisarBoton(this, 'No se pudo'); }
+    });
+
+    document.getElementById('fm-imprimir').addEventListener('click', function () {
+        var v = window.open('', '_blank');
+        v.document.write('<!DOCTYPE html><meta charset="utf-8"><title>' +
+            armar().asunto + '</title>' + armar().html);
+        v.document.close();
+        v.focus();
+        v.print();
+    });
+
+    pintar();
+})();
+</script>
+    <script src="js/pie.js?v=138"></script>
+</body>
+</html>

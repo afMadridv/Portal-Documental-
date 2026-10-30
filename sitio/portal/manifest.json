@@ -1,0 +1,18 @@
+{
+  "name": "Portal Documental",
+  "short_name": "Portal",
+  "description": "Expedientes de insolvencia y conciliación en un solo lugar",
+  "lang": "es-CO",
+  "id": "/portal/",
+  "start_url": "/portal/",
+  "scope": "/portal/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "icons": [
+    { "src": "/img/portal-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/img/portal-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/img/portal-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

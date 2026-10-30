@@ -1,0 +1,73 @@
+/*! Portal Documental · pie legal (ingreso, portal y formatos)
+  Las páginas públicas usan el suyo en publico.css.
+  var(--pt-x, respaldo): toma el token del portal si existe.
+  Andrés Madrid · andresmadrid.vercel.app */
+.pt-pie{
+    --pie-borde: var(--pt-borde, #E2EAEC);
+    --pie-gris:  var(--pt-gris, #595959);
+    --pie-eti:   var(--pt-navy-700, #1F1F1F);
+    --pie-link:  var(--pt-marca-cian, #00A1B8);
+
+    margin-top: 4.8rem;
+    padding: 2.8rem 0 2rem;
+    border-top: 1px solid var(--pie-borde);
+    font-size: 1.28rem;
+    color: var(--pie-gris);
+}
+:root[data-tema="oscuro"] .pt-pie{
+    --pie-borde: var(--pt-borde, #363636);
+    --pie-gris:  var(--pt-gris, #B3B3B3);
+    --pie-eti:   var(--pt-azul-claro, #A8E4EE);
+}
+
+.pt-pie__cols{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 2.4rem 3.2rem;
+}
+.pt-pie__col{ display: flex; flex-direction: column; gap: .7rem; align-items: flex-start; }
+.pt-pie__col--ancha{ grid-column: span 2; }
+@media (max-width: 720px){ .pt-pie__col--ancha{ grid-column: auto; } }
+
+.pt-pie__eti{
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--pie-eti);
+    margin-bottom: .2rem;
+}
+.pt-pie__col a{
+    color: var(--pie-gris);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    line-height: 1.5;
+}
+.pt-pie__col a:hover{ color: var(--pie-link); border-bottom-color: currentColor; }
+.pt-pie__col p{ margin: 0; line-height: 1.55; max-width: 52ch; }
+
+.pt-pie__raya{
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem 1.6rem;
+    justify-content: space-between;
+    margin-top: 2.4rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--pie-borde);
+    font-size: 1.2rem;
+}
+.pt-pie__raya a{ color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.pt-pie__raya a:hover{ color: var(--pie-link); }
+
+
+/* ---- Transición entre páginas ----
+   Fundido al cambiar de página (View Transitions; Firefox no lo hace).
+   Tiene que estar en las dos páginas: igual en publico.css. */
+@view-transition{ navigation: auto; }
+::view-transition-old(root){ animation: vt-salir .2s ease-in both; }
+::view-transition-new(root){ animation: vt-entrar .38s cubic-bezier(.16,1,.3,1) both; }
+@keyframes vt-salir{ to{ opacity: 0; } }
+@keyframes vt-entrar{ from{ opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce){
+    @view-transition{ navigation: none; }
+}

@@ -1,0 +1,2633 @@
+/*! Portal Documental · diseño de pantallas (va después de portal.css)
+  Solo estructura; los colores salen de los tokens --pt-*.
+  1rem = 10px: 1.35rem = 13.5px.
+  Andrés Madrid · andresmadrid.vercel.app */
+
+
+/* ============================================================
+   0) CAMPOS: borde según el tema (en oscuro quedaba muy brillante)
+   ============================================================ */
+html[data-tema="oscuro"] .pt-campo input,
+html[data-tema="oscuro"] .pt-campo select,
+html[data-tema="oscuro"] .pt-campo textarea,
+html[data-tema="oscuro"] .pt-chat-entrada textarea{
+    border-color: var(--pt-borde);
+}
+html[data-tema="oscuro"] .pt-campo input:focus,
+html[data-tema="oscuro"] .pt-campo select:focus,
+html[data-tema="oscuro"] .pt-campo textarea:focus{
+    border-color: var(--pt-marca-cian);
+}
+
+
+/* ============================================================
+   1) INGRESO: marca a la izquierda, formulario a la derecha
+   ============================================================ */
+body.pt-cuerpo-login{
+    display: block;
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    background: var(--pt-fondo);
+}
+
+.pt-ingreso{
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    min-height: 100vh;
+}
+
+/* ---- Panel de marca (siempre oscuro) ---- */
+/* Logo arriba, título centrado. */
+.pt-ingreso__marca{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3.2rem;
+    padding: 5.44rem 5.76rem;
+    background: var(--pt-navy-900);
+    color: var(--pt-blanco);
+    overflow: hidden;
+}
+/* Color plano, sin degradados. */
+.pt-ingreso__logo{
+    display: flex;
+    align-items: center;
+    gap: 1.12rem;
+    position: relative;
+    z-index: 1;
+}
+.pt-ingreso__logo span{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.696rem;
+    font-weight: 600;
+    color: var(--pt-blanco);
+}
+/* Marca de agua: el icono enorme y tenue en la esquina. Detrás de todo, sin clics. */
+.pt-ingreso__agua{
+    position: absolute;
+    right: -15%;
+    top: 50%;
+    transform: translateY(-42%);
+    width: clamp(32rem, 58%, 84rem);   /* crece con el panel, no con la letra */
+    height: auto;
+    color: var(--pt-marca-cian);
+    opacity: .11;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* margin:auto 0 lo centra bajo el logo */
+.pt-ingreso__centro{ position: relative; z-index: 1; margin: auto 0; }
+.pt-ingreso__centro h1{
+    font-family: var(--pt-fuente-titulos);
+    font-size: clamp(3.04rem, 3.6vw, 4.8rem);
+    line-height: 1.12;
+    font-weight: 600;
+    color: var(--pt-blanco);
+    margin-bottom: 1.6rem;
+    max-width: 13ch;
+}
+
+/* ---- Panel del formulario (sigue el tema) ---- */
+.pt-ingreso__forma{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.4rem;
+    padding: 5.44rem clamp(2.56rem, 5vw, 7.04rem);
+    background: var(--pt-fondo);
+}
+.pt-ingreso__caja{ width: 100%; max-width: 48rem; margin: 0 auto; }
+.pt-ingreso__caja h2{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 2.208rem;
+    font-weight: 600;
+    margin-bottom: 0.48rem;
+}
+.pt-ingreso__caja > p.pt-nota{ margin-bottom: 2.56rem; }
+
+/* Reusa .pt-campo; solo cambia el ritmo */
+.pt-ingreso__caja #form-login{ display: flex; flex-direction: column; gap: 1.68rem; }
+.pt-ingreso__caja #boton-entrar{ margin-top: 0.48rem; }
+
+/* Etiqueta y "olvidé" en la misma línea */
+.pt-campo__fila{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.6rem;
+}
+.pt-campo__fila .pt-enlace-olvide{
+    margin: 0;
+    font-size: 1.216rem;
+    padding: 0;
+}
+
+.pt-ingreso__pie{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    margin-top: 3.04rem;
+    padding-top: 1.76rem;
+    border-top: 1px solid var(--pt-borde);
+    font-size: 1.248rem;
+}
+.pt-ingreso__pie a{ color: var(--pt-gris); text-decoration: none; }
+.pt-ingreso__pie a:hover{ color: var(--pt-azul); text-decoration: underline; }
+
+/* Tema en la esquina del panel derecho */
+body.pt-cuerpo-login .pt-tema-flotante{
+    position: absolute;
+    top: 2.4rem;
+    right: 2.4rem;
+    bottom: auto;
+    left: auto;
+}
+.pt-ingreso__forma{ position: relative; }
+
+/* En pantallas angostas el panel de marca es una cabecera corta */
+@media (max-width: 860px){
+    .pt-ingreso{ grid-template-columns: 1fr; min-height: 100vh; }
+    .pt-ingreso__marca{
+        padding: 3.2rem 2.56rem 2.88rem;
+        gap: 1.92rem;
+    }
+    .pt-ingreso__marca::after{ width: 300px; height: 300px; right: -120px; top: -120px; }
+    .pt-ingreso__centro h1{ font-size: 2.4rem; max-width: none; }
+    .pt-ingreso__forma{ padding: 3.52rem 2.56rem 4.8rem; justify-content: flex-start; }
+    /* Apilado no cabe la marca de agua detrás del título */
+    .pt-ingreso__agua{ display: none; }
+}
+
+
+/* ============================================================
+   2) APLICACIÓN: navegación lateral
+   ============================================================
+   Los botones mantienen IDs y .activa: app.js no cambia. */
+body.pt-app{
+    margin: 0;
+    padding: 0;
+    background: var(--pt-fondo);
+    min-height: 100vh;
+}
+.pt-marco{
+    display: grid;
+    grid-template-columns: 216px minmax(0, 1fr);
+    min-height: 100vh;
+}
+/* Plegada: display:none (trasladarla crea scroll horizontal). */
+.pt-marco--plegado{ grid-template-columns: minmax(0, 1fr); }
+.pt-marco--plegado > .pt-lateral,
+.pt-marco--plegado > .pt-lateral-tapa{ display: none; }
+
+/* ---- Columna lateral ---- */
+.pt-lateral{
+    display: flex;
+    flex-direction: column;
+    gap: 2.24rem;
+    padding: 2.4rem 1.6rem;
+    background: var(--pt-superficie);
+    border-right: 1px solid var(--pt-borde);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+.pt-lateral__marca{
+    display: flex;
+    align-items: center;
+    gap: 0.96rem;
+    padding: 0 0.64rem;
+}
+/* Botón de plegar, discreto hasta el hover, pegado al borde */
+.pt-lateral__plegar{
+    margin-left: auto;
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: none;
+    color: var(--pt-gris);
+    font: inherit;
+    font-size: 1.28rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--pt-rapido), color var(--pt-rapido), border-color var(--pt-rapido);
+}
+.pt-lateral__plegar:hover{
+    background: var(--pt-superficie-2);
+    border-color: var(--pt-borde);
+    color: var(--pt-tinta);
+}
+.pt-lateral__marca strong{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.488rem;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--pt-tinta);
+}
+
+/* Los <button> ya existían; aquí solo cambia la forma */
+.pt-lateral__nav{
+    display: flex;
+    flex-direction: column;
+    gap: 0.352rem;
+}
+
+/* Enlaces externos separados con una línea y flecha de salida. */
+.pt-lateral__externos{
+    display: flex;
+    flex-direction: column;
+    gap: 0.72rem;
+    padding-top: 1.44rem;
+    border-top: 1px solid var(--pt-borde);
+}
+/* Rótulo de grupo, en versales como el rol */
+.pt-lateral__rotulo{
+    padding: 0 0.64rem;
+    font-size: 0.928rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+}
+/* Tarjeta: el texto pálido sobre blanco parecía desactivado. */
+.pt-lateral__externo{
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.72rem 0.88rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 14px;
+    background: var(--pt-superficie-2);
+    color: var(--pt-tinta);
+    text-decoration: none;
+    transition: border-color var(--pt-rapido), background var(--pt-rapido),
+                box-shadow var(--pt-rapido);
+}
+.pt-lateral__externo:hover,
+.pt-lateral__externo:focus-visible{
+    border-color: var(--pt-marca-cian);
+    background: var(--pt-superficie);
+    box-shadow: var(--pt-sombra-1);
+}
+/* Cuadro cian: el único color de la barra */
+.pt-lateral__externo__icono{
+    width: 26px; height: 26px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: var(--pt-marca-cian);
+    color: var(--pt-blanco);
+}
+.pt-lateral__externo__icono svg{ width: 14px; height: 14px; }
+.pt-lateral__externo__txt{ min-width: 0; line-height: 1.2; }
+.pt-lateral__externo__txt b{
+    display: block;
+    font-size: 1.256rem;
+    font-weight: 700;
+    letter-spacing: .01em;
+}
+.pt-lateral__externo__txt small{
+    display: block;
+    font-size: 0.928rem;
+    color: var(--pt-gris);
+}
+.pt-lateral__externo__flecha{
+    margin-left: auto;
+    width: 13px; height: 13px;
+    flex: 0 0 auto;
+    color: var(--pt-gris);
+    transition: color var(--pt-rapido), transform var(--pt-rapido);
+}
+.pt-lateral__externo:hover .pt-lateral__externo__flecha,
+.pt-lateral__externo:focus-visible .pt-lateral__externo__flecha{
+    color: var(--pt-marca-cian);
+    transform: translate(1px, -1px);
+}
+
+.pt-lateral__nav button{
+    display: flex;
+    align-items: center;
+    gap: 0.96rem;
+    width: 100%;
+    min-height: 36px;
+    padding: 0.8rem 1.12rem;
+    border: none;
+    border-radius: 14px;
+    background: transparent;
+    color: var(--pt-gris);
+    font: inherit;
+    font-size: 1.352rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--pt-rapido), color var(--pt-rapido);
+}
+.pt-lateral__nav button:hover{
+    background: var(--pt-superficie-2);
+    color: var(--pt-tinta);
+}
+.pt-lateral__nav button.activa{
+    background: var(--pt-navy-700);
+    color: var(--pt-blanco);
+    font-weight: 600;
+}
+.pt-lateral__nav button[hidden]{ display: none; }
+/* Contador a la derecha (carpetas, por vencer…) */
+.pt-lateral__nav button .pt-nav-num{
+    margin-left: auto;
+    font-size: 1.152rem;
+    font-weight: 600;
+    color: var(--pt-gris);
+    background: var(--pt-superficie-2);
+    border-radius: 999px;
+    padding: 0.16rem 0.72rem;
+    min-width: 2.16rem;
+    text-align: center;
+}
+.pt-lateral__nav button.activa .pt-nav-num{
+    background: rgba(255,255,255,.16);
+    color: var(--pt-blanco);
+}
+
+/* Tarjeta de almacenamiento */
+
+/* Persona conectada */
+.pt-lateral__yo{
+    display: flex;
+    align-items: center;
+    gap: 0.88rem;
+    padding: 0.16rem 0.48rem;
+}
+.pt-avatar{
+    width: 28px; height: 28px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--pt-navy-700);
+    color: var(--pt-blanco);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.056rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+.pt-lateral__yo div{ min-width: 0; }
+.pt-lateral__yo b{
+    display: block;
+    font-size: 1.264rem;
+    font-weight: 600;
+    color: var(--pt-tinta);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pt-lateral__yo small{
+    display: block;
+    font-size: 0.992rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+}
+
+/* ---- Columna de contenido ---- */
+.pt-principal{ min-width: 0; display: flex; flex-direction: column; }
+.pt-cabecera{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    padding: 1.44rem clamp(1.6rem, 2.4vw, 3.04rem);
+    border-bottom: 1px solid var(--pt-borde);
+    position: sticky;
+    top: 0;
+    z-index: var(--pt-z-encabezado);
+    background: var(--pt-fondo);
+}
+.pt-cabecera__hueco{ margin-right: auto; }
+
+/* ☰: en móvil abre el cajón; en escritorio solo con la barra plegada. */
+.pt-lateral-abrir{ display: none; }
+.pt-marco--plegado .pt-lateral-abrir{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 900px){
+    .pt-marco,
+    .pt-marco--plegado{ grid-template-columns: 1fr; }
+    /* Bajo 900 px la barra es cajón; vuelve a flex. */
+    .pt-marco--plegado > .pt-lateral{ display: flex; }
+    .pt-marco--plegado > .pt-lateral-tapa{ display: block; }
+    .pt-lateral__plegar{ display: none; }
+    .pt-lateral{
+        position: fixed;
+        z-index: calc(var(--pt-z-modal) - 1);
+        width: 216px;
+        transform: translateX(-100%);
+        transition: transform var(--pt-normal);
+        box-shadow: var(--pt-sombra-3);
+    }
+    .pt-lateral.abierta{ transform: none; }
+    .pt-lateral-abrir{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .pt-lateral-tapa{
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.45);
+        z-index: calc(var(--pt-z-modal) - 2);
+    }
+    .pt-lateral-tapa[hidden]{ display: none; }
+}
+
+
+/* ============================================================
+   3) PANORAMA: cuatro cifras encima de la lista
+   ============================================================ */
+.pt-panorama{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.44rem;
+    margin-bottom: 2.24rem;
+}
+.pt-panorama__caja{
+    padding: 1.52rem 1.76rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 18px;
+    background: var(--pt-superficie);
+    min-width: 0;
+}
+.pt-panorama__tit{
+    font-size: 1.008rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    margin-bottom: 0.56rem;
+}
+.pt-panorama__num{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 2.64rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--pt-tinta);
+}
+.pt-panorama__pie{
+    font-size: 1.152rem;
+    color: var(--pt-gris);
+    margin-top: 0.32rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pt-panorama__num--alerta{ color: var(--pt-rojo-txt); }
+.pt-panorama__num--aviso{ color: var(--pt-ambar-txt); }
+
+@media (max-width: 1100px){ .pt-panorama{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 560px){ .pt-panorama{ grid-template-columns: 1fr; } }
+
+
+/* ============================================================
+   4) LISTA DE CARPETAS
+   ============================================================
+   Una acción principal por fila; el resto en el menú ⋯. */
+.pt-tabla-tarjeta{
+    border: 1px solid var(--pt-borde);
+    border-radius: 22px;
+    background: var(--pt-superficie);
+    /* Sin overflow:hidden: recortaba el menú ⋯. */
+    overflow: visible;
+}
+.pt-tabla-tarjeta > :first-child{
+    border-top-left-radius: 21px;
+    border-top-right-radius: 21px;
+}
+.pt-tabla-tarjeta > :last-child{
+    border-bottom-left-radius: 21px;
+    border-bottom-right-radius: 21px;
+}
+.pt-filas__cab,
+.pt-fila-carpeta{
+    display: grid;
+    grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.9fr) minmax(0, 1.1fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 1.36rem 1.92rem;
+}
+.pt-filas__cab{
+    font-size: 1.008rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    border-bottom: 1px solid var(--pt-borde);
+    background: var(--pt-superficie-2);
+}
+.pt-fila-carpeta{
+    border-bottom: 1px solid var(--pt-borde);
+    transition: background var(--pt-rapido);
+}
+.pt-fila-carpeta:last-child{ border-bottom: none; }
+.pt-fila-carpeta:hover{ background: var(--pt-superficie-2); }
+.pt-fila-carpeta--inactiva{ opacity: .62; }
+
+.pt-fila__nombre{
+    font-weight: 600;
+    font-size: 1.44rem;
+    color: var(--pt-tinta);
+    display: flex;
+    align-items: center;
+    gap: 0.72rem;
+    margin-bottom: 0.288rem;
+}
+.pt-fila__sub,
+.pt-fila__col{
+    font-size: 1.224rem;
+    color: var(--pt-gris);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pt-fila__col b{ display: block; color: var(--pt-tinta); font-weight: 600; }
+.pt-fila__acciones{
+    display: flex;
+    align-items: center;
+    gap: 0.56rem;
+    justify-self: end;
+}
+
+/* Menú ⋯ */
+.pt-menu{ position: relative; }
+.pt-menu__boton{
+    width: 30px; height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--pt-borde);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--pt-gris);
+    cursor: pointer;
+    font-size: 1.6rem;
+    line-height: 1;
+    transition: all var(--pt-rapido);
+}
+.pt-menu__boton:hover{ color: var(--pt-tinta); border-color: var(--pt-azul); }
+.pt-menu__lista{
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.48rem);
+    z-index: var(--pt-z-encabezado);
+    min-width: 17.6rem;
+    padding: 0.48rem;
+    background: var(--pt-superficie);
+    border: 1px solid var(--pt-borde);
+    border-radius: 14px;
+    box-shadow: var(--pt-sombra-2);
+}
+.pt-menu__lista[hidden]{ display: none; }
+.pt-menu__lista button{
+    display: block;
+    width: 100%;
+    padding: 0.8rem 1.04rem;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--pt-tinta);
+    font: inherit;
+    font-size: 1.28rem;
+    text-align: left;
+    cursor: pointer;
+}
+.pt-menu__lista button:hover{ background: var(--pt-superficie-2); }
+.pt-menu__lista button.pt-menu__peligro{ color: var(--pt-rojo-txt); }
+
+/* En pantallas medianas, dos líneas */
+@media (max-width: 980px){
+    .pt-filas__cab{ display: none; }
+    .pt-fila-carpeta{
+        grid-template-columns: minmax(0, 1fr) auto;
+        row-gap: 0.72rem;
+    }
+    .pt-fila__col{ grid-column: 1; }
+    .pt-fila__acciones{ grid-row: 1; grid-column: 2; }
+}
+
+
+/* ============================================================
+   5) ESTADOS: tablero por urgencia
+   ============================================================
+   Cada trámite cae en su grupo del semáforo. */
+/* ---- Tablero: una columna por grupo ----
+   Mismo alto por columna (grid). --pt-columnas lo pone el JS
+   (Pausados solo aparece si hay). */
+.pt-tablero{
+    display: grid;
+    grid-template-columns: repeat(var(--pt-columnas, 4), minmax(0, 1fr));
+    gap: 1.44rem;
+    align-items: stretch;
+}
+.pt-columna{
+    display: flex;
+    flex-direction: column;
+    gap: 1.12rem;
+    padding: 1.28rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 20px;
+    background: var(--pt-fondo);
+}
+/* Tinte por columna; el borde plano es respaldo sin color-mix. */
+.pt-columna--rojo{    border-color: color-mix(in srgb, var(--pt-rojo-txt)   32%, var(--pt-borde)); }
+.pt-columna--naranja{ border-color: color-mix(in srgb, var(--pt-ambar-txt)  38%, var(--pt-borde)); }
+.pt-columna--cian{    border-color: color-mix(in srgb, var(--pt-marca-cian) 32%, var(--pt-borde)); }
+.pt-columna--verde{   border-color: color-mix(in srgb, var(--pt-verde-txt)  28%, var(--pt-borde)); }
+
+.pt-columna__cab{
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding-bottom: 1.04rem;
+    border-bottom: 1px solid var(--pt-borde);
+}
+.pt-columna__tit{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.44rem;
+    font-weight: 600;
+    color: var(--pt-tinta);
+    margin-right: auto;
+}
+.pt-columna__num{
+    font-size: 1.152rem;
+    font-weight: 700;
+    color: var(--pt-gris);
+    background: var(--pt-superficie-2);
+    border-radius: 999px;
+    padding: 0.16rem 0.72rem;
+}
+.pt-columna__lista{
+    display: flex;
+    flex-direction: column;
+    gap: 0.96rem;
+    flex: 1;
+}
+.pt-columna__vacio{
+    padding: 1.6rem 1.44rem;
+    border: 1px dashed var(--pt-borde);
+    border-radius: 16px;
+    font-size: 1.224rem;
+    line-height: 1.5;
+    color: var(--pt-gris);
+    text-align: center;
+}
+/* Columna vacía típica: carpetas sin procesos definidos. */
+.pt-columna__crear{
+    padding: 1.28rem 1.2rem;
+    border: 1px dashed var(--pt-borde);
+    border-radius: 16px;
+    background: none;
+    font: inherit;
+    font-size: 1.192rem;
+    line-height: 1.45;
+    color: var(--pt-gris);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color var(--pt-rapido), color var(--pt-rapido);
+}
+.pt-columna__crear:hover{ border-color: var(--pt-azul); color: var(--pt-azul); }
+
+.pt-grupo__punto{
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+}
+.pt-grupo__punto--rojo{ background: var(--pt-rojo-txt); }
+.pt-grupo__punto--naranja{ background: var(--pt-ambar-txt); }
+.pt-grupo__punto--cian{ background: var(--pt-marca-cian); }
+.pt-grupo__punto--verde{ background: var(--pt-verde-txt); }
+.pt-grupo__punto--gris{ background: var(--pt-gris); }
+
+/* ---- Tarjeta de trámite ---- */
+.pt-tramite{
+    display: flex;
+    flex-direction: column;
+    gap: 1.04rem;
+    padding: 1.28rem 1.36rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 16px;
+    background: var(--pt-superficie);
+    transition: border-color var(--pt-rapido);
+}
+.pt-tramite:hover{ border-color: var(--pt-azul); }
+.pt-tramite__cab{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.04rem;
+}
+/* min-width:0 para que el título encoja */
+.pt-tramite__titulo{ min-width: 0; }
+.pt-tramite__nombre{
+    font-weight: 600;
+    font-size: 1.352rem;
+    line-height: 1.35;
+    color: var(--pt-tinta);
+    overflow-wrap: break-word;
+}
+.pt-tramite__op{
+    font-size: 1.16rem;
+    color: var(--pt-gris);
+    margin-top: 0.24rem;
+}
+.pt-tramite__cuerpo{
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-top: 1.04rem;
+    border-top: 1px solid var(--pt-borde);
+}
+.pt-tramite__linea{ font-size: 1.192rem; line-height: 1.5; color: var(--pt-gris); }
+.pt-tramite__linea strong{ color: var(--pt-tinta); font-weight: 600; }
+.pt-tramite__acciones{ display: flex; align-items: center; gap: 0.56rem; }
+.pt-tramite__ver{ flex: 1; justify-content: center; }
+
+/* El anillo 60/90 se reemplazó por .pt-plazo (fecha de vencimiento). */
+
+/* ---- Pie del tablero ---- */
+.pt-tablero__pie{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    padding: 1.36rem 1.92rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 18px;
+    background: var(--pt-superficie-2);
+    font-size: 1.224rem;
+    color: var(--pt-gris);
+}
+.pt-tablero__pie .pt-acciones{ display: flex; gap: 0.72rem; flex-wrap: wrap; }
+
+/* Cuatro columnas en pantalla ancha, dos en mediana, una en celular. */
+@media (max-width: 1180px){
+    .pt-tablero{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px){
+    .pt-tablero{ grid-template-columns: minmax(0, 1fr); }
+}
+
+
+/* ============================================================
+   6) DETALLE DE CARPETA: cabecera compacta y cifras
+   ============================================================
+   La subida se abre con un botón; lo principal son los documentos. */
+.pt-detalle-cifras{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3.04rem;
+    padding: 1.44rem 0 0.32rem;
+    margin-bottom: 1.44rem;
+    border-bottom: 1px solid var(--pt-borde);
+}
+.pt-cifra__num{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 2.272rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--pt-tinta);
+}
+.pt-cifra__tit{
+    font-size: 0.976rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    margin-top: 0.192rem;
+}
+.pt-cifra__num--alerta{ color: var(--pt-rojo-txt); }
+.pt-cifra__num--aviso{ color: var(--pt-ambar-txt); }
+
+/* Migas de pan */
+.pt-migas{
+    display: flex;
+    align-items: center;
+    gap: 0.64rem;
+    font-size: 1.184rem;
+    color: var(--pt-gris);
+    margin-bottom: 0.56rem;
+}
+.pt-migas button{
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--pt-gris);
+    cursor: pointer;
+    text-decoration: none;
+}
+.pt-migas button:hover{ color: var(--pt-azul); text-decoration: underline; }
+.pt-migas span{ opacity: .5; }
+
+/* Zona de carga solo al pedirla */
+.pt-zona-subida[hidden]{ display: none; }
+.pt-barra-archivos{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.44rem;
+}
+
+
+/* ============================================================
+   7) USUARIOS: crear en panel lateral
+   ============================================================ */
+.pt-cajon{
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: var(--pt-z-modal);
+    width: min(48rem, 100%);
+    height: 100vh;
+    overflow-y: auto;
+    padding: 2.56rem;
+    background: var(--pt-superficie);
+    border-left: 1px solid var(--pt-borde);
+    box-shadow: var(--pt-sombra-3);
+    transform: translateX(100%);
+    transition: transform var(--pt-normal);
+}
+.pt-cajon.abierto{ transform: none; }
+.pt-cajon__cab{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.6rem;
+    margin-bottom: 1.92rem;
+}
+.pt-cajon__cab h3{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.84rem;
+    font-weight: 600;
+    margin: 0;
+}
+.pt-cajon__cerrar{
+    width: 30px; height: 30px;
+    flex: 0 0 auto;
+    border: 1px solid var(--pt-borde);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--pt-gris);
+    font-size: 1.68rem;
+    line-height: 1;
+    cursor: pointer;
+}
+.pt-cajon__cerrar:hover{ color: var(--pt-tinta); border-color: var(--pt-azul); }
+.pt-cajon-tapa{
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--pt-z-modal) - 1);
+    background: rgba(0,0,0,.45);
+}
+.pt-cajon-tapa[hidden]{ display: none; }
+
+/* En el cajón, una columna */
+.pt-cajon .pt-form-usuario{
+    display: flex;
+    flex-direction: column;
+    gap: 1.44rem;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+.pt-cajon .pt-form-usuario .pt-campo{ align-self: stretch; }
+
+
+/* ============================================================
+   8) CALENDARIO: el mes y la agenda al lado
+   ============================================================ */
+.pt-cal-marco{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 32rem;
+    gap: 2.24rem;
+    align-items: start;
+}
+
+/* ---- El mes, dentro de su propia tarjeta ---- */
+.pt-calv-tarjeta{
+    padding: 1.76rem 1.92rem 1.92rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 20px;
+    background: var(--pt-superficie);
+}
+.pt-calv-tarjeta__cab{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.8rem;
+}
+.pt-calv-tarjeta .pt-cal__barra{
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+}
+.pt-calv-leyenda{
+    display: flex;
+    align-items: center;
+    gap: 1.28rem;
+    flex-wrap: wrap;
+    font-size: 1.088rem;
+    color: var(--pt-gris);
+}
+.pt-calv-leyenda span{ display: inline-flex; align-items: center; gap: 0.4rem; }
+
+/* ---- Cifras del resumen ---- */
+.pt-agenda__cifra{
+    display: flex;
+    align-items: center;
+    gap: 0.72rem;
+    padding: 0.72rem 0;
+    border-top: 1px solid var(--pt-borde);
+    font-size: 1.216rem;
+    color: var(--pt-gris);
+}
+.pt-agenda__cifra:first-of-type{ border-top: none; padding-top: 0; }
+.pt-agenda__cifra span{ margin-right: auto; }
+.pt-agenda__cifra strong{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.68rem;
+    font-weight: 600;
+    color: var(--pt-tinta);
+}
+
+.pt-agenda{
+    position: sticky;
+    top: 7.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+.pt-agenda__caja{
+    padding: 1.6rem 1.76rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 18px;
+    background: var(--pt-superficie);
+}
+.pt-agenda__tit{
+    font-size: 1.008rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    margin-bottom: 1.12rem;
+}
+.pt-agenda__item{
+    display: grid;
+    grid-template-columns: 4.16rem minmax(0, 1fr);
+    gap: 1.12rem;
+    padding: 0.96rem 0;
+    border-top: 1px solid var(--pt-borde);
+}
+.pt-agenda__item:first-of-type{ border-top: none; padding-top: 0; }
+.pt-agenda__fecha{ text-align: center; line-height: 1.1; }
+.pt-agenda__dia{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.84rem;
+    font-weight: 600;
+    color: var(--pt-tinta);
+}
+.pt-agenda__mes{
+    font-size: 0.928rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+}
+.pt-agenda__que{
+    font-size: 1.264rem;
+    font-weight: 600;
+    color: var(--pt-tinta);
+    margin-bottom: 0.16rem;
+}
+.pt-agenda__det{ font-size: 1.152rem; color: var(--pt-gris); }
+.pt-agenda__plazo{
+    display: inline-block;
+    margin-top: 0.32rem;
+    font-size: 1.056rem;
+    font-weight: 600;
+    padding: 0.16rem 0.72rem;
+    border-radius: 999px;
+    background: var(--pt-superficie-2);
+    color: var(--pt-gris);
+}
+.pt-agenda__plazo--rojo{ background: var(--pt-rojo-suave); color: var(--pt-rojo-txt); }
+.pt-agenda__plazo--naranja{ background: var(--pt-ambar-suave); color: var(--pt-ambar-txt); }
+.pt-agenda__vacio{ font-size: 1.248rem; color: var(--pt-gris); }
+
+/* ---- Caja de acción sugerida ---- */
+/* Cian oscurecido: con el puro el blanco queda en 3.1:1; así ~4.9:1. */
+.pt-agenda__caja--accion{
+    --pt-accion-fondo: #067B8F;
+    --pt-accion-fondo: color-mix(in srgb, var(--pt-marca-cian) 70%, var(--pt-navy-900));
+    border-color: transparent;
+    background: var(--pt-accion-fondo);
+    color: var(--pt-blanco);
+}
+.pt-agenda__caja--accion .pt-agenda__tit{ color: rgba(255,255,255,.78); }
+.pt-agenda__accion-que{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.44rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--pt-blanco);
+}
+.pt-agenda__accion-det{
+    font-size: 1.152rem;
+    color: rgba(255,255,255,.82);
+    margin-top: 0.32rem;
+}
+.pt-agenda__accion-btns{
+    display: flex;
+    gap: 0.64rem;
+    flex-wrap: wrap;
+    margin-top: 1.28rem;
+}
+/* Sobre cian, botones invertidos */
+.pt-agenda__accion-btns .pt-boton{
+    background: var(--pt-blanco);
+    border-color: var(--pt-blanco);
+    color: var(--pt-accion-fondo);
+}
+.pt-agenda__accion-btns .pt-boton--fantasma{
+    background: transparent;
+    border-color: rgba(255,255,255,.5);
+    color: var(--pt-blanco);
+}
+.pt-agenda__accion-btns .pt-boton--fantasma:hover{
+    background: rgba(255,255,255,.14);
+    border-color: var(--pt-blanco);
+    color: var(--pt-blanco);
+}
+
+@media (max-width: 1050px){
+    .pt-cal-marco{ grid-template-columns: 1fr; }
+    .pt-agenda{ position: static; }
+}
+
+
+/* ============================================================
+   9) DENSIDAD Y ESCALA
+   ============================================================
+   Medidas del diseño:
+   título 25px Lora 600 · nota 13px Krub
+   etiqueta 10px Krub 500 mayúsculas · cifra 20-26px Krub 600
+   botón 13px alto 34 r 14 · sub-pestaña 12px alto 28
+   buscador 12.5px alto 36 · nav 13.5px alto 36
+   Todo bajo body.pt-app: el ingreso usa controles de 46px. */
+
+/* ---- Lienzo ---- */
+body.pt-app .pt-contenido{
+    padding: 2.4rem clamp(1.6rem, 2.4vw, 3.04rem) 4.8rem;
+    max-width: none;
+    /* portal.css trae margin: 0 auto, que en flex anula el estirado. */
+    margin: 0;
+    width: 100%;
+}
+
+/* ---- Encabezado de pantalla ---- */
+body.pt-app .pt-barra-seccion{
+    align-items: center;
+    gap: 1.6rem;
+    margin-bottom: 0.8rem;
+}
+body.pt-app .pt-barra-seccion h2,
+body.pt-app .pt-contenido > section > h2{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 2.496rem;      /* 25px */
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -.005em;
+}
+body.pt-app .pt-detalle-cabecera h2{
+    font-size: 2.4rem;
+    line-height: 1.15;
+}
+body.pt-app .pt-contenido .pt-nota{
+    font-size: 1.28rem;        /* 13px */
+    line-height: 1.5;
+}
+body.pt-app #estados-nota{ margin-bottom: 1.76rem !important; }
+
+/* ---- Sub-pestañas ---- */
+body.pt-app .pt-sub-pestanas{
+    gap: 0.48rem;
+    margin: 1.44rem 0 1.76rem;
+    border-bottom: 1px solid var(--pt-borde);
+    padding-bottom: 0.88rem;
+}
+body.pt-app .pt-sub-pestanas button{
+    min-height: 28px;
+    padding: 0.48rem 1.2rem;
+    font-size: 1.2rem;       /* 12px */
+    font-weight: 500;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--pt-gris);
+}
+body.pt-app .pt-sub-pestanas button svg{ width: 14px; height: 14px; }
+body.pt-app .pt-sub-pestanas button.activa{
+    background: var(--pt-navy-700);
+    color: var(--pt-blanco);
+    font-weight: 600;
+}
+
+/* ---- Buscador ---- */
+body.pt-app .pt-buscador{
+    max-width: 38.4rem;
+    margin: 0 0 1.76rem;
+}
+body.pt-app .pt-buscador input{
+    height: 36px;
+    padding: 0 1.28rem 0 3.36rem;
+    font-size: 1.248rem;       /* 12.5px */
+    border-radius: 14px;
+}
+body.pt-app .pt-buscador > span[data-icono]{ left: 1.12rem; }
+
+/* ---- Botones ---- */
+body.pt-app .pt-boton{
+    min-height: 34px;
+    padding: 0.72rem 1.52rem;
+    font-size: 1.296rem;       /* 13px */
+    font-weight: 600;
+    border-radius: 14px;
+}
+body.pt-app .pt-boton--mini{
+    min-height: 28px;
+    padding: 0.48rem 1.12rem;
+    font-size: 1.2rem;
+    border-radius: 12px;
+}
+body.pt-app .pt-boton svg{ width: 15px; height: 15px; }
+body.pt-app .pt-boton--mini svg{ width: 13px; height: 13px; }
+
+/* ---- Campos ---- */
+body.pt-app .pt-campo input,
+body.pt-app .pt-campo select,
+body.pt-app .pt-campo textarea{
+    min-height: 36px;
+    padding: 0.72rem 1.2rem;
+    font-size: 1.296rem;
+    border-radius: 14px;
+}
+body.pt-app .pt-campo textarea{ min-height: 7.2rem; }
+body.pt-app .pt-campo > span,
+body.pt-app .pt-campo > legend{
+    font-size: 1.152rem;
+    font-weight: 500;
+    margin-bottom: 0.48rem;
+}
+
+/* ---- Tablas ---- */
+body.pt-app .pt-tabla{ font-size: 1.28rem; }
+body.pt-app .pt-tabla th{
+    font-size: 1rem;      /* 10px */
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    padding: 0.96rem 1.2rem;
+}
+body.pt-app .pt-tabla td{ padding: 0.96rem 1.2rem; }
+body.pt-app .pt-tabla-envoltura{ border-radius: 18px; }
+
+/* ---- Cifras en Krub ---- */
+.pt-panorama__num{
+    font-family: var(--pt-fuente-texto);
+    font-size: 2.592rem;      /* 26px */
+    font-weight: 600;
+    letter-spacing: -.01em;
+}
+.pt-cifra__num{
+    font-family: var(--pt-fuente-texto);
+    font-size: 2rem;      /* 20px */
+    font-weight: 600;
+}
+.pt-agenda__dia{ font-family: var(--pt-fuente-texto); font-size: 1.68rem; }
+
+/* Nombre de trámite en Lora */
+.pt-tramite__nombre{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.352rem;      /* 13.5px */
+}
+.pt-columna__tit{ font-size: 1.28rem; font-weight: 600; font-family: var(--pt-fuente-texto); }
+.pt-columna__num{ font-size: 1.088rem; }
+.pt-tramite__acciones .pt-boton{ border-radius: 22px; }
+
+/* Nombre de carpeta en Lora */
+.pt-fila__nombre{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.352rem;
+}
+
+/* ---- Leyes ---- */
+body.pt-app .pt-leyes{
+    margin-top: 2.88rem;
+    padding: 1.92rem 2.08rem;
+    border-radius: 18px;
+}
+body.pt-app .pt-leyes > h3{
+    font-size: 1.52rem;
+    gap: 0.8rem;
+    margin-bottom: 0.48rem;
+}
+body.pt-app .pt-leyes > h3 svg{ width: 16px; height: 16px; }
+body.pt-app .pt-ley__txt strong{ font-size: 1.296rem; }
+body.pt-app .pt-ley__txt span{ font-size: 1.184rem; }
+
+/* ---- Modales ---- */
+body.pt-app .pt-modal__caja{ border-radius: 20px; }
+body.pt-app .pt-modal__caja h3{ font-size: 1.76rem; }
+
+/* ---- Cabecera superior ---- */
+body.pt-app .pt-cabecera .pt-boton{
+    min-height: 30px;
+    font-size: 1.224rem;
+    font-weight: 500;
+    border-radius: 12px;
+}
+
+
+/* ---- Ingreso: controles de 46px ---- */
+body.pt-cuerpo-login .pt-campo input{
+    min-height: 4.6rem;          /* 46px */
+    padding: 0 1.4rem;
+    font-size: 1.4rem;           /* 14px */
+    border-radius: 1.6rem;       /* 16px */
+}
+body.pt-cuerpo-login .pt-campo-clave input{ padding-right: 4.4rem; }
+body.pt-cuerpo-login #boton-entrar{
+    min-height: 4.6rem;
+    font-size: 1.45rem;          /* 14.5px */
+    font-weight: 600;
+    border-radius: 1.6rem;
+}
+body.pt-cuerpo-login .pt-campo > span{
+    font-size: 1.1rem;           /* 11px */
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    margin-bottom: .6rem;
+}
+
+
+/* ============================================================
+   10) RETOQUES
+   ============================================================ */
+
+/* ---- Filtros en línea (Actividad, Calendario) ---- */
+body.pt-app .pt-calv-filtros{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    background: none;
+    border: none;
+    padding: 0;
+    gap: 1.2rem;
+    margin: 0 !important;   /* va en la cabecera de la sección */
+}
+body.pt-app .pt-calv-filtros:empty{ display: none; }
+body.pt-app .pt-calv-filtros label{
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.2rem;
+    color: var(--pt-gris);
+}
+body.pt-app .pt-calv-filtros select{
+    min-height: 3.2rem;
+    padding: .3rem 2.4rem .3rem .9rem;
+    font-size: 1.248rem;
+    border-radius: 1.2rem;
+    border: 1px solid var(--pt-borde);
+    background-color: var(--pt-superficie);
+    color: var(--pt-tinta);
+}
+
+/* ---- Calendario: celdas grandes con el detalle dentro ---- */
+body.pt-app .pt-calv__semana,
+body.pt-app .pt-calv__rejilla{ max-width: none; }
+body.pt-app .pt-calv__semana span{
+    font-size: .96rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    text-align: left;
+    padding-left: .6rem;
+}
+body.pt-app .pt-calv__rejilla{ gap: .6rem; }
+body.pt-app .pt-calv__dia{
+    min-height: 9.6rem;
+    border-radius: 1.2rem;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: .5rem;
+    padding: .7rem .6rem;
+    text-align: left;
+    overflow: hidden;
+}
+body.pt-app .pt-calv__num{
+    font-size: 1.28rem;
+    font-weight: 600;
+    color: var(--pt-tinta);
+}
+body.pt-app .pt-calv__dia--nohabil .pt-calv__num{ color: var(--pt-gris); }
+body.pt-app .pt-calv__dia--vacio{ min-height: 0; }
+/* Hoy con contorno; el relleno es para el vencimiento. */
+body.pt-app .pt-calv__dia--hoy{
+    border-color: var(--pt-tinta);
+    box-shadow: inset 0 0 0 1px var(--pt-tinta);
+}
+body.pt-app .pt-calv__dia--marca-rojo{ background: var(--pt-rojo-suave); }
+body.pt-app .pt-calv__dia--marca-naranja{ background: var(--pt-ambar-suave); }
+body.pt-app .pt-calv__dia--marca-verde{ background: var(--pt-verde-suave); }
+
+.pt-calv__chips{
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    min-width: 0;
+}
+.pt-calv__chip{
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: .22rem .56rem;
+    border-radius: .8rem;
+    font-size: 1.008rem;
+    line-height: 1.5;
+    font-weight: 500;
+    background: var(--pt-superficie-2);
+    color: var(--pt-gris);
+}
+.pt-calv__chip--rojo{ background: var(--pt-rojo); color: #fff; }
+.pt-calv__chip--naranja{ background: var(--pt-ambar); color: #fff; }
+.pt-calv__chip--verde{ background: var(--pt-verde); color: #fff; }
+.pt-calv__chip--pausado{ background: var(--pt-gris); color: #fff; }
+.pt-calv__mas{ font-size: .96rem; color: var(--pt-gris); padding-left: .2rem; }
+
+/* En móvil la celda mide ~38px: las marcas van como puntos. */
+@media (max-width: 720px){
+    body.pt-app .pt-calv__dia{
+        min-height: 5.6rem;
+        align-items: center;
+        padding: .5rem .2rem;
+    }
+    body.pt-app .pt-calv__semana span{ text-align: center; padding-left: 0; }
+    .pt-calv__chips{ flex-direction: row; flex-wrap: wrap; justify-content: center; gap: .25rem; }
+    .pt-calv__chip{
+        width: 7px;
+        height: 7px;
+        padding: 0;
+        border-radius: 50%;
+        overflow: hidden;
+        text-indent: -999px;
+    }
+    .pt-calv__mas{ font-size: .88rem; padding: 0; }
+    .pt-calv-tarjeta{ padding: 1.28rem 1.12rem 1.44rem; }
+}
+
+/* En pantalla angosta los filtros bajan de línea. */
+body.pt-app .pt-calv-filtros{ max-width: 100%; min-width: 0; }
+body.pt-app .pt-calv-filtros label{ min-width: 0; max-width: 100%; }
+body.pt-app .pt-calv-filtros select{ min-width: 0; max-width: 100%; }
+@media (max-width: 620px){
+    body.pt-app .pt-calv-filtros{ width: 100%; }
+    body.pt-app .pt-calv-filtros label{ flex: 1 1 100%; }
+    body.pt-app .pt-calv-filtros select{ flex: 1; }
+}
+
+/* ---- Actividad: filas más juntas ---- */
+body.pt-app .pt-notif-lista > *{ font-size: 1.328rem; }
+body.pt-app .pt-notif-lista li,
+body.pt-app .pt-notif-lista .pt-notif{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* ---- Leyes: rejilla más apretada ---- */
+body.pt-app .pt-leyes__lista{ gap: .8rem; }
+body.pt-app .pt-leyes__lista a{
+    padding: .9rem 1.1rem;
+    border-radius: 1.4rem;
+}
+
+/* ---- Burbuja de soporte ---- */
+body.pt-app .pt-soporte-burbuja{
+    width: 4.4rem;
+    height: 4.4rem;
+    right: 1.6rem;
+    bottom: 1.6rem;
+    box-shadow: var(--pt-sombra-2);
+}
+body.pt-app .pt-contenido{ padding-bottom: 8rem; }
+
+/* ---- Insignia de estado en la fila ---- */
+.pt-fila__nombre .pt-insignia{
+    font-size: .96rem;
+    padding: .15rem .6rem;
+    letter-spacing: .04em;
+}
+
+/* ---- Cabecera superior separada del contenido ---- */
+body.pt-app .pt-cabecera{ gap: .8rem; }
+body.pt-app .pt-cabecera .pt-campana{ margin-right: .4rem; }
+
+/* Fila del título: buscador y acción a la derecha */
+body.pt-app .pt-barra-seccion__acciones{
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    flex-wrap: wrap;
+}
+body.pt-app .pt-barra-seccion__acciones .pt-buscador{
+    margin: 0;
+    width: 26rem;
+    max-width: 100%;
+}
+@media (max-width: 720px){
+    body.pt-app .pt-barra-seccion__acciones{ width: 100%; }
+    body.pt-app .pt-barra-seccion__acciones .pt-buscador{ flex: 1 1 100%; width: auto; }
+}
+
+/* ---- Buscador: la envoltura es el control, el input va desnudo ---- */
+body.pt-app .pt-buscador{
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    min-height: 3.6rem;
+    height: 3.6rem;
+    padding: 0 1.2rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 1.4rem;
+    background: var(--pt-superficie);
+    box-shadow: none;
+}
+body.pt-app .pt-buscador > span[data-icono]{
+    position: static;
+    display: inline-flex;
+    color: var(--pt-gris);
+    flex: 0 0 auto;
+}
+body.pt-app .pt-buscador input{
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: 0;
+    font-size: 1.248rem;
+    color: var(--pt-tinta);
+}
+body.pt-app .pt-buscador input:focus{ outline: none; box-shadow: none; }
+body.pt-app .pt-buscador:focus-within{ border-color: var(--pt-marca-cian); }
+
+/* Menú ⋯ hacia arriba si no cabe abajo */
+.pt-menu__lista--arriba{
+    top: auto;
+    bottom: calc(100% + .3rem);
+}
+
+
+/* ============================================================
+   11) SUBCARPETAS
+   ============================================================
+   Un nivel, como fichas (Audiencias, Notificaciones…). */
+.pt-subcarpetas{
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.2rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--pt-borde);
+}
+.pt-subcarpeta{
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    min-height: 4rem;
+    padding: .6rem 1.6rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 999px;
+    background: var(--pt-superficie);
+    color: var(--pt-gris);
+    font: inherit;
+    /* Antes .78rem = 7,8 px, no se leía */
+    font-size: 1.45rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--pt-rapido);
+}
+.pt-subcarpeta:hover{ border-color: var(--pt-azul); color: var(--pt-tinta); }
+.pt-subcarpeta.activa{
+    background: var(--pt-navy-700);
+    border-color: var(--pt-navy-700);
+    color: var(--pt-blanco);
+    font-weight: 600;
+}
+.pt-subcarpeta svg{ width: 18px; height: 18px; flex: 0 0 auto; }
+.pt-subcarpeta__num{
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: .1rem .7rem;
+    border-radius: 999px;
+    background: var(--pt-superficie-2);
+    color: var(--pt-gris);
+}
+.pt-subcarpeta.activa .pt-subcarpeta__num{
+    background: rgba(255,255,255,.18);
+    color: var(--pt-blanco);
+}
+/* Crear: borde discontinuo */
+.pt-subcarpeta--nueva{
+    border-style: dashed;
+    border-color: var(--pt-marca-cian);
+    color: var(--pt-marca-cian);
+    background: transparent;
+}
+.pt-subcarpeta--nueva:hover{
+    background: var(--pt-superficie-2);
+    color: var(--pt-marca-cian);
+}
+
+/* Renombrar / eliminar la subcarpeta abierta */
+.pt-subcarpeta-barra{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-left: auto;
+}
+
+/* Destino al mover un documento */
+.pt-mover{
+    min-height: 3.2rem;
+    padding: .4rem .9rem;
+    font-size: 1.25rem;   /* antes .75rem = 7,5 px */
+    border: 1px solid var(--pt-borde);
+    border-radius: 1.2rem;
+    background: var(--pt-superficie);
+    color: var(--pt-tinta);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+@media (max-width: 620px){
+    .pt-subcarpeta-barra{ margin-left: 0; width: 100%; }
+}
+
+
+/* ============================================================
+   12) ESQUELETO DE CARGA
+   ============================================================
+   Solo la primera vez que se entra a una sección (después hay caché).
+   Cada esqueleto usa las clases de lo real, así mide lo mismo. */
+
+@keyframes pt-latido{
+    0%, 100%{ opacity: 1; }
+    50%{ opacity: .55; }
+}
+
+/* Piezas sueltas: cada sección arma su esqueleto con la forma de lo que viene */
+.pt-esq{
+    display: block;
+    border-radius: 6px;
+    background: var(--pt-superficie-2);
+    background: color-mix(in srgb, var(--pt-tinta) 9%, transparent);
+    animation: pt-latido 1.4s ease-in-out infinite;
+}
+.pt-esq--linea{ height: 1.4rem; max-width: 100%; }
+.pt-esq--chica{ height: 1.1rem; margin-top: .6rem; }
+.pt-esq--cifra{ height: 3.2rem; width: 7rem; border-radius: 8px; }
+.pt-esq--punto{ width: 1.2rem; height: 1.2rem; border-radius: 50%; flex: none; }
+.pt-esq--bloque{ width: 100%; border-radius: 12px; }
+.pt-esq--titulo{ height: 1.8rem; }
+.pt-esq--ic{ width: 3.2rem; height: 3.2rem; border-radius: 10px; }
+.pt-tarjeta-carpeta--esq{ cursor: default; pointer-events: none; }
+.pt-tarjeta-carpeta--esq .pt-tarjeta-carpeta__pie{ display: flex; align-items: center; justify-content: space-between; }
+.pt-fila-esq td{ padding-top: 1.4rem; padding-bottom: 1.4rem; }
+.pt-lista-esq{ list-style: none; margin: 0; padding: .4rem 0; display: grid; gap: .2rem; }
+.pt-lista-esq li{ display: flex; align-items: center; gap: 1.2rem; padding: 1rem 0; border-bottom: 1px solid var(--pt-borde); }
+.pt-lista-esq li:last-child{ border-bottom: 0; }
+.pt-lista-esq__txt{ flex: 1; min-width: 0; }
+.pt-calv__rejilla .pt-esq.pt-calv__dia{
+    border-color: transparent;
+    background: color-mix(in srgb, var(--pt-tinta) 7%, transparent);
+    cursor: default;
+}
+
+/* Giro en botones con aria-busy: solo acciones cortas */
+[data-accion][aria-busy="true"]{ cursor: progress; }
+[data-accion][aria-busy="true"] > [data-icono],
+[data-accion][aria-busy="true"] > svg{ display: none; }
+[data-accion][aria-busy="true"]::before{
+    content: '';
+    display: inline-block;
+    width: 1.1em; height: 1.1em;
+    margin-right: .5em;
+    vertical-align: -.18em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: pt-gira .7s linear infinite;
+}
+@keyframes pt-gira{ to{ transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){
+    .pt-esq{ animation: none; }
+    [data-accion][aria-busy="true"]::before{ animation-duration: 1.6s; }
+}
+
+
+/* ============================================================
+   13) NOTARÍAS
+   ============================================================
+   Quien trabaja en dos o más elige al entrar. */
+
+/* ---- Notaría abierta, en la barra lateral ---- */
+.pt-notaria{ padding: 0 0.64rem; margin-top: -1.12rem; }
+.pt-notaria__boton,
+.pt-notaria__fijo{
+    display: flex;
+    flex-direction: column;
+    gap: 0.16rem;
+    width: 100%;
+    padding: 0.8rem 1.04rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 14px;
+    background: var(--pt-superficie-2);
+    font: inherit;
+    text-align: left;
+}
+.pt-notaria__boton{
+    cursor: pointer;
+    transition: border-color var(--pt-rapido), background var(--pt-rapido);
+}
+/* Con una sola oficina no parece botón (sin mano, hover ni flecha). */
+.pt-notaria__fijo{
+    cursor: default;
+    border-style: dashed;
+    opacity: .88;
+}
+.pt-notaria__boton:hover{
+    border-color: var(--pt-marca-cian);
+    background: var(--pt-superficie);
+}
+/* Flecha solo si hay a dónde cambiar */
+.pt-notaria__boton::after{
+    content: '⌄';
+    position: absolute;
+    right: 1.6rem;
+    color: var(--pt-gris);
+    font-size: 1.28rem;
+    line-height: 1;
+}
+.pt-notaria__boton{ position: relative; }
+.pt-notaria__ciudad{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.28rem;
+    font-weight: 600;
+    color: var(--pt-tinta);
+    padding-right: 1.6rem;
+}
+.pt-notaria__nombre{
+    font-size: 1.024rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+}
+
+/* ---- Casillas de notaría en el formulario ---- */
+.pt-notarias-casillas{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 0.64rem;
+    margin-top: 0.48rem;
+}
+.pt-notaria-casilla{
+    display: flex;
+    align-items: center;
+    gap: 0.72rem;
+    padding: 0.8rem 1.04rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 12px;
+    background: var(--pt-superficie);
+    font-size: 1.216rem;
+    cursor: pointer;
+}
+.pt-notaria-casilla:hover{ border-color: var(--pt-marca-cian); }
+.pt-notaria-casilla input{ flex: 0 0 auto; margin: 0; }
+.pt-notaria-casilla b{ font-weight: 600; color: var(--pt-tinta); }
+
+
+/* ---- Selección de oficina ----
+   Como el ingreso, pero el panel derecho sigue el tema. */
+.pt-elegir{
+    position: fixed;
+    inset: 0;
+    z-index: var(--pt-z-modal);
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    background: var(--pt-fondo);
+    overflow-y: auto;
+}
+.pt-elegir[hidden]{ display: none; }
+
+/* Panel de marca, siempre oscuro */
+.pt-elegir__marca{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3.2rem;
+    padding: 4.16rem 4.48rem;
+    background: var(--pt-navy-900);
+    color: var(--pt-blanco);
+}
+.pt-elegir__logo{
+    display: flex;
+    align-items: center;
+    gap: 1.12rem;
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--pt-blanco);
+}
+.pt-elegir__logo i{
+    width: 26px; height: 26px;
+    border-radius: 12px;
+    background: var(--pt-marca-cian);
+    flex: 0 0 auto;
+}
+.pt-elegir__centro h1{
+    font-family: var(--pt-fuente-titulos);
+    font-size: clamp(2.4rem, 3vw, 3.36rem);
+    line-height: 1.15;
+    font-weight: 600;
+    color: var(--pt-blanco);
+    margin-bottom: 1.44rem;
+    max-width: 16ch;
+}
+.pt-elegir__centro > p{
+    font-size: 1.312rem;
+    line-height: 1.65;
+    color: var(--pt-azul-claro);
+    max-width: 44ch;
+    margin-bottom: 2.72rem;
+}
+.pt-elegir__sesion{
+    padding: 1.44rem 1.6rem;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 18px;
+    background: rgba(255,255,255,.04);
+    max-width: 34rem;
+}
+.pt-elegir__sesion-eti{
+    display: block;
+    font-size: 0.96rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    margin-bottom: 0.8rem;
+}
+.pt-elegir__sesion-yo{ display: flex; align-items: center; gap: 0.96rem; }
+.pt-elegir__sesion-yo b{
+    display: block;
+    font-size: 1.28rem;
+    font-weight: 600;
+    color: var(--pt-blanco);
+}
+.pt-elegir__sesion-yo small{
+    display: block;
+    font-size: 0.96rem;
+    letter-spacing: .06em;
+    color: var(--pt-azul-claro);
+}
+.pt-elegir__estado{
+    display: flex;
+    align-items: center;
+    gap: 0.72rem;
+    font-size: 1.152rem;
+    color: var(--pt-azul-claro);
+}
+.pt-elegir__estado i{
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #35C46B;
+    flex: 0 0 auto;
+}
+
+/* Panel de decisión, según el tema */
+.pt-elegir__panel{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2.72rem;
+    padding: 4.16rem clamp(2.4rem, 3.5vw, 4.16rem);
+    background: var(--pt-fondo);
+}
+.pt-elegir__tema{ position: absolute; top: 2.24rem; right: 2.24rem; }
+.pt-elegir__eti{
+    display: block;
+    font-size: 1.008rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    margin-bottom: 1.12rem;
+}
+.pt-elegir__lista{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    gap: 1.12rem;
+}
+
+/* Una oficina, con sus cifras */
+.pt-oficina{
+    display: flex;
+    flex-direction: column;
+    gap: 0.32rem;
+    padding: 1.44rem 1.6rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 18px;
+    background: var(--pt-superficie);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--pt-rapido), box-shadow var(--pt-rapido);
+}
+.pt-oficina:hover{ border-color: var(--pt-marca-cian); }
+.pt-oficina.activa{
+    border-color: var(--pt-marca-cian);
+    box-shadow: inset 0 0 0 1px var(--pt-marca-cian);
+}
+.pt-oficina__cab{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+}
+.pt-oficina__ciudad{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--pt-tinta);
+}
+/* Tic solo en la marcada */
+.pt-oficina__tic{
+    position: relative;
+    width: 20px; height: 20px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--pt-marca-cian);
+    opacity: 0;
+    transition: opacity var(--pt-rapido);
+}
+.pt-oficina.activa .pt-oficina__tic{ opacity: 1; }
+.pt-oficina__tic::after{
+    content: "";
+    position: absolute;
+    left: 7px; top: 4px;
+    width: 4px; height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+.pt-oficina__nombre{ font-size: 1.216rem; color: var(--pt-gris); }
+.pt-oficina__cifras{
+    display: flex;
+    gap: 2.24rem;
+    margin-top: 1.12rem;
+    padding-top: 1.04rem;
+    border-top: 1px solid var(--pt-borde);
+}
+.pt-oficina__cifra b{
+    display: block;
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.92rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--pt-tinta);
+}
+.pt-oficina__cifra small{
+    display: block;
+    font-size: 0.928rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    margin-top: 0.16rem;
+}
+/* Ámbar lo que aprieta, rojo lo vencido. Un cero no lleva color. */
+.pt-oficina__cifra--alerta b{ color: var(--pt-ambar-txt); }
+.pt-oficina__cifra--rojo b{ color: var(--pt-rojo-txt); }
+
+/* "Todas las notarías": borde discontinuo, no es una oficina más */
+.pt-oficina--todas{ border-style: dashed; }
+
+/* Espacio de la oficina (solo admin) */
+.pt-oficina__espacio{
+    display: flex;
+    flex-direction: column;
+    gap: 0.56rem;
+    margin-top: 1.12rem;
+    font-size: 1.12rem;
+    color: var(--pt-gris);
+}
+.pt-oficina__espacio b{ color: var(--pt-tinta); font-weight: 600; }
+.pt-oficina__barra{
+    display: block;
+    height: .6rem;
+    border-radius: 999px;
+    background: var(--pt-borde);
+    overflow: hidden;
+}
+.pt-oficina__barra i{
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--pt-marca-cian);
+    transition: width var(--pt-normal);
+}
+
+/* ---- Espacio en el servidor ---- */
+.pt-elegir__espacio[hidden]{ display: none; }
+.pt-elegir__edad{ font-size: 1.008rem; color: var(--pt-gris); white-space: nowrap; }
+.pt-elegir__disco{
+    margin-top: 1.12rem;
+    padding: 1.44rem 1.6rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 18px;
+    background: var(--pt-superficie);
+}
+.pt-elegir__disco .pt-disco__barra{ margin-bottom: 1.12rem; }
+.pt-elegir__disco-datos{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 2.4rem;
+    font-size: 1.152rem;
+    color: var(--pt-gris);
+}
+.pt-elegir__disco-datos span{ display: inline-flex; align-items: center; gap: 0.56rem; }
+.pt-elegir__disco-datos b{ color: var(--pt-tinta); font-weight: 600; }
+.pt-elegir__punto{
+    width: 8px; height: 8px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--pt-borde);
+}
+.pt-elegir__punto--docs{ background: var(--pt-marca-cian); }
+.pt-elegir__punto--otros{ background: color-mix(in srgb, var(--pt-gris) 45%, transparent); }
+.pt-disco--aviso  .pt-elegir__punto--docs{ background: var(--pt-ambar-txt); }
+.pt-disco--alerta .pt-elegir__punto--docs{ background: var(--pt-rojo-txt); }
+.pt-elegir__disco-nota{
+    margin: 1.12rem 0 0;
+    padding: 1.2rem 1.44rem;
+    border: 1px dashed var(--pt-borde);
+    border-radius: 14px;
+    font-size: 1.152rem;
+    color: var(--pt-gris);
+}
+.pt-elegir__disco-nota b{ color: var(--pt-tinta); }
+.pt-oficina__cifras--texto{
+    display: block;
+    font-size: 1.152rem;
+    line-height: 1.55;
+    color: var(--pt-gris);
+}
+.pt-elegir__entrar{ width: 100%; margin-top: 1.44rem; }
+
+/* ---- Administrar oficinas ---- */
+.pt-elegir__admin[hidden]{ display: none; }
+.pt-elegir__admin-cab{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.28rem;
+}
+.pt-elegir__admin-cab .pt-elegir__eti{ margin-bottom: 0; }
+.pt-elegir__admin-lista{
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.12rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 18px;
+    background: var(--pt-superficie);
+    overflow: hidden;
+}
+.pt-elegir__admin-fila{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.12rem;
+    flex-wrap: wrap;
+    padding: 1.04rem 1.44rem;
+    border-top: 1px solid var(--pt-borde);
+    font-size: 1.216rem;
+    color: var(--pt-gris);
+}
+.pt-elegir__admin-fila:first-child{ border-top: none; }
+.pt-elegir__admin-fila.apagada{ opacity: .6; }
+.pt-elegir__admin-txt b{ color: var(--pt-tinta); font-weight: 600; }
+.pt-elegir__admin-txt em{
+    font-style: normal;
+    font-size: 1.024rem;
+    color: var(--pt-ambar-txt);
+}
+/* Fila en rejilla: si no cabe, se parte el nombre, no los botones. */
+.pt-elegir__admin-fila{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    column-gap: 1.6rem;
+}
+.pt-elegir__admin-acc{ grid-column: 3; }
+
+/* Espacio de cada oficina, entre nombre y botones */
+.pt-elegir__admin-uso{
+    display: flex;
+    align-items: center;
+    gap: 0.64rem 1.6rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    font-size: 1.088rem;
+}
+.pt-elegir__admin-peso{ display: inline-flex; align-items: center; gap: 0.8rem; }
+.pt-elegir__admin-peso b{ color: var(--pt-tinta); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pt-elegir__admin-peso .pt-reparto{ width: 7rem; }
+.pt-elegir__admin-acc{ display: flex; gap: 0.48rem; }
+.pt-elegir__admin-acc button{
+    padding: 0.4rem 0.96rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 999px;
+    background: var(--pt-superficie);
+    font: inherit;
+    font-size: 1.088rem;
+    color: var(--pt-gris);
+    cursor: pointer;
+    transition: border-color var(--pt-rapido), color var(--pt-rapido);
+}
+.pt-elegir__admin-acc button:hover{
+    border-color: var(--pt-marca-cian);
+    color: var(--pt-tinta);
+}
+.pt-elegir__admin-vacio{
+    padding: 1.44rem;
+    font-size: 1.216rem;
+    color: var(--pt-gris);
+}
+
+/* Sin oficinas: el aviso ocupa todo el ancho de la rejilla. */
+.pt-elegir__vacio{
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 2.4rem 1.6rem;
+    border: 1px dashed var(--pt-borde);
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.36rem;
+    line-height: 1.55;
+    color: var(--pt-gris);
+}
+
+.pt-elegir__pie{ display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: auto; }
+
+/* En pantalla angosta, panel de marca como cabecera */
+@media (max-width: 940px){
+    .pt-elegir{ grid-template-columns: 1fr; }
+    .pt-elegir__marca{ padding: 2.72rem 2.24rem 2.24rem; gap: 1.6rem; }
+    .pt-elegir__centro h1{ font-size: 2.08rem; max-width: none; }
+    .pt-elegir__centro > p{ display: none; }
+    .pt-elegir__sesion{ max-width: none; }
+    .pt-elegir__estado{ display: none; }
+    .pt-elegir__panel{ padding: 2.72rem 2.24rem 3.52rem; }
+    .pt-elegir__lista{ grid-template-columns: 1fr; }
+    .pt-elegir__admin-fila{ grid-template-columns: 1fr; row-gap: 0.8rem; }
+    .pt-elegir__admin-uso{ justify-content: flex-start; }
+    .pt-elegir__admin-acc{ grid-column: auto; }
+}
+
+/* ---- Casillas de notaría en los formularios ----
+   Casilla de tamaño fijo; el texto ocupa el resto y se parte. */
+.pt-notarias-casillas{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+    gap: 0.64rem;
+    margin-top: 0.64rem;
+}
+.pt-notaria-casilla{
+    display: flex;
+    align-items: center;
+    gap: 0.88rem;
+    min-width: 0;
+    padding: 0.96rem 1.12rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 14px;
+    background: var(--pt-superficie);
+    font-size: 1.216rem;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color var(--pt-rapido), background var(--pt-rapido);
+}
+.pt-notaria-casilla:hover{ border-color: var(--pt-marca-cian); }
+/* .pt-campo les metía min-height y padding de campo: se recupera el tamaño. */
+body.pt-app .pt-campo .pt-notaria-casilla input,
+.pt-notaria-casilla input{
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin: 0;
+    min-height: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    accent-color: var(--pt-marca-cian);
+    cursor: pointer;
+}
+.pt-notaria-casilla span{ min-width: 0; }
+.pt-notaria-casilla b{ font-weight: 600; color: var(--pt-tinta); }
+/* La marcada se nota sin depender solo del cuadro */
+.pt-notaria-casilla:has(input:checked){
+    border-color: var(--pt-marca-cian);
+    background: var(--pt-superficie-2);
+}
+
+/* ============================================================
+   14) CARPETAS EN TARJETAS
+   ============================================================
+   Rejilla de tarjetas; la tarjeta entera abre el expediente. */
+.pt-rejilla-carpetas{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+    gap: 1.28rem;
+}
+.pt-tarjeta-carpeta{
+    display: flex;
+    flex-direction: column;
+    gap: 0.72rem;
+    padding: 1.52rem 1.6rem 1.28rem;
+    border: 1px solid var(--pt-borde);
+    border-radius: 20px;
+    background: var(--pt-superficie);
+    cursor: pointer;
+    transition: border-color var(--pt-rapido), box-shadow var(--pt-rapido);
+}
+.pt-tarjeta-carpeta:hover{ border-color: var(--pt-azul); }
+.pt-tarjeta-carpeta:focus-visible{
+    outline: 2px solid var(--pt-marca-cian);
+    outline-offset: 2px;
+}
+.pt-tarjeta-carpeta--inactiva{ opacity: .62; }
+
+.pt-tarjeta-carpeta__cab{
+    display: flex;
+    align-items: center;
+    gap: 0.64rem;
+}
+.pt-tarjeta-carpeta__ic{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    flex: 0 0 auto;
+    border-radius: 12px;
+    background: var(--pt-superficie-2);
+    color: var(--pt-gris);
+}
+/* Menú al extremo, sin pasar el clic a la tarjeta */
+.pt-tarjeta-carpeta__cab .pt-menu{ margin-left: auto; }
+.pt-tarjeta-carpeta__cab .pt-insignia{ margin-left: auto; }
+.pt-tarjeta-carpeta__cab .pt-insignia + .pt-menu{ margin-left: 0; }
+
+.pt-tarjeta-carpeta__nombre{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.44rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--pt-tinta);
+    margin: 0;
+}
+.pt-tarjeta-carpeta__tipo{
+    align-self: flex-start;
+    padding: 0.16rem 0.72rem;
+    border-radius: 999px;
+    background: var(--pt-superficie-2);
+    font-size: 1.024rem;
+    color: var(--pt-gris);
+}
+.pt-tarjeta-carpeta__proceso{ font-size: 1.184rem; color: var(--pt-gris); }
+
+/* ---- Plazo: la fecha, no el conteo ---- */
+.pt-tarjeta-carpeta__plazo{
+    font-size: 1.184rem;
+    color: var(--pt-gris);
+    padding-top: 0.64rem;
+    border-top: 1px solid var(--pt-borde);
+}
+.pt-tarjeta-carpeta__plazo strong{ color: var(--pt-tinta); font-weight: 600; }
+.pt-tarjeta-carpeta__plazo--sin{ color: var(--pt-gris); font-style: italic; }
+.pt-tarjeta-carpeta__prorroga{
+    font-size: 1.024rem;
+    padding: 0.08rem 0.56rem;
+    border-radius: 999px;
+    background: var(--pt-ambar-suave);
+    color: var(--pt-ambar-txt);
+}
+
+/* ---- Quiénes están en el expediente ---- */
+.pt-gente{
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-top: 0.64rem;
+    border-top: 1px solid var(--pt-borde);
+}
+.pt-gente__grupo{ display: flex; align-items: baseline; gap: 0.64rem; min-width: 0; }
+.pt-gente__eti{
+    flex: 0 0 auto;
+    font-size: 0.928rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+}
+.pt-gente__nombres{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.32rem;
+    min-width: 0;
+}
+.pt-gente__chip{
+    padding: 0.16rem 0.64rem;
+    border-radius: 999px;
+    background: var(--pt-superficie-2);
+    font-size: 1.088rem;
+    color: var(--pt-tinta);
+    max-width: 18rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pt-tarjeta-carpeta__pie{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin-top: auto;
+    padding-top: 0.96rem;
+    border-top: 1px solid var(--pt-borde);
+}
+.pt-tarjeta-carpeta__docs{ font-size: 1.152rem; color: var(--pt-gris); }
+.pt-tarjeta-carpeta__docs b{ color: var(--pt-tinta); font-weight: 600; }
+
+@media (max-width: 640px){
+    .pt-rejilla-carpetas{ grid-template-columns: 1fr; }
+}
+
+/* ---- Plazo de 60 días en la tarjeta del tablero ----
+   Fila completa bajo el nombre: al lado no cabía. Color en la barra izquierda. */
+.pt-plazo{
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 0.56rem;
+    row-gap: 0.16rem;
+    padding: 0.64rem 0.88rem;
+    border-radius: 12px;
+    border-left: 3px solid var(--pt-gris);
+    background: var(--pt-superficie-2);
+}
+.pt-plazo__eti{
+    font-size: 0.928rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--pt-gris);
+    white-space: nowrap;
+}
+.pt-plazo__fecha{
+    font-family: var(--pt-fuente-titulos);
+    font-size: 1.28rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--pt-tinta);
+    overflow-wrap: break-word;
+}
+/* "52 días hábiles · prórroga" en su propia línea */
+.pt-plazo__resto{
+    grid-column: 1 / -1;
+    font-size: 1.024rem;
+    line-height: 1.4;
+    color: var(--pt-gris);
+}
+.pt-plazo--rojo{ border-left-color: var(--pt-rojo-txt); }
+.pt-plazo--rojo .pt-plazo__fecha{ color: var(--pt-rojo-txt); }
+.pt-plazo--naranja{ border-left-color: var(--pt-ambar-txt); }
+.pt-plazo--naranja .pt-plazo__fecha{ color: var(--pt-ambar-txt); }
+.pt-plazo--verde{ border-left-color: var(--pt-verde-txt); }
+.pt-plazo--verde .pt-plazo__fecha{ color: var(--pt-verde-txt); }
+.pt-plazo--sin .pt-plazo__fecha,
+.pt-plazo--gris .pt-plazo__fecha{ color: var(--pt-gris); font-size: 1.152rem; }
+
+/* ---- Quiénes están, en el detalle de carpeta ---- */
+.pt-detalle-gente{
+    margin-top: 1.12rem;
+    padding-top: 1.12rem;
+    border-top: 1px dashed var(--pt-borde);
+}
+.pt-detalle-gente[hidden]{ display: none; }
+.pt-detalle-gente .pt-gente{ border-top: none; padding-top: 0; gap: 0.64rem; }
+.pt-detalle-gente .pt-gente__chip{ max-width: none; }
+.pt-detalle-gente .pt-gente__chip em{
+    font-style: normal;
+    font-size: 0.96rem;
+    color: var(--pt-gris);
+    margin-left: 0.32rem;
+}
+
+/* ============================================================
+   PROGRESO DE SUBIDA
+   ============================================================
+   Cuenta archivos terminados (el navegador no da avance por archivo)
+   y nombra el que va subiendo. */
+.pt-progreso{
+    background: var(--pt-superficie);
+    border: 1px solid var(--pt-borde);
+    border-radius: 1rem;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1.44rem;
+    box-shadow: var(--pt-sombra-1);
+}
+.pt-progreso[hidden]{ display: none; }
+
+.pt-progreso__cab{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-bottom: .7rem;
+}
+.pt-progreso__eti{ font-size: 1.3rem; font-weight: 600; }
+.pt-progreso__num{
+    font-size: 1.2rem;
+    color: var(--pt-gris);
+    /* Cifras de ancho fijo: si no, la barra tiembla de 9 a 10 */
+    font-variant-numeric: tabular-nums;
+}
+
+.pt-progreso__pista{
+    height: .8rem;
+    border-radius: 999px;
+    background: var(--pt-borde);
+    overflow: hidden;
+}
+.pt-progreso__pista i{
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: var(--pt-marca-cian);
+    transition: width .25s ease;
+}
+.pt-progreso--listo .pt-progreso__pista i{ background: var(--pt-verde-txt); }
+.pt-progreso--fallo .pt-progreso__pista i{ background: var(--pt-rojo-txt); }
+
+.pt-progreso__archivo{
+    display: block;
+    margin-top: .6rem;
+    font-size: 1.168rem;
+    color: var(--pt-gris);
+    /* Nombre largo: una línea con puntos suspensivos */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pt-progreso__archivo:empty{ display: none; }
+
+@media (prefers-reduced-motion: reduce){
+    .pt-progreso__pista i{ transition: none; }
+}
+
+/* ============================================================
+   TABLA DE DOCUMENTOS CON MUCHAS FILAS
+   ============================================================
+   El nombre toma lo que sobre y se corta con …; las demás columnas no
+   se parten. Nombre completo y autor en el title. */
+.pt-tabla .pt-col-archivo{
+    /* Toma el espacio sobrante */
+    width: 100%;
+    max-width: 0;               /* ellipsis dentro de tabla */
+    white-space: nowrap;
+}
+.pt-nombre-archivo{
+    display: inline-block;
+    max-width: calc(100% - 3rem);   /* descontando el icono */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.pt-tabla .pt-col-tamano{
+    white-space: nowrap;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.pt-tabla .pt-col-fecha{
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--pt-gris);
+}
+.pt-tabla .pt-col-autor{
+    max-width: 18rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pt-tabla .pt-col-acciones{ white-space: nowrap; width: 1%; }
+
+/* Filas más bajas (con mil documentos se nota) */
+.pt-tabla td{ padding-top: .9rem; padding-bottom: .9rem; }
+
+@media (max-width: 900px){
+    /* En pantalla estrecha, fuera el autor antes que el nombre */
+    .pt-tabla .pt-col-autor{ max-width: 10rem; }
+}
+
+/* ============================================================
+   CONSEJO DE LOS VIDEOS
+   ============================================================
+   Caja propia con cerrar: se queda para la próxima subida. */
+.pt-consejo{
+    position: relative;
+    margin-bottom: 1.44rem;
+    padding: 1.1rem 4rem 1.1rem 1.4rem;
+    border-radius: .9rem;
+    background: color-mix(in srgb, var(--pt-ambar-txt) 12%, var(--pt-superficie));
+    border: 1px solid color-mix(in srgb, var(--pt-ambar-txt) 35%, transparent);
+    color: var(--pt-tinta);
+    font-size: 1.25rem;
+    line-height: 1.5;
+}
+.pt-consejo[hidden]{ display: none; }
+.pt-consejo p{ margin: 0; }
+.pt-consejo__cerrar{
+    position: absolute;
+    top: .6rem;
+    right: .8rem;
+    border: none;
+    background: none;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--pt-gris);
+    cursor: pointer;
+    padding: .2rem .6rem;
+    border-radius: .5rem;
+}
+.pt-consejo__cerrar:hover{
+    color: var(--pt-tinta);
+    background: color-mix(in srgb, var(--pt-ambar-txt) 18%, transparent);
+}
+
+/* Archivo en curso y botón de parar en la misma fila */
+.pt-progreso__pie{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-top: .6rem;
+}
+.pt-progreso__pie .pt-progreso__archivo{ margin-top: 0; }
+#subida-cancelar[hidden]{ display: none; }
+
+/* ============================================================
+   ALMACENAMIENTO (solo admin)
+   ============================================================
+   Tres estados distintos: hay dato, no hay dato, no se pudo leer. */
+.pt-disco{
+    background: var(--pt-superficie);
+    border: 1px solid var(--pt-borde);
+    border-radius: 1.4rem;
+    padding: 1.8rem 2rem;
+    margin-bottom: 1.8rem;
+    box-shadow: var(--pt-sombra-1);
+}
+.pt-disco__cab{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-bottom: 1.1rem;
+}
+.pt-disco__tit{
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06rem;
+    color: var(--pt-gris);
+}
+/* Si sigue en "hace 2 h", la tarea del servidor se paró */
+.pt-disco__edad{ font-size: 1.15rem; color: var(--pt-gris); white-space: nowrap; }
+
+/* Dos tramos: documentos y lo demás (dice qué está creciendo) */
+.pt-disco__barra{
+    display: flex;
+    height: 1.2rem;
+    border-radius: 999px;
+    background: var(--pt-borde);
+    overflow: hidden;
+    margin-bottom: 1.4rem;
+}
+.pt-disco__barra i{ display: block; height: 100%; transition: width .3s ease; }
+.pt-disco__docs { background: var(--pt-marca-cian); }
+.pt-disco__otros{ background: color-mix(in srgb, var(--pt-gris) 45%, transparent); }
+.pt-disco--aviso  .pt-disco__docs{ background: var(--pt-ambar-txt); }
+.pt-disco--alerta .pt-disco__docs{ background: var(--pt-rojo-txt); }
+
+.pt-disco__datos{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.4rem;
+}
+.pt-disco__dato{ display: flex; flex-direction: column; gap: .2rem; }
+.pt-disco__dato span{
+    font-size: 1.15rem; color: var(--pt-gris);
+    text-transform: uppercase; letter-spacing: .05rem;
+}
+.pt-disco__dato b{ font-size: 2rem; font-variant-numeric: tabular-nums; }
+.pt-disco__dato small{ font-size: 1.15rem; color: var(--pt-gris); }
+
+.pt-disco--sin-dato .pt-disco__aviso{
+    margin: 0 0 .5rem; font-size: 1.5rem; font-weight: 600;
+}
+.pt-disco--sin-dato code{
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--pt-superficie-2);
+    padding: .1rem .4rem; border-radius: .4rem;
+}
+
+.pt-almacen-sub{
+    font-size: 1.6rem;
+    margin: 2.2rem 0 1rem;
+}
+
+/* Barra contra el expediente más grande; el % es sobre el total. */
+.pt-reparto{
+    display: inline-block;
+    vertical-align: middle;
+    width: 12rem;
+    height: .7rem;
+    border-radius: 999px;
+    background: var(--pt-borde);
+    overflow: hidden;
+}
+.pt-reparto i{
+    display: block; height: 100%;
+    background: var(--pt-marca-cian);
+    border-radius: 999px;
+}
+.pt-reparto__pct{
+    margin-left: .8rem;
+    font-size: 1.2rem;
+    color: var(--pt-gris);
+    font-variant-numeric: tabular-nums;
+}
+.pt-tabla .pt-col-reparto{ white-space: nowrap; width: 1%; }
+
+@media (max-width: 900px){
+    .pt-reparto{ width: 6rem; }
+}
+@media (prefers-reduced-motion: reduce){
+    .pt-disco__barra i{ transition: none; }
+}
+
+/* Los dos botones de la campana */
+.pt-campana-dropdown__acciones{ display: flex; gap: .5rem; }

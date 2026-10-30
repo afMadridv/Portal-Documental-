@@ -1,0 +1,496 @@
+/*! Portal Documental · chats, campana y pantallas angostas
+    Andrés Madrid · andresmadrid.vercel.app */
+
+/* Computador (más de 900 px): chats como panel lateral, abiertos desde la
+   cabecera y la carpeta. Celular y tableta: burbujas que se arrastran y
+   chats en hoja desde abajo. 900 px es donde el menú pasa a cajón. */
+
+/* ============ BURBUJAS (celular) ============ */
+.pt-soporte-burbuja{
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.pt-soporte-burbuja.pt-burbuja--arrastrando{
+    transition: none !important;
+    transform: scale(1.08);
+    box-shadow: var(--pt-sombra-3);
+    cursor: grabbing;
+}
+.pt-soporte-burbuja.pt-burbuja--soltando{ transition: left .22s var(--pt-curva), top .22s var(--pt-curva); }
+.pt-burbuja__tel{ display: none; }
+
+@media (min-width: 901px){
+    .pt-soporte-burbuja{ display: none !important; }
+}
+/* Con un chat abierto, las burbujas estorban */
+body:has(#soporte-panel:not([hidden])) .pt-soporte-burbuja,
+body:has(#pt-chats:not([hidden])) .pt-soporte-burbuja{ display: none !important; }
+
+/* ============ BOTONES DE CHAT EN EL COMPUTADOR ============ */
+.pt-cab-soporte{ position: relative; }
+.pt-cab-soporte__tel{ display: none; }
+.pt-cab-soporte .pt-soporte-contador{ top: -.5rem; right: -.5rem; }
+.pt-cab-soporte--alerta{ animation: pt-parpadeo-rojo 1s 6; color: #fff; }
+.pt-boton-chat-carpeta .pt-badge-noleidos{ margin-left: .2rem; }
+
+@media (max-width: 900px){
+    .pt-cab-soporte,
+    .pt-boton-chat-carpeta{ display: none !important; }
+}
+
+/* ============ PANELES DE CHAT ============ */
+.pt-soporte-panel,
+.pt-chat-flotante{ resize: none; }
+
+/* Computador: panel lateral de alto completo */
+@media (min-width: 901px){
+    .pt-soporte-panel,
+    .pt-chat-flotante{
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: auto;
+        width: 40rem;
+        height: auto;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100vw;
+        max-height: none;
+        border-radius: 0;
+        border-left: 1px solid var(--pt-borde);
+        animation: pt-panel-entra .28s var(--pt-curva);
+    }
+}
+@keyframes pt-panel-entra{
+    from{ transform: translateX(2.4rem); opacity: 0; }
+    to{ transform: none; opacity: 1; }
+}
+
+/* Celular: hoja desde abajo que deja ver la cabecera y la barra de llamada */
+:root{ --pt-alto-llamada: 0px; }
+@media (max-width: 900px){
+    .pt-soporte-panel,
+    .pt-chat-flotante{
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: auto;
+        height: min(76vh, calc(100vh - var(--pt-alto-llamada) - 7rem));
+        height: min(76dvh, calc(100dvh - var(--pt-alto-llamada) - 7rem));
+        min-width: 0;
+        min-height: 0;
+        max-width: none;
+        max-height: none;
+        border-radius: 2rem 2rem 0 0;
+        box-shadow: 0 -1.2rem 4rem rgba(0,0,0,.28);
+        overflow: hidden;
+        animation: pt-hoja-entra .26s var(--pt-curva);
+    }
+    .pt-soporte-entrada,
+    .pt-chat-flotante #form-mensaje{ padding-bottom: calc(.8rem + env(safe-area-inset-bottom)); }
+    /* Sin el teclado encima del texto en iPhone: 16 px no hace zoom */
+    .pt-chat-entrada textarea{ font-size: 16px; }
+}
+@keyframes pt-hoja-entra{
+    from{ transform: translateY(3rem); opacity: 0; }
+    to{ transform: none; opacity: 1; }
+}
+
+/* ---- Cabecera: volver, quién, llamar y cerrar en una fila ---- */
+.pt-soporte-panel__cab{
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    min-height: 6.4rem;
+    cursor: default;
+}
+.pt-chat-cab__txt{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .1rem; }
+.pt-chat-cab__txt strong{
+    font-size: 1.55rem;
+    color: var(--pt-blanco);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pt-chat-cab__txt small{
+    font-size: 1.15rem;
+    color: var(--pt-azul-claro);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pt-chat-icono{
+    flex: none;
+    width: 3.8rem;
+    height: 3.8rem;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,.09);
+    color: var(--pt-blanco);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--pt-rapido);
+}
+.pt-chat-icono:hover{ background: rgba(255,255,255,.18); }
+.pt-chat-icono:focus-visible{ outline: 2px solid var(--pt-azul); outline-offset: 2px; }
+.pt-chat-icono[hidden]{ display: none; }
+.pt-chat-icono--llamar{ background: #16a34a; }
+.pt-chat-icono--llamar:hover{ background: #15803d; }
+.pt-chat-avatar{
+    width: 3.8rem;
+    height: 3.8rem;
+    font-size: 1.3rem;
+    background: var(--pt-marca-cian);
+    color: #fff;
+}
+.pt-chat-avatar[hidden]{ display: none; }
+
+/* La cabecera del chat del trámite, igual */
+.pt-chat-flotante__cab{ gap: 1rem; padding: 1rem 1.2rem; min-height: 6.4rem; cursor: default; }
+.pt-chat-flotante__cab h3{ font-size: 1.55rem; display: flex; align-items: center; gap: .6rem; margin: 0; }
+.pt-chat-flotante__cab .pt-nota{ font-size: 1.15rem; margin: .1rem 0 0; }
+body.pt-app .pt-chat-flotante__cab .pt-boton{
+    flex: none;
+    width: 3.8rem;
+    height: 3.8rem;
+    min-height: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,.09);
+    justify-content: center;
+}
+.pt-chat-flotante #chat-tabs{ margin: 0; padding: .8rem 1rem; background: var(--pt-superficie); }
+
+/* ---- Lista del administrador ---- */
+.pt-soporte-lista{ padding: .6rem; background: var(--pt-superficie); }
+.pt-soporte-lista__item{
+    gap: 1.2rem;
+    padding: 1.1rem 1rem;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid var(--pt-borde);
+    border-radius: 0;
+    background: transparent;
+}
+.pt-soporte-lista__item:last-child{ border-bottom: none; }
+.pt-soporte-lista__item:hover{ background: var(--pt-superficie-2); border-radius: 1.2rem; }
+.pt-soporte-lista__item .pt-chat-avatar{ background: var(--pt-superficie-2); color: var(--pt-tinta); }
+.pt-soporte-lista__item:hover .pt-chat-avatar{ background: var(--pt-superficie); }
+.pt-soporte-lista__txt{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .15rem; }
+.pt-soporte-lista__txt strong{ font-size: 1.45rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pt-soporte-lista__txt small{ font-size: 1.2rem; color: var(--pt-gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* El historial llena el panel, de la cabecera al cuadro de texto */
+.pt-soporte-panel .pt-chat-historial,
+.pt-chat-flotante .pt-chat-historial{
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    gap: 0;
+    border-radius: 0;
+}
+
+/* ---- Mensajes: separador por día y hora corta ---- */
+.pt-chat-dia{ display: flex; justify-content: center; margin: 1.4rem 0 .6rem; }
+.pt-chat-dia span{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--pt-gris);
+    background: var(--pt-superficie);
+    border: 1px solid var(--pt-borde);
+    border-radius: 999px;
+    padding: .25rem 1.1rem;
+}
+.pt-chat-msg{ margin: .35rem 0; }
+.pt-chat-msg--seguido{ margin-top: .15rem; }
+.pt-chat-msg__meta{ display: flex; align-items: baseline; gap: .8rem; }
+.pt-chat-msg__meta strong{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pt-chat-msg__hora{ margin-left: auto; flex: none; font-size: 1.05rem; opacity: .85; }
+
+/* ============ CAMPANA CON AVISOS NUEVOS ============ */
+.pt-campana.pt-campana--nueva{
+    background: var(--pt-marca-naranja) !important;
+    border-color: var(--pt-marca-naranja) !important;
+    color: #141414 !important;
+    animation: pt-aro 2.6s ease-out infinite;
+}
+.pt-campana--nueva > [data-icono]{
+    display: inline-flex;
+    transform-origin: 50% 8%;
+    animation: pt-sacudir 2.6s ease-in-out infinite;
+}
+.pt-campana--sacudir > [data-icono]{ animation: pt-sacudir 1.3s ease-in-out 2; }
+@keyframes pt-sacudir{
+    0%, 36%, 100%{ transform: rotate(0); }
+    4%{ transform: rotate(18deg); }
+    8%{ transform: rotate(-16deg); }
+    12%{ transform: rotate(13deg); }
+    16%{ transform: rotate(-10deg); }
+    20%{ transform: rotate(7deg); }
+    24%{ transform: rotate(-4deg); }
+    28%{ transform: rotate(2deg); }
+}
+@keyframes pt-aro{
+    0%{ box-shadow: 0 0 0 0 rgba(250,155,2,.55); }
+    45%{ box-shadow: 0 0 0 .9rem rgba(250,155,2,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(250,155,2,0); }
+}
+
+/* ============ LLAMADA EN CURSO ============ */
+/* La burbuja de soporte pasa a verde y vibra. En llamada sigue con el
+   icono de chat (abre el chat; la llamada se maneja en la barra de
+   arriba); mientras suena muestra el teléfono. */
+body.pt-en-llamada #soporte-burbuja,
+body.pt-sonando #soporte-burbuja{ background: #16a34a; }
+body.pt-en-llamada #soporte-burbuja{ animation: pt-vibrar 1.4s ease-in-out infinite; }
+body.pt-sonando #soporte-burbuja{ animation: pt-vibrar .7s ease-in-out infinite; }
+body.pt-sonando #soporte-burbuja .pt-burbuja__chat{ display: none; }
+body.pt-sonando #soporte-burbuja .pt-burbuja__tel{ display: inline-flex; }
+
+body.pt-en-llamada .pt-cab-soporte,
+body.pt-sonando .pt-cab-soporte{
+    background: #16a34a !important;
+    border-color: #16a34a !important;
+    color: #fff !important;
+    animation: pt-vibrar 1.4s ease-in-out infinite;
+}
+body.pt-sonando .pt-cab-soporte__chat{ display: none; }
+body.pt-sonando .pt-cab-soporte__tel{ display: inline-flex; }
+
+@keyframes pt-vibrar{
+    0%, 50%, 100%{ transform: translate(0, 0) rotate(0); }
+    5%{ transform: translate(-2px, 0) rotate(-7deg); }
+    10%{ transform: translate(2px, 0) rotate(7deg); }
+    15%{ transform: translate(-2px, 0) rotate(-6deg); }
+    20%{ transform: translate(2px, 0) rotate(6deg); }
+    25%{ transform: translate(-1px, 0) rotate(-3deg); }
+    30%{ transform: translate(1px, 0) rotate(3deg); }
+}
+
+/* Celular: la barra de llamada va arriba a lo ancho, como en el
+   computador, y la página baja para no quedar debajo */
+@media (max-width: 900px){
+    .pt-llamada-mini{
+        top: calc(.6rem + env(safe-area-inset-top));
+        left: .8rem;
+        right: .8rem;
+        transform: none;
+        gap: .4rem;
+        padding: .5rem .6rem .5rem 1.2rem;
+        min-height: 4.8rem;
+        z-index: calc(var(--pt-z-modal) + 5);
+    }
+    .pt-llamada-mini__estado{ flex: 1; min-width: 0; }
+    .pt-llamada-mini__estado strong{ overflow: hidden; text-overflow: ellipsis; }
+    .pt-llamada-mini .pt-boton--mini{ min-height: 3.6rem; min-width: 3.6rem; justify-content: center; }
+    body:has(#llamada-mini:not([hidden])){
+        --pt-alto-llamada: calc(6rem + env(safe-area-inset-top));
+        padding-top: var(--pt-alto-llamada);
+    }
+    body:has(#llamada-mini:not([hidden])) .pt-cabecera{ top: var(--pt-alto-llamada); }
+}
+
+/* ============ CABECERA Y MENÚ EN CELULAR ============ */
+.pt-lateral__salidas{ display: none; }
+@media (max-width: 900px){
+    .pt-cabecera > [data-accion="salir-sitio"],
+    .pt-cabecera > [data-accion="salir"]{ display: none; }
+    .pt-lateral__salidas{
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+        padding: 1rem .48rem calc(1rem + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--pt-borde);
+        margin-top: .8rem;
+    }
+    .pt-lateral__salidas .pt-boton{ width: 100%; justify-content: center; }
+}
+
+/* ============ CINTAS DE PESTAÑAS: una sola fila que se desliza ============ */
+@media (max-width: 900px){
+    body.pt-app .pt-sub-pestanas,
+    .pt-subcarpetas{
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        scroll-padding-inline: 1rem;
+    }
+    body.pt-app .pt-sub-pestanas::-webkit-scrollbar,
+    .pt-subcarpetas::-webkit-scrollbar{ display: none; }
+    body.pt-app .pt-sub-pestanas > *,
+    .pt-subcarpetas > *{ flex: none; white-space: nowrap; }
+}
+
+/* ============ CARPETA EN CELULAR ============ */
+@media (max-width: 640px){
+    #vista-carpeta > .pt-barra-seccion{
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    #vista-carpeta > .pt-barra-seccion > .pt-boton{ align-self: flex-start; }
+    #vista-carpeta > .pt-barra-seccion .pt-celda-acciones{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: .8rem;
+    }
+    #vista-carpeta > .pt-barra-seccion .pt-celda-acciones .pt-boton{
+        width: 100%;
+        min-height: 4.4rem;
+        padding: .7rem 1rem;
+        justify-content: center;
+        text-align: center;
+        font-size: 1.3rem;
+        line-height: 1.2;
+        white-space: normal;
+    }
+    .pt-barra-archivos{ gap: .8rem; flex-wrap: wrap; }
+}
+
+/* Texto de botón que solo cabe en las tarjetas del celular */
+.pt-txt-celular{ display: none; }
+@media (max-width: 640px){ .pt-txt-celular{ display: inline; } }
+
+/* Con «N anexos» al lado, el nombre se corta antes y no pisa el tamaño */
+.pt-tabla .pt-col-archivo{ overflow: hidden; text-overflow: ellipsis; }
+/* Descuenta número e icono: si el nombre no cabe, la celda lo tapa entero */
+.pt-tabla .pt-nombre-archivo{ max-width: calc(100% - 6rem); }
+.pt-fila-arrastrable .pt-nombre-archivo{ max-width: calc(100% - 8rem); }
+.pt-fila-anexo .pt-nombre-archivo{ max-width: calc(100% - 9rem); }
+.pt-fila-arrastrable.pt-fila-anexo .pt-nombre-archivo{ max-width: calc(100% - 11rem); }
+.pt-col-archivo:has(.pt-anexos-plegar) .pt-nombre-archivo{ max-width: calc(100% - 15rem); }
+
+/* ============ TABLAS COMO TARJETAS (celular) ============
+   app.js copia el título de cada columna en data-etiqueta. */
+@media (max-width: 640px){
+    body.pt-app .pt-tabla-envoltura{
+        overflow: visible;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    .pt-tabla,
+    .pt-tabla tbody{ display: block; width: 100%; }
+    .pt-tabla thead{ display: none; }
+    .pt-tabla tbody tr{
+        display: flex;
+        flex-direction: column;
+        background: var(--pt-superficie);
+        border: 1px solid var(--pt-borde);
+        border-radius: 16px;
+        padding: 1.2rem 1.4rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--pt-sombra-1);
+    }
+    .pt-tabla tbody tr:hover td{ background: transparent; }
+    body.pt-app .pt-tabla td,
+    .pt-tabla td{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.2rem;
+        padding: .45rem 0;
+        border: none;
+        background: transparent;
+        text-align: right;
+        white-space: normal;
+        max-width: none;
+        width: auto;
+        word-break: break-word;
+    }
+    .pt-tabla td[hidden],
+    .pt-tabla td:empty{ display: none; }
+    .pt-tabla td::before{
+        content: attr(data-etiqueta);
+        flex: none;
+        max-width: 45%;
+        text-align: left;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--pt-gris);
+    }
+    /* Primera columna: título de la tarjeta */
+    .pt-tabla td:first-child{
+        justify-content: flex-start;
+        text-align: left;
+        font-size: 1.5rem;
+        font-weight: 600;
+        padding-bottom: .7rem;
+    }
+    .pt-tabla td:first-child::before{ display: none; }
+    /* Acciones al pie, a lo ancho */
+    .pt-tabla td:last-child:has(.pt-celda-acciones, .pt-boton){
+        justify-content: flex-end;
+        border-top: 1px solid var(--pt-borde);
+        margin-top: .6rem;
+        padding-top: 1rem;
+    }
+    .pt-tabla td:last-child:has(.pt-celda-acciones, .pt-boton)::before{ display: none; }
+    .pt-tabla .pt-celda-acciones{ flex-wrap: wrap; justify-content: flex-end; gap: .6rem; }
+    /* Filas de grupo (Administradores · 1) y avisos de tabla vacía */
+    .pt-tabla tbody tr:has(> td[colspan]){
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: .6rem .2rem .2rem;
+        margin: .4rem 0 .2rem;
+    }
+    .pt-tabla td[colspan]{ display: block; text-align: left; font-size: 1.2rem; padding: 0; background: transparent !important; }
+    .pt-tabla td[colspan]::before{ display: none; }
+    /* Usuarios: el nombre arriba y el usuario debajo */
+    #vista-usuarios .pt-tabla td[data-etiqueta="Nombre"]{
+        order: -2;
+        justify-content: flex-start;
+        text-align: left;
+        font-size: 1.55rem;
+        font-weight: 600;
+        padding-bottom: 0;
+    }
+    #vista-usuarios .pt-tabla td[data-etiqueta="Nombre"]::before{ display: none; }
+    #vista-usuarios .pt-tabla td:first-child{ order: -1; font-size: 1.25rem; font-weight: 400; color: var(--pt-gris); }
+}
+
+/* ============ MODALES EN CELULAR ============ */
+@media (max-width: 640px){
+    .pt-modal__caja:not(.pt-llamada) .pt-modal__acciones{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .8rem;
+    }
+    .pt-modal__caja:not(.pt-llamada) .pt-modal__acciones > .pt-boton{
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        white-space: normal;
+        line-height: 1.25;
+        margin: 0;
+    }
+    .pt-modal__caja:not(.pt-llamada) .pt-modal__acciones > :only-child{ grid-column: 1 / -1; }
+    .pt-correo-vista{ max-height: 42vh; }
+    .pt-modal__caja--correo h3{ font-size: 1.8rem; }
+}
+/* ============ MENOS MOVIMIENTO ============ */
+@media (prefers-reduced-motion: reduce){
+    .pt-campana--nueva,
+    .pt-campana--nueva > [data-icono],
+    .pt-campana--sacudir > [data-icono],
+    body.pt-en-llamada #soporte-burbuja,
+    body.pt-sonando #soporte-burbuja,
+    body.pt-en-llamada .pt-cab-soporte,
+    body.pt-sonando .pt-cab-soporte,
+    .pt-soporte-panel,
+    .pt-chat-flotante{ animation: none !important; }
+}

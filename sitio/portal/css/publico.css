@@ -1,0 +1,271 @@
+/*! Portal Documental · páginas públicas (legales)
+  Arena de fondo, negro para texto, cian de marca y un solo naranja
+  por pantalla. Reglas de contraste:
+    1. Sobre naranja, texto negro (#111111): con blanco no pasa de 2.1:1.
+    2. Texto de acento en cian profundo #006B7B (5.5:1).
+    3. Un solo botón naranja por pantalla.
+  Aquí 1rem = 16px y los tamaños van en px.
+  Andrés Madrid · andresmadrid.vercel.app */
+
+:root{
+    --arena:#F6F0E6;
+    --arena-2:#F3ECE0;
+    --crema:#FBF8F2;
+    --superficie:#FFFFFF;
+    --elegida:#F1FAFB;
+
+    --linea:#E4D9C6;
+    --linea-2:#EFE6D6;
+    --linea-3:#DCCFB9;
+
+    --tinta:#111111;
+    --texto-2:#4A4A4A;
+    --texto-3:#666666;
+
+    --mar:#00A1B8;
+    --mar-prof:#006B7B;
+    --mar-suave:#E2F4F6;
+    --mar-tinta:#111111;
+
+    --sol:#FA9B02;
+    --sol-hover:#FFAA22;
+    --sol-txt:#111111;          /* igual en los dos temas (regla 1) */
+
+    --ambar-suave:#FFE9C7;
+    --ambar-tinta:#7A4300;
+    --error:#B42318;
+    --error-suave:#FEF3F2;
+
+    --oscuro:#111111;            /* botones oscuros y bloque "te quedan" */
+    --oscuro-txt:#F6F0E6;
+    --nav-fondo:rgba(0,0,0,.06);
+    --hover:rgba(0,0,0,.06);
+
+    --anillo:rgba(0,161,184,.14);
+    --sombra-tarjeta:0 24px 60px -36px rgba(0,0,0,.3);
+
+    --titulos:'Bricolage Grotesque', system-ui, sans-serif;
+    --texto:'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --curva:cubic-bezier(.16,1,.3,1);
+    --margen:clamp(20px, 8.3vw, 120px);
+}
+
+html[data-tema="oscuro"]{
+    --arena:#0A0A0A;
+    --arena-2:rgba(244,237,225,.07);
+    --crema:rgba(244,237,225,.04);
+    --superficie:#161616;
+    --elegida:rgba(69,201,218,.08);
+
+    --linea:rgba(244,237,225,.14);
+    --linea-2:rgba(244,237,225,.10);
+    --linea-3:rgba(244,237,225,.24);
+
+    --tinta:#F4EDE1;
+    --texto-2:#CFCFCF;
+    --texto-3:#A3A3A3;
+
+    --mar-prof:#45C9DA;
+    --mar-suave:rgba(69,201,218,.14);
+    --mar-tinta:#EDEDED;
+
+    --ambar-suave:rgba(250,155,2,.16);
+    --ambar-tinta:#FFC266;
+    --error:#FF8A80;
+    --error-suave:rgba(255,138,128,.10);
+
+    --oscuro:#F4EDE1;
+    --oscuro-txt:#0A0A0A;
+    --nav-fondo:rgba(244,237,225,.07);
+    --hover:rgba(244,237,225,.07);
+
+    --anillo:rgba(69,201,218,.22);
+    --sombra-tarjeta:0 24px 60px -36px rgba(0,0,0,.75);
+    color-scheme:dark;
+}
+
+*{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:var(--arena);
+    color:var(--tinta);
+    font-family:var(--texto);
+    font-size:16px;
+    line-height:1.5;
+}
+a{ color:var(--mar-prof); text-decoration:underline; text-underline-offset:3px; }
+a:hover{ color:#F2801C; }
+button{ font:inherit; color:inherit; }
+[hidden]{ display:none !important; }
+:focus-visible{ outline:3px solid var(--mar); outline-offset:2px; }
+
+/* ---- Cabecera ---- */
+.cab{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    padding:22px var(--margen);
+}
+.cab__marca{ display:flex; align-items:center; gap:12px; min-width:0; }
+.cab__nombre{
+    font:600 19px/1 var(--titulos);
+    letter-spacing:-.01em;
+    color:var(--tinta);
+    text-decoration:none;
+}
+.cab__nombre:hover{ color:var(--tinta); }
+.cab__sep{ width:1px; height:18px; background:var(--linea-3); flex:none; }
+.cab__lugar{
+    font:600 11.5px/1 var(--texto);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--texto-3);
+}
+.cab__acciones{ display:flex; align-items:center; gap:12px; }
+.cab__nav{ display:flex; padding:4px; border-radius:999px; background:var(--nav-fondo); }
+.cab__nav a{
+    padding:11px 18px;
+    border-radius:999px;
+    font:600 14px/1 var(--texto);
+    color:var(--tinta);
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background .18s var(--curva);
+}
+.cab__nav a:hover{ background:var(--hover); color:var(--tinta); }
+.cab__nav a[aria-current="page"]{ background:var(--oscuro); color:var(--oscuro-txt); }
+.tema-boton{
+    width:42px; height:42px;
+    flex:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid var(--linea-3);
+    border-radius:999px;
+    background:transparent;
+    color:var(--tinta);
+    cursor:pointer;
+    transition:background .18s var(--curva);
+}
+.tema-boton:hover{ background:var(--hover); }
+.tema-boton svg{ width:18px; height:18px; }
+
+/* ---- Pie ---- */
+.pie{
+    margin-top:88px;
+    padding:24px var(--margen) 28px;
+    border-top:1px solid var(--linea);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    font:400 13.5px/1.5 var(--texto);
+    color:var(--texto-3);
+}
+.pie p{ margin:0; max-width:92ch; }
+.pie__fila{ display:flex; justify-content:space-between; gap:12px 24px; flex-wrap:wrap; }
+.pie__enlaces{ display:flex; gap:10px 22px; flex-wrap:wrap; font-weight:500; }
+.pie__enlaces a{ color:var(--texto-2); text-decoration:none; }
+.pie__enlaces a:hover{ color:#F2801C; text-decoration:underline; }
+.pie__autor a{ color:var(--texto-2); }
+
+/* ---- Botones ---- */
+.btn-sol{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    height:56px;
+    padding:0 28px;
+    border:0;
+    border-radius:16px;
+    background:var(--sol);
+    color:var(--sol-txt);
+    font:700 17px/1 var(--texto);
+    text-decoration:none;
+    box-shadow:0 10px 24px -10px rgba(242,128,28,.7);
+    cursor:pointer;
+    transition:background .18s var(--curva), transform .18s var(--curva);
+}
+.btn-sol:hover{ background:var(--sol-hover); color:var(--sol-txt); }
+.btn-sol:active{ transform:translateY(1px); }
+.btn-sol:disabled{
+    background:var(--arena-2);
+    color:var(--texto-3);
+    box-shadow:none;
+    cursor:not-allowed;
+}
+.btn-sol span{ font-size:19px; }
+
+.btn-atras{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    height:52px;
+    padding:0 18px 0 12px;
+    border:0;
+    border-radius:14px;
+    background:transparent;
+    color:var(--texto-2);
+    font:600 15px/1 var(--texto);
+    cursor:pointer;
+}
+.btn-atras:hover{ background:var(--hover); }
+
+.btn-oscuro{
+    height:44px;
+    padding:0 18px;
+    border:0;
+    border-radius:12px;
+    background:var(--oscuro);
+    color:var(--oscuro-txt);
+    font:600 15px/1 var(--texto);
+    cursor:pointer;
+}
+.btn-texto{
+    display:inline-flex;
+    align-items:center;
+    height:44px;
+    padding:0 14px;
+    border:0;
+    border-radius:12px;
+    background:transparent;
+    color:var(--mar-prof);
+    font:600 15px/1 var(--texto);
+    cursor:pointer;
+}
+.btn-texto:hover{ background:var(--mar-suave); }
+
+@media (max-width:720px){
+    .cab{ padding-top:18px; padding-bottom:14px; }
+    .cab__sep, .cab__lugar{ display:none; }
+    .cab__nombre{ font-size:17px; }
+    .cab__nav a{ padding:10px 13px; font-size:13px; }
+}
+/* En teléfono chico sobra el enlace de la página actual (partía la cabecera). */
+@media (max-width:420px){
+    .cab__nav a[aria-current="page"]{ display:none; }
+    /* Tres pestañas: "Portal" a secas para que quepa el botón del tema */
+    .cab__nav a{ padding:10px 11px; }
+    .cab__nav-mas{ display:none; }
+}
+@media (prefers-reduced-motion:reduce){
+    *{ transition:none !important; animation:none !important; }
+}
+
+/* ---- Transición entre páginas ----
+   Fundido al cambiar de página (View Transitions; Firefox no lo hace).
+   Tiene que estar en las dos páginas: igual en pie.css. */
+@view-transition{ navigation: auto; }
+::view-transition-old(root){ animation: vt-salir .2s ease-in both; }
+::view-transition-new(root){ animation: vt-entrar .38s cubic-bezier(.16,1,.3,1) both; }
+@keyframes vt-salir{ to{ opacity: 0; } }
+@keyframes vt-entrar{ from{ opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce){
+    @view-transition{ navigation: none; }
+}

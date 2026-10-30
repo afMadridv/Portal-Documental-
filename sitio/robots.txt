@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# La API de Supabase no es una página: nada que indexar ahí
+Disallow: /rest/
+Disallow: /auth/
+Disallow: /storage/
+Disallow: /realtime/
+Disallow: /functions/
+
+# El portal NO se bloquea aquí a propósito: sus páginas llevan
+# <meta name="robots" content="noindex">, y Google solo puede leer esa
+# etiqueta si tiene permiso de entrar. Bloqueado aquí, podría mostrar la
+# dirección del ingreso en los resultados igual, sin descripción.

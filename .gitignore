@@ -1,0 +1,10 @@
+# Configuración local del editor
+.obsidian/
+.vscode/
+.claude/
+
+# Claves: nunca en el repositorio
+.env
+.env.*
+*.pem
+*.key
