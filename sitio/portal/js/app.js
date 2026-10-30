@@ -898,7 +898,7 @@ function tarjetaTodasLasNotarias() {
     '</button>';
 }
 
-/* Disco del servidor en corto (lo mismo que Almacenamiento). */
+/* Espacio de almacenamiento en corto (lo mismo que Almacenamiento). */
 function pintarEspacioNotarias() {
     const caja = document.getElementById('pt-elegir-espacio');
     if (!caja) return;
@@ -920,23 +920,23 @@ function pintarEspacioNotarias() {
             '<div class="pt-elegir__disco' + estado + '">' +
                 '<div class="pt-disco__barra">' +
                     '<i class="pt-disco__docs" style="width:' + pct(docs) + '%" title="Documentos de las notarías"></i>' +
-                    '<i class="pt-disco__otros" style="width:' + pct(otros) + '%" title="Sistema, base de datos y respaldos"></i>' +
+                    '<i class="pt-disco__otros" style="width:' + pct(otros) + '%" title="Adjuntos de chat y soporte"></i>' +
                 '</div>' +
                 '<div class="pt-elegir__disco-datos">' +
                     '<span><i class="pt-elegir__punto pt-elegir__punto--docs"></i>Documentos <b>' + formatoEspacio(docs) + '</b></span>' +
-                    '<span><i class="pt-elegir__punto pt-elegir__punto--otros"></i>Sistema y base <b>' + formatoEspacio(otros) + '</b></span>' +
+                    '<span><i class="pt-elegir__punto pt-elegir__punto--otros"></i>Adjuntos <b>' + formatoEspacio(otros) + '</b></span>' +
                     '<span><i class="pt-elegir__punto"></i>Libre <b>' + formatoEspacio(d.libreBytes) + '</b></span>' +
                 '</div>' +
             '</div>';
     } else {
         // Sin medición del disco: al menos lo de los documentos
         cuerpo = '<p class="pt-elegir__disco-nota">Los documentos de todas las oficinas ocupan <b>' +
-            formatoEspacio(docs) + '</b>. El servidor todavía no ha medido el disco.</p>';
+            formatoEspacio(docs) + '</b>. Todavía no hay medición del espacio.</p>';
     }
 
     caja.innerHTML =
         '<div class="pt-elegir__admin-cab">' +
-            '<span class="pt-elegir__eti">Espacio en el servidor</span>' +
+            '<span class="pt-elegir__eti">Espacio de almacenamiento</span>' +
             (d ? '<span class="pt-elegir__edad" title="Medido el ' + escaparHtml(formatoFecha(d.medido)) + '">' +
                 (d.totalBytes ? Math.round((d.usadoBytes / d.totalBytes) * 100) + ' % ocupado · ' : '') +
                 escaparHtml(hace(d.medido)) + '</span>' : '') +
@@ -1440,10 +1440,9 @@ function conGiro(boton, promesa) {
 }
 
 /* Contadores de la barra, con datos ya descargados. */
-/* ============ ESPACIO DEL SERVIDOR ============
-   Tres estados: medición (con su antigüedad), sin medir, o no se pudo leer.
-   No se inventan cifras. El disco lo mide la tarea medir-disco (df); el
-   peso de los expedientes lo suma la base. */
+/* ============ ESPACIO DE ALMACENAMIENTO ============
+   Tres estados: medición, sin medir, o no se pudo leer.
+   almacenamiento_ver() suma Storage en el momento contra el cupo del plan. */
 let _almacen = null;        // última lectura o null
 let _almacenError = null;   // motivo del fallo
 
@@ -1501,7 +1500,7 @@ function hace(marca) {
 
 /* Tarjeta del disco. */
 function _tarjetaDisco() {
-    const tit = '<div class="pt-disco__tit">Disco del servidor</div>';
+    const tit = '<div class="pt-disco__tit">Espacio de almacenamiento</div>';
     if (_almacenError) {
         return '<div class="pt-disco pt-disco--sin-dato">' + tit +
             '<p class="pt-disco__aviso">No se pudo leer la medición.</p>' +
@@ -1509,9 +1508,9 @@ function _tarjetaDisco() {
     }
     if (!_almacen) {
         return '<div class="pt-disco pt-disco--sin-dato">' + tit +
-            '<p class="pt-disco__aviso">El servidor todavía no ha medido el disco.</p>' +
-            '<p class="pt-nota">La tarea <code>medir-disco</code> escribe la medición cada pocos ' +
-            'minutos. Si esto no cambia, esa tarea no está corriendo.</p></div>';
+            '<p class="pt-disco__aviso">Todavía no hay medición del espacio.</p>' +
+            '<p class="pt-nota">La calcula la base con <code>almacenamiento_ver()</code>. ' +
+            'Si esto no cambia, falta <code>migracion_almacenamiento_storage.sql</code>.</p></div>';
     }
 
     const d = _almacen;
@@ -1519,7 +1518,7 @@ function _tarjetaDisco() {
         ? Math.min(100, Math.round((d.usadoBytes / d.totalBytes) * 100)) : 0;
     // Aviso al 80 % y alarma al 92 %: un disco lleno tumba Postgres
     const estado = pct >= 92 ? ' pt-disco--alerta' : (pct >= 80 ? ' pt-disco--aviso' : '');
-    // Lo demás: Ubuntu, Docker, la base y los respaldos
+    // Lo demás de Storage: adjuntos de chat y soporte
     const otros = Math.max(0, d.usadoBytes - d.docsBytes);
     const ancho = (b) => (d.totalBytes ? (b / d.totalBytes) * 100 : 0) + '%';
 
@@ -1529,19 +1528,19 @@ function _tarjetaDisco() {
 
     return '<div class="pt-disco' + estado + '">' +
         '<div class="pt-disco__cab">' + tit +
-            '<span class="pt-disco__edad" title="Medido en el servidor con df el ' +
+            '<span class="pt-disco__edad" title="Medido en Storage el ' +
                 escaparHtml(formatoFecha(d.medido)) + '">' + escaparHtml(hace(d.medido)) + '</span>' +
         '</div>' +
         // Dos tramos: documentos y lo demás
         '<div class="pt-disco__barra">' +
             '<i class="pt-disco__docs"  style="width:' + ancho(d.docsBytes) + '" title="Documentos del portal"></i>' +
-            '<i class="pt-disco__otros" style="width:' + ancho(otros) + '" title="Sistema, base de datos y respaldos"></i>' +
+            '<i class="pt-disco__otros" style="width:' + ancho(otros) + '" title="Adjuntos de chat y soporte"></i>' +
         '</div>' +
         '<div class="pt-disco__datos">' +
             dato('Ocupado', formatoEspacio(d.usadoBytes), pct + '% de ' + formatoEspacio(d.totalBytes)) +
             dato('Documentos del portal', formatoEspacio(d.docsBytes), 'lo que suman los expedientes') +
-            dato('Sistema y base', formatoEspacio(otros), 'Ubuntu, Docker, Supabase, respaldos') +
-            dato('Libre', formatoEspacio(d.libreBytes), 'queda disponible') +
+            dato('Adjuntos', formatoEspacio(otros), 'archivos de chat y soporte') +
+            dato('Libre', formatoEspacio(d.libreBytes), 'queda en el cupo del plan') +
         '</div>' +
     '</div>';
 }
@@ -1578,7 +1577,7 @@ function pintarVistaAlmacenamiento() {
               (carpetas.length === 1 ? ' expediente' : ' expedientes')) +
         caja1('Promedio por documento', docs ? formatoEspacio(total / docs) : '—',
               docs ? 'peso medio de un archivo' : 'todavía no hay documentos') +
-        caja1('Del disco del servidor',
+        caja1('Del espacio contratado',
               (_almacen && _almacen.totalBytes)
                   ? ((total / _almacen.totalBytes) * 100).toFixed(1) + '%' : '—',
               _almacen ? 'de ' + formatoEspacio(_almacen.totalBytes) : 'sin medición');
@@ -6832,7 +6831,7 @@ async function subirArchivos(listaArchivos) {
                 ? 'Video de ' + formatoTamano(peso) + '. '
                 : videosPesados.length + ' videos, ' + formatoTamano(peso) + ' entre todos. ') +
             'Antes de subir grabaciones conviene comprimirlas o recortar lo que no ' +
-            'haga falta: el video es lo que más llena el disco del servidor' +
+            'haga falta: el video es lo que más llena el espacio de almacenamiento' +
             (pesado
                 // Desde cierto peso la subida ya no es instantánea
                 ? ', y a este tamaño la subida tarda y no se puede reanudar: si se corta, hay que repetirla entera.'

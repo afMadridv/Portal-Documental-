@@ -13,7 +13,7 @@
 --   nuevo: las tablas y sus columnas, los índices, las funciones, los
 --   permisos de cada rol (RLS), los disparadores, el bucket de los
 --   documentos, la tarea diaria de los plazos y los festivos hasta 2030.
---   Son las 30 partes de abajo, en orden.
+--   Son las 31 partes de abajo, en orden.
 --
 -- QUÉ NO TRAE: LOS DATOS
 --   Usuarios, notarías, carpetas, documentos, mensajes y cifras no van
@@ -32,12 +32,12 @@
 --   PARTE donde se detuvo y se resuelve antes de seguir. Cada parte va
 --   en su propia transacción, así que lo que ya pasó queda bien hecho.
 --
--- Partes: 30    Huella: 695a7e4c748514e7
+-- Partes: 31    Huella: 78a15b97967f61e9
 -- ============================================================
 
 
 -- ############################################################
--- PARTE 1 DE 30: esquema.sql
+-- PARTE 1 DE 31: esquema.sql
 -- Las tablas, funciones, políticas, el bucket y la publicación de Realtime
 -- ############################################################
 
@@ -2353,7 +2353,7 @@ create index if not exists idx_archivos_subcarpeta on public.archivos (subcarpet
 
 
 -- ############################################################
--- PARTE 2 DE 30: migracion_cierre_y_descargas.sql
+-- PARTE 2 DE 31: migracion_cierre_y_descargas.sql
 -- Cierre de trámite y control de descargas
 -- ############################################################
 
@@ -2531,7 +2531,7 @@ $$;
 
 
 -- ############################################################
--- PARTE 3 DE 30: migracion_subcarpetas.sql
+-- PARTE 3 DE 31: migracion_subcarpetas.sql
 -- Subcarpetas
 -- ############################################################
 
@@ -2590,7 +2590,7 @@ create index if not exists idx_archivos_subcarpeta on public.archivos (subcarpet
 
 
 -- ############################################################
--- PARTE 4 DE 30: migracion_seguridad_2026_08.sql
+-- PARTE 4 DE 31: migracion_seguridad_2026_08.sql
 -- Endurecimiento de permisos
 -- ############################################################
 
@@ -2856,7 +2856,7 @@ revoke execute on function public.tocar_actualizado() from public, anon, authent
 
 
 -- ############################################################
--- PARTE 5 DE 30: migracion_festivos_y_cron.sql
+-- PARTE 5 DE 31: migracion_festivos_y_cron.sql
 -- Festivos hasta 2030 y la tarea diaria
 -- ############################################################
 
@@ -3040,7 +3040,7 @@ select cron.schedule(
 
 
 -- ############################################################
--- PARTE 6 DE 30: migracion_notarias.sql
+-- PARTE 6 DE 31: migracion_notarias.sql
 -- Multi-notaría: reescribe puede_ver_carpeta
 -- ############################################################
 
@@ -3448,7 +3448,7 @@ grant execute on function public.puede_ver_notaria(bigint)  to authenticated;
 
 
 -- ############################################################
--- PARTE 7 DE 30: migracion_avisos_plazo.sql
+-- PARTE 7 DE 31: migracion_avisos_plazo.sql
 -- Avisos del plazo a 4, 3, 2, 1 semanas, 1 día y el mismo día
 -- ############################################################
 
@@ -3767,7 +3767,7 @@ end $$;
 
 
 -- ############################################################
--- PARTE 8 DE 30: migracion_notificaciones_por_notaria.sql
+-- PARTE 8 DE 31: migracion_notificaciones_por_notaria.sql
 -- Los avisos no se mezclan entre oficinas, y el correo obligatorio por rol
 -- ############################################################
 
@@ -4146,7 +4146,7 @@ create trigger exigir_correo
 
 
 -- ############################################################
--- PARTE 9 DE 30: migracion_credenciales.sql
+-- PARTE 9 DE 31: migracion_credenciales.sql
 -- Las contraseñas asignadas, para el Excel
 -- ############################################################
 
@@ -4233,7 +4233,7 @@ grant execute on function public.credencial_fijar(text, text) to authenticated;
 
 
 -- ############################################################
--- PARTE 10 DE 30: migracion_tipo_proceso.sql
+-- PARTE 10 DE 31: migracion_tipo_proceso.sql
 -- El régimen de la carpeta
 -- ############################################################
 
@@ -4275,7 +4275,7 @@ notify pgrst, 'reload schema';
 
 
 -- ############################################################
--- PARTE 11 DE 30: migracion_almacenamiento.sql
+-- PARTE 11 DE 31: migracion_almacenamiento.sql
 -- La barra de espacio lee el disco de verdad
 -- ############################################################
 
@@ -4375,7 +4375,7 @@ end $$;
 
 
 -- ############################################################
--- PARTE 12 DE 30: migracion_tope_archivo.sql
+-- PARTE 12 DE 31: migracion_tope_archivo.sql
 -- 500 MB por archivo, para las grabaciones de audiencias
 -- ############################################################
 
@@ -4417,7 +4417,7 @@ select id, file_size_limit from storage.buckets where id = 'documentos';
 
 
 -- ############################################################
--- PARTE 13 DE 30: migracion_peso_incremental.sql
+-- PARTE 13 DE 31: migracion_peso_incremental.sql
 -- El peso de la carpeta se suma en vez de recontarse en cada archivo
 -- ############################################################
 
@@ -4579,7 +4579,7 @@ order by c.id;
 
 
 -- ############################################################
--- PARTE 14 DE 30: migracion_almacenamiento_ver.sql
+-- PARTE 14 DE 31: migracion_almacenamiento_ver.sql
 -- El portal consulta el disco por una función, no leyendo la tabla
 -- ############################################################
 
@@ -4678,7 +4678,7 @@ select p.proname,
 
 
 -- ############################################################
--- PARTE 15 DE 30: migracion_rls_initplan.sql
+-- PARTE 15 DE 31: migracion_rls_initplan.sql
 -- auth.uid() se evalúa una vez por consulta y no una por fila
 -- ############################################################
 
@@ -4855,7 +4855,7 @@ commit;
 
 
 -- ############################################################
--- PARTE 16 DE 30: migracion_sesion_unica.sql
+-- PARTE 16 DE 31: migracion_sesion_unica.sql
 -- Una sola sesión abierta por cuenta: el último ingreso desplaza al anterior
 -- ############################################################
 
@@ -4994,7 +4994,7 @@ grant execute on function public.sesion_estado(uuid) to authenticated;
 
 
 -- ############################################################
--- PARTE 17 DE 30: migracion_monitor_sin_chat.sql
+-- PARTE 17 DE 31: migracion_monitor_sin_chat.sql
 -- El monitor deja de leer las conversaciones y sus adjuntos
 -- ############################################################
 
@@ -5059,7 +5059,7 @@ end $$;
 
 
 -- ############################################################
--- PARTE 18 DE 30: migracion_endurecimiento_2026_09.sql
+-- PARTE 18 DE 31: migracion_endurecimiento_2026_09.sql
 -- Cierra el acceso anónimo
 -- ############################################################
 
@@ -5250,7 +5250,7 @@ end $$;
 
 
 -- ############################################################
--- PARTE 19 DE 30: migracion_campana_por_persona.sql
+-- PARTE 19 DE 31: migracion_campana_por_persona.sql
 -- Cada campana decide sola: el aviso ya no se salta porque otro lo tenga
 -- ############################################################
 
@@ -5587,7 +5587,7 @@ select 'campana por persona: listo' as resultado;
 
 
 -- ############################################################
--- PARTE 20 DE 30: migracion_tablero_notarias.sql
+-- PARTE 20 DE 31: migracion_tablero_notarias.sql
 -- La pantalla de notarías muestra lo que vence y, al administrador, lo que ocupa cada oficina
 -- ############################################################
 
@@ -5725,7 +5725,7 @@ select p.proname,
 
 
 -- ############################################################
--- PARTE 21 DE 30: migracion_registro_cerrado.sql
+-- PARTE 21 DE 31: migracion_registro_cerrado.sql
 -- Una cuenta que no creó un administrador nace inactiva
 -- ############################################################
 
@@ -5794,7 +5794,7 @@ select u.id, coalesce(u.email, '') as correo, coalesce(u.phone, '') as telefono,
 
 
 -- ############################################################
--- PARTE 22 DE 30: migracion_metricas_web.sql
+-- PARTE 22 DE 31: migracion_metricas_web.sql
 -- El tablero «Rendimiento» del administrador: visitas al ingreso, ingresos al portal y metas del mes
 -- ############################################################
 
@@ -6155,7 +6155,7 @@ commit;
 
 
 -- ############################################################
--- PARTE 23 DE 30: migracion_permisos_internos.sql
+-- PARTE 23 DE 31: migracion_permisos_internos.sql
 -- Vuelve a cerrar _notificar y las demás funciones internas, le quita a anon los permisos sobre tablas y le da a cada llamada de soporte un canal secreto
 -- ############################################################
 
@@ -6299,7 +6299,7 @@ select count(*) as permisos_de_anon_en_tablas
 
 
 -- ############################################################
--- PARTE 24 DE 30: migracion_presencia_privada.sql
+-- PARTE 24 DE 31: migracion_presencia_privada.sql
 -- «En línea» por latido en la base: solo lo ve el administrador
 -- ############################################################
 
@@ -6414,7 +6414,7 @@ select p.proname as funcion,
 
 
 -- ############################################################
--- PARTE 25 DE 30: migracion_anexos.sql
+-- PARTE 25 DE 31: migracion_anexos.sql
 -- Anexos de un documento (1, 1.1, 1.2…) y «mover a otra subcarpeta»
 -- ############################################################
 
@@ -6583,7 +6583,7 @@ select p.proname as funcion,
 
 
 -- ############################################################
--- PARTE 26 DE 30: migracion_intentos_fallidos.sql
+-- PARTE 26 DE 31: migracion_intentos_fallidos.sql
 -- Intentos fallidos de ingreso por cuenta, para el tablero de Rendimiento
 -- ############################################################
 
@@ -6693,7 +6693,7 @@ select p.proname as funcion,
 
 
 -- ############################################################
--- PARTE 27 DE 30: migracion_avisos_push.sql
+-- PARTE 27 DE 31: migracion_avisos_push.sql
 -- Avisos en el celular del administrador y chat de soporte también para el monitor
 -- ############################################################
 
@@ -7397,7 +7397,7 @@ select exists (select 1 from pg_extension where extname = 'pg_net') as pg_net,
 
 
 -- ############################################################
--- PARTE 28 DE 30: migracion_aviso_solicitud_clave.sql
+-- PARTE 28 DE 31: migracion_aviso_solicitud_clave.sql
 -- El aviso de solicitud de clave dice nombre y rol, y se repite si la persona insiste
 -- ############################################################
 
@@ -7540,7 +7540,7 @@ select p.proname as funcion,
 
 
 -- ############################################################
--- PARTE 29 DE 30: migracion_renombrar_y_tope_300.sql
+-- PARTE 29 DE 31: migracion_renombrar_y_tope_300.sql
 -- El administrador y el operador renombran documentos y videos, y el tope por archivo baja a 300 MB
 -- ############################################################
 
@@ -7637,7 +7637,7 @@ select has_function_privilege('authenticated', 'public.archivo_renombrar(bigint,
 
 
 -- ############################################################
--- PARTE 30 DE 30: migracion_ajustes_cloud.sql
+-- PARTE 30 DE 31: migracion_ajustes_cloud.sql
 -- search_path fijo en las funciones de ayuda de los avisos y rls_auto_enable cerrada a usuarios con sesión
 -- ############################################################
 
@@ -7670,5 +7670,99 @@ begin
         revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
     end if;
 end $$;
+
+commit;
+
+
+-- ############################################################
+-- PARTE 31 DE 31: migracion_almacenamiento_storage.sql
+-- Almacenamiento se mide en Storage de Supabase contra el cupo del plan, sin tarea del servidor
+-- ############################################################
+
+-- ============================================================
+-- MIGRACIÓN: el espacio se mide en Storage, no en el disco
+-- ============================================================
+-- Idempotente. Va en una transacción.
+--
+-- QUÉ PASABA
+--   La sección Almacenamiento leía la fila que escribía medir-disco.sh
+--   con df en un servidor propio. En Supabase cloud no hay disco que
+--   medir: los documentos viven en Storage y el plan trae un cupo
+--   (1 GB en el gratis, 100 GB en Pro). Sin ese script la sección decía
+--   «El servidor todavía no ha medido el disco» para siempre.
+--
+-- QUÉ HACE
+--   almacenamiento_ver() calcula en el momento, sin tarea aparte:
+--     total  el cupo del plan, en almacenamiento.total_mb (1024 si está en 0)
+--     usado  todo lo que hay en Storage (lo que cuenta contra el cupo)
+--     docs   lo que pesan los documentos de los expedientes
+--     libre  total menos usado
+--   La diferencia entre usado y docs son los adjuntos de chat y soporte.
+--
+--   almacenamiento_cupo(mb) deja al administrador fijar el cupo cuando
+--   se cambia de plan:
+--     select public.almacenamiento_cupo(102400);   -- 100 GB (Pro)
+-- ============================================================
+
+begin;
+
+create or replace function public.almacenamiento_ver()
+returns table (
+    total_bytes bigint,
+    usado_bytes bigint,
+    libre_bytes bigint,
+    docs_bytes  bigint,
+    medido      timestamptz
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+    v_total bigint;
+    v_usado bigint;
+begin
+    if not public.es_admin() then
+        return;   -- cero filas, sin error
+    end if;
+    select (coalesce(nullif(a.total_mb, 0), 1024) * 1048576)::bigint into v_total
+      from public.almacenamiento a where a.id = 1;
+    v_total := coalesce(v_total, 1024::bigint * 1048576);
+    select coalesce(sum((o.metadata ->> 'size')::bigint), 0) into v_usado
+      from storage.objects o;
+    return query
+    select v_total,
+           v_usado,
+           greatest(v_total - v_usado, 0),
+           coalesce((select sum(c.peso_total_bytes) from public.carpetas c), 0)::bigint,
+           now();
+end;
+$$;
+
+create or replace function public.almacenamiento_cupo(p_mb numeric)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+    if not public.es_admin() then
+        raise exception 'Solo el administrador puede cambiar el cupo.' using errcode = '42501';
+    end if;
+    if p_mb is null or p_mb <= 0 then
+        raise exception 'El cupo tiene que ser mayor que cero.' using errcode = '22023';
+    end if;
+    insert into public.almacenamiento (id, total_mb, actualizado)
+    values (1, p_mb, now())
+    on conflict (id) do update set total_mb = excluded.total_mb, actualizado = now();
+end;
+$$;
+
+revoke execute on function public.almacenamiento_ver()          from public, anon;
+grant  execute on function public.almacenamiento_ver()          to authenticated;
+revoke execute on function public.almacenamiento_cupo(numeric)  from public, anon;
+grant  execute on function public.almacenamiento_cupo(numeric)  to authenticated;
+
+notify pgrst, 'reload schema';
 
 commit;

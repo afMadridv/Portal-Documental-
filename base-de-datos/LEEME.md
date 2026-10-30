@@ -83,6 +83,7 @@ El orden importa: cada uno asume el anterior.
 | 28 | `migracion_aviso_solicitud_clave.sql` | El aviso de solicitud de clave dice nombre y rol, y se repite si la persona insiste |
 | 29 | `migracion_renombrar_y_tope_300.sql` | El administrador y el operador renombran documentos y videos, y el tope por archivo baja a 300 MB |
 | 30 | `migracion_ajustes_cloud.sql` | search_path fijo en las funciones de ayuda de los avisos y `rls_auto_enable` cerrada a usuarios con sesión |
+| 31 | `migracion_almacenamiento_storage.sql` | Almacenamiento se mide en Storage de Supabase contra el cupo del plan, sin tarea del servidor |
 
 `limpieza_portal.sql` y `mantenimiento_huerfanos.sql` no entran aquí:
 son herramientas aparte. La primera vacía un portal que ya está en uso;
