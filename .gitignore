@@ -3,6 +3,12 @@
 .vscode/
 .claude/
 
+# Video: dependencias, renders y grabaciones pesadas
+video/node_modules/
+video/salida/
+video/public/grabaciones/**/*.mp4
+video/public/grabaciones/**/*.mov
+
 # Claves: nunca en el repositorio
 .env
 .env.*

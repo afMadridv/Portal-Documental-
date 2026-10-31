@@ -1,4 +1,4 @@
-/*! Portal Documental · diseño de pantallas (va después de portal.css)
+/*! Legajo · diseño de pantallas (va después de portal.css)
   Solo estructura; los colores salen de los tokens --pt-*.
   1rem = 10px: 1.35rem = 13.5px.
   Andrés Madrid · andresmadrid.vercel.app */
@@ -49,44 +49,52 @@ body.pt-cuerpo-login{
     color: var(--pt-blanco);
     overflow: hidden;
 }
-/* Color plano, sin degradados. */
+/* Legajo en grande, con el título y la frase debajo */
 .pt-ingreso__logo{
-    display: flex;
-    align-items: center;
-    gap: 1.12rem;
-    position: relative;
-    z-index: 1;
-}
-.pt-ingreso__logo span{
-    font-family: var(--pt-fuente-titulos);
-    font-size: 1.696rem;
-    font-weight: 600;
+    font-size: clamp(6.4rem, 8.2vw, 12rem);
+    gap: .3em;
+    margin-bottom: 4rem;
     color: var(--pt-blanco);
 }
-/* Marca de agua: el icono enorme y tenue en la esquina. Detrás de todo, sin clics. */
-.pt-ingreso__agua{
-    position: absolute;
-    right: -15%;
-    top: 50%;
-    transform: translateY(-42%);
-    width: clamp(32rem, 58%, 84rem);   /* crece con el panel, no con la letra */
-    height: auto;
-    color: var(--pt-marca-cian);
-    opacity: .11;
-    pointer-events: none;
-    z-index: 0;
-}
+.pt-ingreso__logo .lg-icono{ width: 1em; height: 1em; }
+.pt-ingreso__logo .lg-logo{ --lg-trazo: 3; }
 
-/* margin:auto 0 lo centra bajo el logo */
+/* margin:auto 0 lo centra en el panel */
 .pt-ingreso__centro{ position: relative; z-index: 1; margin: auto 0; }
 .pt-ingreso__centro h1{
     font-family: var(--pt-fuente-titulos);
-    font-size: clamp(3.04rem, 3.6vw, 4.8rem);
-    line-height: 1.12;
-    font-weight: 600;
+    font-size: clamp(2.6rem, 2.5vw, 3.6rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -.015em;
     color: var(--pt-blanco);
-    margin-bottom: 1.6rem;
-    max-width: 13ch;
+    margin-bottom: 1.2rem;
+    max-width: 22ch;
+    animation: pt-subir .7s var(--pt-curva) .9s backwards;
+}
+.pt-ingreso__centro p{
+    margin: 0;
+    max-width: 44ch;
+    font-size: 1.6rem;
+    line-height: 1.55;
+    color: #C9CDCB;
+    animation: pt-subir .7s var(--pt-curva) 1.05s backwards;
+}
+.pt-ingreso__leyes{ animation: pt-subir .7s var(--pt-curva) 1.2s backwards; }
+@keyframes pt-subir{ from{ opacity: 0; transform: translateY(14px); } }
+@media (prefers-reduced-motion: reduce){
+    .pt-ingreso__centro h1,
+    .pt-ingreso__centro p,
+    .pt-ingreso__leyes{ animation: none; }
+}
+/* Las leyes, en mono al pie del panel */
+.pt-ingreso__leyes{
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem 2.8rem;
+    margin: 0;
+    font: 400 1.2rem var(--pt-fuente-mono);
+    color: #C9CDCB;
 }
 
 /* ---- Panel del formulario (sigue el tema) ---- */
@@ -156,10 +164,11 @@ body.pt-cuerpo-login .pt-tema-flotante{
         gap: 1.92rem;
     }
     .pt-ingreso__marca::after{ width: 300px; height: 300px; right: -120px; top: -120px; }
-    .pt-ingreso__centro h1{ font-size: 2.4rem; max-width: none; }
+    .pt-ingreso__logo{ font-size: 5.6rem; margin-bottom: 2rem; }
+    .pt-ingreso__centro h1{ font-size: 2.2rem; max-width: none; margin-bottom: .8rem; }
     .pt-ingreso__forma{ padding: 3.52rem 2.56rem 4.8rem; justify-content: flex-start; }
-    /* Apilado no cabe la marca de agua detrás del título */
-    .pt-ingreso__agua{ display: none; }
+    /* Apilado sobran las leyes */
+    .pt-ingreso__leyes{ display: none; }
 }
 
 
@@ -226,12 +235,10 @@ body.pt-app{
     border-color: var(--pt-borde);
     color: var(--pt-tinta);
 }
-.pt-lateral__marca strong{
-    font-family: var(--pt-fuente-titulos);
-    font-size: 1.488rem;
-    font-weight: 600;
-    line-height: 1.15;
+.pt-lateral__marca .lg-marca{
+    font-size: 2.2rem;
     color: var(--pt-tinta);
+    --lg-clip-icono: var(--pt-tinta);
 }
 
 /* Los <button> ya existían; aquí solo cambia la forma */
@@ -1041,10 +1048,9 @@ body.pt-app{
 .pt-agenda__vacio{ font-size: 1.248rem; color: var(--pt-gris); }
 
 /* ---- Caja de acción sugerida ---- */
-/* Cian oscurecido: con el puro el blanco queda en 3.1:1; así ~4.9:1. */
+/* Kraft oscuro: con el kraft puro el blanco no se lee */
 .pt-agenda__caja--accion{
-    --pt-accion-fondo: #067B8F;
-    --pt-accion-fondo: color-mix(in srgb, var(--pt-marca-cian) 70%, var(--pt-navy-900));
+    --pt-accion-fondo: #7A5A26;
     border-color: transparent;
     background: var(--pt-accion-fondo);
     color: var(--pt-blanco);
@@ -1068,7 +1074,7 @@ body.pt-app{
     flex-wrap: wrap;
     margin-top: 1.28rem;
 }
-/* Sobre cian, botones invertidos */
+/* Sobre kraft, botones invertidos */
 .pt-agenda__accion-btns .pt-boton{
     background: var(--pt-blanco);
     border-color: var(--pt-blanco);
@@ -1095,8 +1101,8 @@ body.pt-app{
    9) DENSIDAD Y ESCALA
    ============================================================
    Medidas del diseño:
-   título 25px Lora 600 · nota 13px Krub
-   etiqueta 10px Krub 500 mayúsculas · cifra 20-26px Krub 600
+   título 25px Familjen Grotesk 600 · nota 13px Work Sans
+   etiqueta 10px Work Sans 500 mayúsculas · cifra 20-26px Work Sans 600
    botón 13px alto 34 r 14 · sub-pestaña 12px alto 28
    buscador 12.5px alto 36 · nav 13.5px alto 36
    Todo bajo body.pt-app: el ingreso usa controles de 46px. */
@@ -1218,7 +1224,7 @@ body.pt-app .pt-tabla th{
 body.pt-app .pt-tabla td{ padding: 0.96rem 1.2rem; }
 body.pt-app .pt-tabla-envoltura{ border-radius: 18px; }
 
-/* ---- Cifras en Krub ---- */
+/* ---- Cifras en Work Sans ---- */
 .pt-panorama__num{
     font-family: var(--pt-fuente-texto);
     font-size: 2.592rem;      /* 26px */
@@ -1232,7 +1238,7 @@ body.pt-app .pt-tabla-envoltura{ border-radius: 18px; }
 }
 .pt-agenda__dia{ font-family: var(--pt-fuente-texto); font-size: 1.68rem; }
 
-/* Nombre de trámite en Lora */
+/* Nombre de trámite en Familjen Grotesk */
 .pt-tramite__nombre{
     font-family: var(--pt-fuente-titulos);
     font-size: 1.352rem;      /* 13.5px */
@@ -1241,7 +1247,7 @@ body.pt-app .pt-tabla-envoltura{ border-radius: 18px; }
 .pt-columna__num{ font-size: 1.088rem; }
 .pt-tramite__acciones .pt-boton{ border-radius: 22px; }
 
-/* Nombre de carpeta en Lora */
+/* Nombre de carpeta en Familjen Grotesk */
 .pt-fila__nombre{
     font-family: var(--pt-fuente-titulos);
     font-size: 1.352rem;
@@ -1775,19 +1781,9 @@ body.pt-app .pt-buscador:focus-within{ border-color: var(--pt-marca-cian); }
     color: var(--pt-blanco);
 }
 .pt-elegir__logo{
-    display: flex;
-    align-items: center;
-    gap: 1.12rem;
-    font-family: var(--pt-fuente-titulos);
-    font-size: 1.6rem;
-    font-weight: 600;
+    align-self: flex-start;
+    font-size: 2.4rem;
     color: var(--pt-blanco);
-}
-.pt-elegir__logo i{
-    width: 26px; height: 26px;
-    border-radius: 12px;
-    background: var(--pt-marca-cian);
-    flex: 0 0 auto;
 }
 .pt-elegir__centro h1{
     font-family: var(--pt-fuente-titulos);
@@ -1843,7 +1839,7 @@ body.pt-app .pt-buscador:focus-within{ border-color: var(--pt-marca-cian); }
 .pt-elegir__estado i{
     width: 7px; height: 7px;
     border-radius: 50%;
-    background: #35C46B;
+    background: #6FC08F;
     flex: 0 0 auto;
 }
 
@@ -1923,6 +1919,21 @@ body.pt-app .pt-buscador:focus-within{ border-color: var(--pt-marca-cian); }
     transform: rotate(45deg);
 }
 .pt-oficina__nombre{ font-size: 1.216rem; color: var(--pt-gris); }
+/* Notaría o centro de conciliación */
+.pt-oficina__tipo{
+    align-self: flex-start;
+    margin-top: 0.64rem;
+    padding: 0.16rem 0.72rem;
+    border-radius: 999px;
+    background: var(--pt-superficie-2);
+    font-size: 1.024rem;
+    color: var(--pt-gris);
+}
+.pt-oficina__tipo--centro,
+.pt-tarjeta-carpeta__tipo--centro{
+    background: var(--pt-ambar-suave);
+    color: var(--pt-ambar-txt);
+}
 .pt-oficina__cifras{
     display: flex;
     gap: 2.24rem;
@@ -2034,6 +2045,7 @@ body.pt-app .pt-buscador:focus-within{ border-color: var(--pt-marca-cian); }
     gap: 1.28rem;
 }
 .pt-elegir__admin-cab .pt-elegir__eti{ margin-bottom: 0; }
+.pt-elegir__admin-botones{ display: flex; flex-wrap: wrap; gap: 0.64rem; justify-content: flex-end; }
 .pt-elegir__admin-lista{
     display: flex;
     flex-direction: column;
@@ -2631,3 +2643,77 @@ body.pt-app .pt-campo .pt-notaria-casilla input,
 
 /* Los dos botones de la campana */
 .pt-campana-dropdown__acciones{ display: flex; gap: .5rem; }
+
+
+/* ============================================================
+   ARCHIVO KRAFT: pizarra, kraft y verde lomo
+   ============================================================ */
+/* Rótulos en mono, como fichas de archivo */
+.pt-lateral__rotulo,
+.pt-lateral__yo small,
+.pt-panorama__tit,
+.pt-filas__cab,
+.pt-cifra__tit,
+.pt-agenda__tit,
+.pt-agenda__mes,
+.pt-notaria__nombre,
+.pt-elegir__sesion-eti,
+.pt-elegir__eti,
+.pt-gente__eti,
+.pt-plazo__eti,
+.pt-disco__tit,
+.pt-disco__dato span,
+body.pt-app .pt-tabla th,
+body.pt-app .pt-calv__semana span{
+    font-family: var(--pt-fuente-mono);
+    font-weight: 500;
+}
+
+/* Esquinas de 8px en botones y campos */
+.pt-boton{ border-radius: .8rem; }
+.pt-boton--mini{ border-radius: .7rem; }
+.pt-campo input,
+.pt-campo select,
+.pt-campo textarea{ border-radius: .8rem; }
+body.pt-cuerpo-login .pt-campo input,
+body.pt-cuerpo-login #boton-entrar{ min-height: 4.4rem; border-radius: .8rem; }
+body.pt-cuerpo-login .pt-campo > span,
+body.pt-cuerpo-login .pt-campo__fila > span{
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--pt-gris);
+}
+
+/* Botón principal pizarra; en oscuro, kraft con letra oscura */
+.pt-boton--primario,
+.pt-boton--primario:hover{ box-shadow: none; }
+.pt-boton--primario:hover{ background-color: #2F3431; }
+html[data-tema="oscuro"] .pt-boton--primario{ background-color: #C9A46A; color: #1F1A12; }
+html[data-tema="oscuro"] .pt-boton--primario:hover{ background-color: #DDBE8A; }
+
+/* Menú abierto en oscuro: kraft apagado */
+html[data-tema="oscuro"] .pt-lateral__nav button.activa{ background: #3A3123; color: #DDBE8A; }
+html[data-tema="oscuro"] .pt-lateral__nav button.activa .pt-nav-num{ background: rgba(221,190,138,.16); color: #DDBE8A; }
+
+/* Oficina elegida: borde pizarra; kraft en oscuro */
+.pt-oficina.activa{
+    border-color: var(--pt-navy-700);
+    box-shadow: inset 0 0 0 1px var(--pt-navy-700);
+}
+.pt-oficina__tic{ background: var(--pt-navy-700); }
+html[data-tema="oscuro"] .pt-oficina.activa{ border-color: #C9A46A; box-shadow: inset 0 0 0 1px #C9A46A; }
+html[data-tema="oscuro"] .pt-oficina__tic{ background: #C9A46A; }
+html[data-tema="oscuro"] .pt-oficina__tic::after{ border-color: #1F1A12; }
+
+/* Notaría en verde lomo, centro en kraft */
+.pt-oficina__tipo--notaria{ background: var(--pt-verde-suave); color: var(--pt-verde-txt); }
+
+/* Sobre kraft, texto oscuro */
+.pt-subcarpeta--nueva,
+.pt-subcarpeta--nueva:hover{ color: var(--pt-kraft-txt); }
+
+/* Tarjeta de carpeta con el ícono de la marca */
+.pt-tarjeta-carpeta__ic{ background: var(--pt-ambar-suave); }
+.pt-tarjeta-carpeta__ic .lg-icono{ width: 22px; height: 22px; --lg-clip-icono: var(--pt-tinta); }

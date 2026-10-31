@@ -1,4 +1,4 @@
-/*! Portal Documental · inicio de sesión
+/*! Legajo · inicio de sesión
   Andrés Madrid · andresmadrid.vercel.app */
 document.addEventListener('DOMContentLoaded', async () => {
     const formulario = document.getElementById('form-login');

@@ -1,4 +1,4 @@
-/*! Portal Documental · sesión y permisos
+/*! Legajo · sesión y permisos
   Andrés Madrid · andresmadrid.vercel.app */
 const CLAVE_SESION = 'portal_sesion';
 const DURACION_SESION = 8 * 60 * 60 * 1000;           // 8 horas: una jornada

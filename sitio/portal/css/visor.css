@@ -1,4 +1,4 @@
-/*! Portal Documental · visor.html
+/*! Legajo · visor.html
   Word como visor de PDF (barra oscura, páginas sobre gris) y hojas como
   Excel (barra verde, pestañas abajo). Siempre en claro.
   Andrés Madrid · andresmadrid.vercel.app */
@@ -21,13 +21,13 @@ button{ font: inherit; }
 .v-estado--error p:first-of-type{ color: #8A1C1C; font-weight: 600; }
 .v-estado__descargar{
     display: inline-flex; align-items: center; min-height: 40px; margin-top: 6px; padding: 0 20px;
-    border-radius: 8px; background: #00798C; color: #fff; font-weight: 600; text-decoration: none;
+    border-radius: 8px; background: #454B48; color: #fff; font-weight: 600; text-decoration: none;
 }
-.v-estado__descargar:hover{ background: #00667A; }
-.v-estado__descargar:focus-visible{ outline: 3px solid #7FD3E0; outline-offset: 2px; }
+.v-estado__descargar:hover{ background: #2F3431; }
+.v-estado__descargar:focus-visible{ outline: 3px solid #C9A46A; outline-offset: 2px; }
 .v-ruedita{
     width: 34px; height: 34px; border-radius: 50%;
-    border: 3px solid #D6D6D6; border-top-color: #00A1B8;
+    border: 3px solid #D6D6D6; border-top-color: #C9A46A;
     animation: v-gira .8s linear infinite;
 }
 @keyframes v-gira{ to{ transform: rotate(360deg); } }

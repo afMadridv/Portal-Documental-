@@ -1,4 +1,4 @@
-/*! Portal Documental · días hábiles en Colombia
+/*! Legajo · días hábiles en Colombia
   Lunes a viernes sin festivos (Ley Emiliani). La misma lista está en la
   tabla festivos_colombia: si se agrega un año aquí, también allá.
   Andrés Madrid · andresmadrid.vercel.app */

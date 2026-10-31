@@ -1,4 +1,4 @@
-/*! Portal Documental · modo de uso (pasos y video corto por tema)
+/*! Legajo · modo de uso (pasos y video corto por tema)
     Andrés Madrid · andresmadrid.vercel.app */
 (function () {
     /* Dos pestañas. El administrador y el monitor ven las dos;

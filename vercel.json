@@ -2,9 +2,6 @@
   "buildCommand": "",
   "outputDirectory": "sitio",
   "cleanUrls": false,
-  "redirects": [
-    { "source": "/", "destination": "/portal/", "permanent": false }
-  ],
   "rewrites": [
     { "source": "/favicon.ico", "destination": "/img/favicon.ico" }
   ],

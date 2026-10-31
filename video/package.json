@@ -1,0 +1,27 @@
+{
+  "name": "legajo-video",
+  "private": true,
+  "description": "Video de presentación de Legajo en 16:9 y 9:16, hecho con Remotion",
+  "scripts": {
+    "estudio": "remotion studio src/index.ts",
+    "horizontal": "remotion render src/index.ts LegajoHorizontal salida/legajo-16x9.mp4",
+    "vertical": "remotion render src/index.ts LegajoVertical salida/legajo-9x16.mp4",
+    "todo": "npm run horizontal && npm run vertical",
+    "capturas": "node capturas.mjs",
+    "pagina": "remotion render src/index.ts LegajoHorizontal ../sitio/video/legajo-16x9.mp4 --crf=26 && remotion still src/index.ts LegajoHorizontal ../sitio/video/legajo-portada.jpg --frame=330 --image-format=jpeg --jpeg-quality=82",
+    "cuadro": "remotion still src/index.ts"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.539",
+    "@remotion/google-fonts": "4.0.539",
+    "@remotion/paths": "4.0.539",
+    "@remotion/transitions": "4.0.539",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "typescript": "5.6.3"
+  }
+}

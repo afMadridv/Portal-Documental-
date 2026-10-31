@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
      _    __  __
-    / \  |  \/  |   Portal Documental
+    / \  |  \/  |   Legajo
    / _ \ | |\/| |   Desarrollado por Andrés Madrid
   / ___ \| |  | |   andresmadrid.vercel.app
  /_/   \_\_|  |_|
@@ -10,14 +10,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="Andrés Madrid">
+    <script src="portal/js/firma.js?v=142" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300A1B8'/%3E%3Cpath d='M7 10.5a1.5 1.5 0 0 1 1.5-1.5h4l2 2.5h9a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 23.5 23h-15A1.5 1.5 0 0 1 7 21.5z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M12 16.5h8M12 19.5h5' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
-    <title>Portal Documental</title>
-    <!-- La raíz lleva al portal -->
-    <meta http-equiv="refresh" content="0; url=portal/">
-    <meta name="robots" content="noindex">
+    <link rel="icon" href="img/favicon.ico" sizes="48x48">
+    <link rel="icon" href="img/legajo.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="img/portal-180.png">
+    <link rel="manifest" href="portal/manifest.json">
+    <meta name="theme-color" content="#454B48">
+    <title>Legajo | Portal documental para notarías y centros de conciliación</title>
+    <meta name="description" content="Insolvencias y conciliaciones en orden: carpetas por proceso, plazos en días hábiles, audiencias y avisos en un solo portal.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_CO">
+    <meta property="og:site_name" content="Legajo">
+    <meta property="og:title" content="Legajo · Cada proceso, en orden y a tiempo">
+    <meta property="og:description" content="Portal documental para notarías y centros de conciliación.">
+    <meta property="og:image" content="/img/portal-512.png">
+    <!-- Con JS las animaciones esconden lo que aún no entra; sin JS todo se ve -->
+    <script>document.documentElement.classList.add('js');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&text=egajo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="portal/css/marca.css?v=142">
+    <link rel="stylesheet" href="css/inicio.css?v=142">
+    <script src="js/inicio.js?v=142" defer></script>
 </head>
 <body>
-    <p>Redirigiendo… Si no ocurre, <a href="portal/">entra aquí</a>.</p>
+
+<header class="barra" id="barra">
+    <div class="barra__fila envoltura">
+        <a class="lg-marca lg-anima barra__marca" href="#arriba" aria-label="Legajo, inicio">
+            <svg class="lg-icono" viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="18" width="48" height="36" rx="5"/><path d="M14 28V12a5 5 0 0 1 10 0v12M19 28V14" pathLength="1"/><rect x="8" y="30" width="48" height="24" rx="5"/></svg>
+            <span class="lg-logo" aria-hidden="true"><svg viewBox="0 0 40 51"><path d="M34 44H13a3 3 0 0 1-3-3V10a4 4 0 0 1 8 0v28h18a5 5 0 0 1 0 10H9a6 6 0 0 1-6-6V6" pathLength="1"/></svg><span class="lg-logo__txt">egajo</span></span>
+        </a>
+        <nav class="barra__nav" aria-label="Secciones">
+            <a href="#video">Video</a>
+            <a href="#producto">Producto</a>
+            <a href="#oficinas">Oficinas</a>
+            <a href="#proceso">Cómo funciona</a>
+            <a class="barra__ingresar" href="portal/">Ingresar</a>
+        </nav>
+    </div>
+</header>
+
+<section class="portada" id="arriba">
+    <!-- El clip de la «L», grande y tenue, se dibuja detrás -->
+    <svg class="portada__clip" viewBox="0 0 40 51" aria-hidden="true"><path d="M34 44H13a3 3 0 0 1-3-3V10a4 4 0 0 1 8 0v28h18a5 5 0 0 1 0 10H9a6 6 0 0 1-6-6V6" pathLength="1"/></svg>
+    <div class="portada__txt envoltura">
+        <p class="portada__eti">Insolvencia · Conciliación</p>
+        <h1 class="portada__titulo">
+            <span style="--i:0">Cada</span> <span style="--i:1">proceso,</span>
+            <span style="--i:2">en</span> <span style="--i:3">orden</span>
+            <span style="--i:4">y</span> <span style="--i:5">a</span> <span style="--i:6">tiempo.</span>
+        </h1>
+        <p class="portada__sub">Portal documental para notarías y centros de conciliación: expedientes, plazos y audiencias en un solo lugar.</p>
+        <div class="botones portada__botones">
+            <a class="btn btn--kraft" href="portal/">Ingresar al portal <span class="btn__flecha" aria-hidden="true">→</span></a>
+            <a class="btn btn--linea" href="#video">Ver el video</a>
+        </div>
+    </div>
+</section>
+
+<!-- El portal tal cual, con datos inventados del modo práctica -->
+<div class="envoltura escenario" data-revela>
+    <div class="vista-giro">
+        <div class="vista">
+            <div class="vista__barra" aria-hidden="true">
+                <span class="vista__puntos"><i></i><i></i><i></i></span>
+                <span class="vista__pestana">
+                    <svg class="lg-icono" viewBox="0 0 64 64"><rect x="8" y="18" width="48" height="36" rx="5"/><path d="M14 28V12a5 5 0 0 1 10 0v12M19 28V14"/><rect x="8" y="30" width="48" height="24" rx="5"/></svg>
+                    Legajo · Carpetas
+                </span>
+            </div>
+            <img src="img/inicio/02-carpetas.webp" width="2160" height="1350"
+                 alt="Carpetas de procesos de una notaría en Legajo: cifras de carpetas, plazos por vencer y documentos, y las tarjetas de cada expediente con su semáforo">
+        </div>
+    </div>
+
+    <!-- La misma carpeta, como la ve el cliente en el celular -->
+    <figure class="escenario__celular">
+        <img src="img/inicio/m-cliente-carpeta.webp" width="702" height="1519" loading="lazy"
+             alt="Vista del cliente en el celular: su carpeta, los días hábiles que quedan y sus documentos">
+    </figure>
+
+    <!-- Avisos que flotan alrededor, como los de la campana -->
+    <div class="aviso aviso--1" style="--d:1.5s" aria-hidden="true"><i class="punto punto--kraft"></i><span><b>Vence en 1 día hábil</b><small>Martha L. Ríos · 2026-0418</small></span></div>
+    <div class="aviso aviso--2" style="--d:2.1s" aria-hidden="true"><i class="punto punto--verde"></i><span><b>Audiencia notificada</b><small>Acreedores avisados por correo</small></span></div>
+    <div class="aviso aviso--3" style="--d:2.7s" aria-hidden="true"><i class="punto punto--pizarra"></i><span><b>Documento nuevo</b><small>Certificado de ingresos.pdf</small></span></div>
+</div>
+
+<main>
+    <section class="pelicula envoltura" id="video">
+        <div class="pelicula__txt" data-revela>
+            <p class="pelicula__eti">Video · 75 segundos</p>
+            <h2>Legajo, de la solicitud al cierre.</h2>
+            <p>Oficinas, carpetas, documentos, plazos, audiencias y conciliación, en el portal de verdad.</p>
+        </div>
+        <div class="pelicula__marco" data-revela>
+            <video controls preload="none" playsinline width="1920" height="1080" poster="video/legajo-portada.jpg">
+                <source src="video/legajo-16x9.mp4" type="video/mp4">
+                Tu navegador no reproduce este video. <a href="video/legajo-16x9.mp4">Descárgalo aquí</a>.
+            </video>
+        </div>
+    </section>
+
+    <section class="producto envoltura" id="producto">
+        <h2 data-revela>Todo el legajo, sin carpetas sueltas.</h2>
+
+        <div class="funcion" data-revela>
+            <div class="funcion__txt">
+                <span class="funcion__eti"><i class="punto punto--kraft"></i>Carpetas</span>
+                <h3>Una carpeta por proceso.</h3>
+                <p>Documentos con sus anexos, subcarpetas y quién subió cada archivo. El cliente sube lo suyo y ve solo su trámite; el acreedor, solo lo que le toca.</p>
+            </div>
+            <div class="funcion__dibujo">
+                <figure class="captura" style="--x:52%; --y:72%; --zoom:1.3">
+                    <img src="img/inicio/03-documentos.webp" width="2160" height="1980" loading="lazy"
+                         alt="Documentos de la carpeta de Martha L. Ríos: la solicitud con sus anexos 1.1 y 1.2, el poder, la cédula y el auto de aceptación">
+                </figure>
+                <div class="dibujo__aviso" aria-hidden="true">✓ Anexo 1.2 · Certificado de ingresos.pdf</div>
+            </div>
+        </div>
+
+        <div class="funcion funcion--al-reves" data-revela>
+            <div class="funcion__txt">
+                <span class="funcion__eti"><i class="punto punto--verde"></i>Plazos</span>
+                <h3>Ningún vencimiento por sorpresa.</h3>
+                <p>El semáforo cuenta días hábiles colombianos, sin fines de semana ni festivos. Avisa a cuatro, tres, dos y una semana, un día antes y el mismo día.</p>
+            </div>
+            <div class="funcion__dibujo">
+                <figure class="captura" style="--x:42%; --y:45%; --zoom:1.35">
+                    <img src="img/inicio/04-estados.webp" width="2160" height="1350" loading="lazy"
+                         alt="Estados de los trámites: columnas de vencidos, por vencer, en curso, pausados y completados">
+                </figure>
+                <div class="dibujo__aviso dibujo__aviso--rojo" aria-hidden="true">Venció hace 2 días · Inversiones Duarte</div>
+            </div>
+        </div>
+
+        <div class="funcion" data-revela>
+            <div class="funcion__txt">
+                <span class="funcion__eti"><i class="punto punto--pizarra"></i>Audiencias</span>
+                <h3>Audiencias citadas, partes avisadas.</h3>
+                <p>La fecha queda en el calendario y el aviso sale por correo a cada parte. La constancia de notificación se descarga en PDF.</p>
+            </div>
+            <div class="funcion__dibujo">
+                <figure class="captura" style="--x:58%; --y:52%; --zoom:1.35">
+                    <img src="img/inicio/05-audiencias.webp" width="2160" height="1980" loading="lazy"
+                         alt="Audiencias del proceso: audiencia de negociación de deudas y su continuación, cada una con el botón Notificar">
+                </figure>
+                <div class="dibujo__aviso" aria-hidden="true">✓ Aviso enviado a deudor y acreedores</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="extras envoltura" aria-labelledby="extras-titulo">
+        <h2 id="extras-titulo" data-revela>Y lo demás que pide el trámite.</h2>
+        <div class="extras__rejilla">
+            <article class="extra" data-revela style="--i:0">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+                <h3>Chat por trámite</h3>
+                <p>Cada carpeta conversa por separado con el cliente y con los acreedores.</p>
+            </article>
+            <article class="extra" data-revela style="--i:1">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+                <h3>Expediente en un PDF</h3>
+                <p>Los documentos que elijas, en el orden que elijas, unidos y numerados.</p>
+            </article>
+            <article class="extra" data-revela style="--i:2">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 13h4"/></svg>
+                <h3>La carpeta en un ZIP</h3>
+                <p>Todo el legajo con sus subcarpetas, en una sola descarga.</p>
+            </article>
+            <article class="extra" data-revela style="--i:3">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <h3>Avisos en el celular</h3>
+                <p>Documentos nuevos, plazos y mensajes llegan a la campana y al teléfono.</p>
+            </article>
+            <article class="extra" data-revela style="--i:4">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+                <h3>Cada quien, lo suyo</h3>
+                <p>Administrador, operador, monitor, cliente y acreedor ven solo lo que les toca.</p>
+            </article>
+            <article class="extra" data-revela style="--i:5">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+                <h3>Soporte con llamada</h3>
+                <p>Chat de soporte y llamada de voz sin salir del portal.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="oficinas" id="oficinas">
+        <div class="envoltura">
+            <h2 data-revela>Notarías y centros de conciliación, en un mismo portal.</h2>
+            <p class="oficinas__intro" data-revela>Cada oficina tiene sus carpetas. Al entrar, el portal se ajusta al trámite que lleva.</p>
+            <div class="oficinas__rejilla">
+                <article class="oficina" data-revela style="--i:0">
+                    <span class="oficina__tipo oficina__tipo--verde">Notaría</span>
+                    <h3>Insolvencia de persona natural</h3>
+                    <ul>
+                        <li>60 días hábiles para la negociación, 90 con la prórroga.</li>
+                        <li>Deudor, acreedores y apoderados en la misma carpeta.</li>
+                        <li>Ley 1564 de 2012 y Ley 2445 de 2025 a la mano.</li>
+                    </ul>
+                </article>
+                <article class="oficina" data-revela style="--i:1">
+                    <span class="oficina__tipo oficina__tipo--kraft">Centro de conciliación</span>
+                    <h3>Conciliación extrajudicial</h3>
+                    <ul>
+                        <li>3 meses desde la solicitud, prorrogables 3 más.</li>
+                        <li>Convocantes y convocados; al cerrar, el resultado: acuerdo, no acuerdo o inasistencia.</li>
+                        <li>Ley 2220 de 2022 y el enlace al SICAAC.</li>
+                    </ul>
+                </article>
+            </div>
+            <figure class="captura captura--ancha" data-revela style="--x:50%; --y:50%; --zoom:1">
+                <img src="img/inicio/01-oficinas.webp" width="2160" height="1350" loading="lazy"
+                     alt="Pantalla para elegir oficina: el centro de conciliación de Barranquilla y la notaría de Santa Marta, cada uno con sus cifras">
+            </figure>
+        </div>
+    </section>
+
+    <section class="proceso envoltura" id="proceso">
+        <h2 data-revela>De la solicitud al cierre.</h2>
+        <ol class="pasos" data-revela>
+            <li style="--i:0"><span class="pasos__cab"><span class="pasos__num">1</span></span><h3>Crear la carpeta</h3><p>El administrador abre el proceso y asigna operador, cliente y acreedores.</p></li>
+            <li style="--i:1"><span class="pasos__cab"><span class="pasos__num">2</span></span><h3>Iniciar el plazo</h3><p>El semáforo empieza a contar. Se puede pausar o aplicar la prórroga.</p></li>
+            <li style="--i:2"><span class="pasos__cab"><span class="pasos__num">3</span></span><h3>Audiencias</h3><p>Fechas en el calendario y citación por correo a las partes.</p></li>
+            <li style="--i:3"><span class="pasos__cab"><span class="pasos__num pasos__num--verde">4</span></span><h3>Cierre</h3><p>Fin del trámite y un plazo para descargar los documentos.</p></li>
+        </ol>
+    </section>
+
+    <section class="cierre">
+        <div class="cierre__fila envoltura" data-revela>
+            <div class="cierre__txt">
+                <svg class="cierre__icono" viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="18" width="48" height="36" rx="5" fill="#454B48"/><path d="M14 28V12a5 5 0 0 1 10 0v12M19 28V14" fill="none" stroke="#F2F3F3" stroke-width="4" stroke-linecap="round"/><rect x="8" y="30" width="48" height="24" rx="5" fill="#3A403D"/></svg>
+                <div>
+                    <h2>Pongamos en orden su oficina.</h2>
+                    <p>Entre con el usuario y la contraseña que le entregaron.</p>
+                </div>
+            </div>
+            <div class="botones">
+                <a class="btn btn--pizarra" href="portal/">Ingresar al portal <span class="btn__flecha" aria-hidden="true">→</span></a>
+                <a class="btn btn--linea-oscura" href="#video">Ver el video</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="pie">
+    <div class="pie__fila envoltura">
+        <a class="lg-marca pie__marca" href="#arriba" aria-label="Legajo, inicio">
+            <svg class="lg-icono" viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="18" width="48" height="36" rx="5"/><path d="M14 28V12a5 5 0 0 1 10 0v12M19 28V14"/><rect x="8" y="30" width="48" height="24" rx="5"/></svg>
+            <span class="lg-logo" aria-hidden="true"><svg viewBox="0 0 40 51"><path d="M34 44H13a3 3 0 0 1-3-3V10a4 4 0 0 1 8 0v28h18a5 5 0 0 1 0 10H9a6 6 0 0 1-6-6V6"/></svg>egajo</span>
+        </a>
+        <nav class="pie__enlaces" aria-label="Enlaces legales">
+            <a href="portal/terminos.html">Términos</a>
+            <a href="portal/privacidad.html">Privacidad</a>
+            <a href="https://andresmadrid.vercel.app" target="_blank" rel="noopener">Contacto</a>
+        </nav>
+        <a class="btn btn--kraft pie__portal" href="portal/">Ir al portal <span class="btn__flecha" aria-hidden="true">→</span></a>
+    </div>
+    <div class="pie__base envoltura">
+        <span>© <span id="anio">2026</span> Legajo</span>
+        <span>Las imágenes usan datos inventados</span>
+    </div>
+</footer>
+
 </body>
 </html>

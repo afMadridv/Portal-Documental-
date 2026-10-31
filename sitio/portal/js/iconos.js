@@ -1,4 +1,4 @@
-/*! Portal Documental · iconos SVG de línea (heredan el color del texto)
+/*! Legajo · iconos SVG de línea (heredan el color del texto)
   JS: icono('descargar') · HTML: <span data-icono="descargar"></span>
   Andrés Madrid · andresmadrid.vercel.app */
 (function () {

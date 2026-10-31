@@ -1,4 +1,4 @@
-/*! Portal Documental · chats, campana y pantallas angostas
+/*! Legajo · chats, campana y pantallas angostas
     Andrés Madrid · andresmadrid.vercel.app */
 
 /* Computador (más de 900 px): chats como panel lateral, abiertos desde la
@@ -140,8 +140,8 @@ body:has(#pt-chats:not([hidden])) .pt-soporte-burbuja{ display: none !important;
 .pt-chat-icono:hover{ background: rgba(255,255,255,.18); }
 .pt-chat-icono:focus-visible{ outline: 2px solid var(--pt-azul); outline-offset: 2px; }
 .pt-chat-icono[hidden]{ display: none; }
-.pt-chat-icono--llamar{ background: #16a34a; }
-.pt-chat-icono--llamar:hover{ background: #15803d; }
+.pt-chat-icono--llamar{ background: #2E7D4F; }
+.pt-chat-icono--llamar:hover{ background: #256B42; }
 .pt-chat-avatar{
     width: 3.8rem;
     height: 3.8rem;
@@ -219,7 +219,7 @@ body.pt-app .pt-chat-flotante__cab .pt-boton{
 .pt-campana.pt-campana--nueva{
     background: var(--pt-marca-naranja) !important;
     border-color: var(--pt-marca-naranja) !important;
-    color: #141414 !important;
+    color: #2A2114 !important;
     animation: pt-aro 2.6s ease-out infinite;
 }
 .pt-campana--nueva > [data-icono]{
@@ -239,9 +239,9 @@ body.pt-app .pt-chat-flotante__cab .pt-boton{
     28%{ transform: rotate(2deg); }
 }
 @keyframes pt-aro{
-    0%{ box-shadow: 0 0 0 0 rgba(250,155,2,.55); }
-    45%{ box-shadow: 0 0 0 .9rem rgba(250,155,2,0); }
-    100%{ box-shadow: 0 0 0 0 rgba(250,155,2,0); }
+    0%{ box-shadow: 0 0 0 0 rgba(201,164,106,.55); }
+    45%{ box-shadow: 0 0 0 .9rem rgba(201,164,106,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(201,164,106,0); }
 }
 
 /* ============ LLAMADA EN CURSO ============ */
@@ -249,7 +249,7 @@ body.pt-app .pt-chat-flotante__cab .pt-boton{
    icono de chat (abre el chat; la llamada se maneja en la barra de
    arriba); mientras suena muestra el teléfono. */
 body.pt-en-llamada #soporte-burbuja,
-body.pt-sonando #soporte-burbuja{ background: #16a34a; }
+body.pt-sonando #soporte-burbuja{ background: #2E7D4F; }
 body.pt-en-llamada #soporte-burbuja{ animation: pt-vibrar 1.4s ease-in-out infinite; }
 body.pt-sonando #soporte-burbuja{ animation: pt-vibrar .7s ease-in-out infinite; }
 body.pt-sonando #soporte-burbuja .pt-burbuja__chat{ display: none; }
@@ -257,8 +257,8 @@ body.pt-sonando #soporte-burbuja .pt-burbuja__tel{ display: inline-flex; }
 
 body.pt-en-llamada .pt-cab-soporte,
 body.pt-sonando .pt-cab-soporte{
-    background: #16a34a !important;
-    border-color: #16a34a !important;
+    background: #2E7D4F !important;
+    border-color: #2E7D4F !important;
     color: #fff !important;
     animation: pt-vibrar 1.4s ease-in-out infinite;
 }

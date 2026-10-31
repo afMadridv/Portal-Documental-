@@ -1,4 +1,4 @@
-/*! Portal Documental · conexión a Supabase
+/*! Legajo · conexión a Supabase
   Con MODO 'nube' reemplaza las funciones de db.js por Auth, Postgres y
   Storage. app.js y login.js no se enteran.
   Andrés Madrid · andresmadrid.vercel.app */
@@ -12,7 +12,7 @@
 
     const nube = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_KEY);
 
-    console.info('Portal Documental: conectado a Supabase (' + cfg.SUPABASE_URL + ')');
+    console.info('Legajo: conectado a Supabase (' + cfg.SUPABASE_URL + ')');
 
     /* ============ UTILIDADES ============ */
     function aEmail(usuario) {
@@ -210,6 +210,7 @@
             activa: c.activa, creadaPor: c.creada_por, fecha: Date.parse(c.fecha),
             notariaId: c.notaria_id || null,
             tipoProceso: c.tipo_proceso || null,
+            resultado: c.resultado || null,
             asignados: (rAsignados.data || [])
                 .filter(a => a.carpeta_id === c.id)
                 .map(a => usuarioPorId[a.perfil_id] || a.perfil_id),
@@ -250,6 +251,9 @@
             fechaFinTramite: c.fecha_fin_tramite || null,
             fechaDesactivacion: c.fecha_desactivacion_programada || null,
             activa: c.activa, creadaPor: c.creada_por, fecha: Date.parse(c.fecha),
+            notariaId: c.notaria_id || null,
+            tipoProceso: c.tipo_proceso || null,
+            resultado: c.resultado || null,
             asignados: (rA.data || []).map(a => usuarioPorId[a.perfil_id] || a.perfil_id),
             operadores: (rO.data || []).map(o => usuarioPorId[o.perfil_id] || o.perfil_id)
         };
@@ -799,6 +803,7 @@
         return (data || []).map(n => ({
             id: n.id, nombre: n.nombre, ciudad: n.ciudad,
             activa: n.activa !== false,
+            tipo: n.tipo === 'centro' ? 'centro' : 'notaria',
             carpetas: Number(n.carpetas || 0),
             // Procesos vencidos o por vencer, para escoger oficina
             porVencer: Number(n.por_vencer || 0)
@@ -830,26 +835,28 @@
     /* Todas las notarías visibles (formularios del admin) */
     window.notariasListar = async () => {
         const { data, error } = await nube.from('notarias')
-            .select('id, nombre, ciudad, activa').order('ciudad');
+            .select('id, nombre, ciudad, activa, tipo').order('ciudad');
         if (error) fallar(error);
         return (data || []).map(n => ({
-            id: n.id, nombre: n.nombre, ciudad: n.ciudad, activa: n.activa !== false
+            id: n.id, nombre: n.nombre, ciudad: n.ciudad, activa: n.activa !== false,
+            tipo: n.tipo === 'centro' ? 'centro' : 'notaria'
         }));
     };
 
-    window.notariaCrear = async (nombre, ciudad) => {
+    window.notariaCrear = async (nombre, ciudad, tipo) => {
         const { data, error } = await nube.rpc('notaria_crear', {
-            p_nombre: nombre, p_ciudad: ciudad
+            p_nombre: nombre, p_ciudad: ciudad, p_tipo: tipo || 'notaria'
         });
         if (error) fallar(error);
         return data;
     };
 
-    window.notariaEditar = async (id, nombre, ciudad, activa) => {
+    window.notariaEditar = async (id, nombre, ciudad, activa, tipo) => {
         const { error } = await nube.rpc('notaria_editar', {
             p_id: id, p_nombre: nombre || null,
             p_ciudad: ciudad || null,
-            p_activa: (activa === undefined ? null : activa)
+            p_activa: (activa === undefined ? null : activa),
+            p_tipo: tipo || null
         });
         if (error) fallar(error);
     };
@@ -972,7 +979,7 @@
         const { error } = await nube.rpc('reactivar_tramite', { carpeta: carpetaId });
         if (error) fallar(error);
     };
-    /* Conteo del trámite: 60 días hábiles (90 con prórroga) */
+    /* Conteo del trámite: el servidor cuenta según el tipo de oficina */
     window.tramiteIniciar = async (carpetaId, fecha) => {
         const { error } = await nube.rpc('iniciar_tramite', {
             carpeta: carpetaId, p_fecha: fecha || null
@@ -983,9 +990,11 @@
         const { error } = await nube.rpc('aplicar_prorroga', { carpeta: carpetaId });
         if (error) fallar(error);
     };
-    /* Fin de trámite: solo admin (valida el servidor) */
-    window.tramiteFinalizar = async (carpetaId) => {
-        const { error } = await nube.rpc('finalizar_tramite', { carpeta: carpetaId });
+    /* Fin de trámite: solo admin (valida el servidor). Conciliación lleva resultado. */
+    window.tramiteFinalizar = async (carpetaId, resultado) => {
+        const { error } = await nube.rpc('finalizar_tramite', {
+            carpeta: carpetaId, p_resultado: resultado || null
+        });
         if (error) fallar(error);
     };
 

@@ -1,4 +1,4 @@
-/*! Portal Documental · firma
+/*! Legajo · firma
     Andrés Madrid · andresmadrid.vercel.app */
 (function () {
     if (window.__firmaAM) return;

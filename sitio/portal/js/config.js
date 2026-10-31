@@ -1,4 +1,4 @@
-/*! Portal Documental · configuración
+/*! Legajo · configuración
   nube = Supabase, local = datos de práctica en este navegador.
   La clave anónima es pública; lo que protege los datos son las reglas RLS.
   Andrés Madrid · andresmadrid.vercel.app */

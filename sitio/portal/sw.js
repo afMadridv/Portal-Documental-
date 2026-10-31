@@ -1,4 +1,4 @@
-/*! Portal Documental · service worker de avisos (solo administrador)
+/*! Legajo · service worker de avisos (solo administrador)
     Andrés Madrid · andresmadrid.vercel.app */
 // Solo avisos: no guarda páginas ni archivos, el portal carga como siempre.
 self.addEventListener('install', () => self.skipWaiting());
@@ -22,7 +22,7 @@ self.addEventListener('push', (e) => {
 async function mostrar(d) {
     const tag = d.g || 'aviso';
     const ahora = Date.now();
-    let titulo = d.t || 'Portal Documental';
+    let titulo = d.t || 'Legajo';
     let n = 1;
     // Si ya hay uno con la misma etiqueta y es reciente, se suman
     const previa = VARIOS[d.cat] ? (await self.registration.getNotifications({ tag }))[0] : null;

@@ -1,4 +1,4 @@
-/*! Portal Documental · librerías externas con huella SRI
+/*! Legajo · librerías externas con huella SRI
   Si el archivo del CDN cambia, el navegador no lo ejecuta.
   Para cambiar de versión, URL y huella juntas:
     jsDelivr: data.jsdelivr.com/v1/packages/npm/<paquete>@<versión>?structure=flat ("hash", con sha256-)

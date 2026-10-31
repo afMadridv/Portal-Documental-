@@ -1,0 +1,74 @@
+/*! Legajo · logotipo e ícono
+  Andrés Madrid · andresmadrid.vercel.app */
+
+/* Logotipo: el clip doblado arma la «L». Crece con font-size. */
+.lg-logo{
+    display: inline-flex;
+    align-items: flex-end;
+    gap: .07em;
+    font: 700 1em/.74 'Bricolage Grotesque', 'Familjen Grotesk', system-ui, sans-serif;
+    letter-spacing: -.035em;
+    color: inherit;
+    white-space: nowrap;
+}
+.lg-logo svg{
+    width: .615em;
+    height: .775em;
+    flex: none;
+    overflow: visible;
+    fill: none;
+    stroke: var(--lg-clip, #C9A46A);
+    stroke-width: var(--lg-trazo, 3.8);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Ícono: carpeta kraft con el clip de pestaña */
+.lg-icono{ width: 1em; height: 1em; flex: none; }
+.lg-icono rect:first-of-type{ fill: #C9A46A; }
+.lg-icono rect:last-of-type{ fill: #B8925A; }
+.lg-icono path{
+    fill: none;
+    stroke: var(--lg-clip-icono, #F2F3F3);
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+/* Entrada animada (los path llevan pathLength="1"): el clip dibuja la «L»
+   y luego aparece «egajo». */
+.lg-anima .lg-logo svg path{
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: lg-trazo 1s cubic-bezier(.65, 0, .35, 1) .15s forwards;
+}
+/* Márgenes negativos: la «g» y la «j» bajan de la línea */
+.lg-anima .lg-logo__txt{
+    display: inline-block;
+    clip-path: inset(-.4em 100% -.5em 0);
+    animation: lg-descubrir .6s cubic-bezier(.16, 1, .3, 1) .75s forwards;
+}
+.lg-anima .lg-icono{ animation: lg-caer .7s cubic-bezier(.34, 1.56, .64, 1) backwards; }
+.lg-anima .lg-icono path{
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: lg-trazo .6s ease-out .35s forwards;
+}
+@keyframes lg-trazo{ to{ stroke-dashoffset: 0; } }
+@keyframes lg-descubrir{ to{ clip-path: inset(-.4em -.2em -.5em 0); } }
+@keyframes lg-caer{ from{ opacity: 0; transform: translateY(-.25em) rotate(-6deg); } }
+@media (prefers-reduced-motion: reduce){
+    .lg-anima .lg-logo svg path,
+    .lg-anima .lg-icono path{ animation: none; stroke-dashoffset: 0; }
+    .lg-anima .lg-logo__txt{ animation: none; clip-path: none; }
+    .lg-anima .lg-icono{ animation: none; }
+}
+
+/* Ícono + logotipo juntos */
+.lg-marca{
+    display: inline-flex;
+    align-items: center;
+    gap: .42em;
+    color: inherit;
+    text-decoration: none;
+}
+.lg-marca .lg-icono{ width: 1.25em; height: 1.25em; }

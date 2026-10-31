@@ -1,4 +1,4 @@
-/*! Portal Documental · métricas de la pantalla de ingreso
+/*! Legajo · métricas de la pantalla de ingreso
   Manda solo el evento, el origen en una palabra, el tipo de equipo y
   un número al azar de la pestaña (sessionStorage). Nada de lo que la
   persona escribe. Si falla, no pasa nada.

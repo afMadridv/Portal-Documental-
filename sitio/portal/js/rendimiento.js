@@ -1,4 +1,4 @@
-/*! Portal Documental · Rendimiento (solo administrador)
+/*! Legajo · Rendimiento (solo administrador)
   Visitas al ingreso, inicios de sesión, intentos fallidos y metas.
   Todo sale de metricas_web(), que solo responde al admin activo.
   Gráficas en SVG a mano. Colores fijos por cifra: cian visitas,
@@ -590,7 +590,7 @@
         pintarLineas();
     });
 
-    /* ---- Portal Documental ---- */
+    /* ---- Legajo ---- */
     const ROL = { cliente: 'Clientes', acreedor: 'Acreedores', operador: 'Operadores', monitor: 'Monitores' };
     function pintarPortal() {
         const t = datos.totales || {}, p = datos.portal || {};

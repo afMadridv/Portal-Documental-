@@ -1,4 +1,4 @@
-/*! Portal Documental · visor de Word y Excel (visor.html)
+/*! Legajo · visor de Word y Excel (visor.html)
   Word como PDF, hojas con cara de Excel, en pestaña aparte
   (en la app del celular, en un marco dentro del portal).
   No tiene sesión: le pide el archivo al portal que lo abrió

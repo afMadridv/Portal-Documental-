@@ -1,4 +1,4 @@
-/*! Portal Documental · plantillas de correo
+/*! Legajo · plantillas de correo
   Bienvenida, contraseña nueva y "todo va por el portal". Cada una
   devuelve { asunto, html, texto }.
   Tablas y estilos en línea a propósito: Gmail y Outlook se comen el
@@ -6,16 +6,16 @@
   Andrés Madrid · andresmadrid.vercel.app */
 
 const CORREO = {
-    cian:   '#00A1B8',
-    navy:   '#111111',   // negro (el nombre es de cuando era azul marino)
-    navy700:'#1F1F1F',
-    gris:   '#595959',
-    borde:  '#E2EAEC',
-    fondo:  '#F2F8F9',
-    rojo:   '#B3261E',
-    rojoBg: '#FBE3E1',
-    ambar:  '#8A4B08',
-    ambarBg:'#FCEFD3'
+    cian:   '#7A5A26',   // kraft oscuro: con el kraft claro el blanco no se lee
+    navy:   '#454B48',   // gris pizarra
+    navy700:'#2F3431',
+    gris:   '#5F6562',
+    borde:  '#E2E4E3',
+    fondo:  '#F2F3F3',
+    rojo:   '#A2452F',
+    rojoBg: '#F6E3DD',
+    ambar:  '#7A5A26',
+    ambarBg:'#F3E8D4'
 };
 
 const CORREO_FUENTE = "Arial, 'Helvetica Neue', Helvetica, sans-serif";
@@ -40,9 +40,9 @@ function _cabecera(notaria) {
     return '' +
     '<tr><td style="background:' + CORREO.navy + ';padding:22px 28px;">' +
       '<div style="font:700 20px/1.2 ' + CORREO_FUENTE + ';color:#ffffff;letter-spacing:.5px;">' +
-        'PORTAL DOCUMENTAL</div>' +
+        'LEGAJO</div>' +
       (notaria
-        ? '<div style="font:400 13px/1.4 ' + CORREO_FUENTE + ';color:#A8E4EE;padding-top:4px;">' +
+        ? '<div style="font:400 13px/1.4 ' + CORREO_FUENTE + ';color:#D9C29A;padding-top:4px;">' +
             _esc(notaria) + '</div>'
         : '') +
     '</td></tr>';
@@ -110,7 +110,7 @@ function _avisoClave() {
 function _envoltura(interior) {
     return '' +
     '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" ' +
-        'style="background:#EDF1F3;padding:24px 12px;">' +
+        'style="background:#ECEDEC;padding:24px 12px;">' +
       '<tr><td align="center">' +
         '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" ' +
             'style="width:600px;max-width:100%;background:#ffffff;border:1px solid ' + CORREO.borde + ';">' +
@@ -127,10 +127,10 @@ function correoBienvenida(d) {
     const portal = d.portal || '';
     const cuerpo = '' +
     _cabecera(d.notaria) +
-    _franja('Bienvenido al Portal Documental') +
+    _franja('Bienvenido a Legajo') +
     '<tr><td style="padding:28px 28px 8px;font:400 15px/1.65 ' + CORREO_FUENTE + ';color:' + CORREO.navy + ';">' +
       '<p style="margin:0 0 16px;">' + _saludo(d, true) + '</p>' +
-      '<p style="margin:0 0 12px;">Se abrió tu cuenta en el <strong>Portal Documental</strong>, ' +
+      '<p style="margin:0 0 12px;">Se abrió tu cuenta en el <strong>Legajo</strong>, ' +
         'que es donde se lleva tu trámite de principio a fin. Abajo están los datos con los ' +
         'que entras.</p>' +
       (d.carpeta
@@ -166,10 +166,10 @@ function correoBienvenida(d) {
     '<tr><td style="padding:8px 28px 26px;"></td></tr>';
 
     const texto =
-        'PORTAL DOCUMENTAL' + (d.notaria ? ' — ' + d.notaria : '') + '\n' +
-        'BIENVENIDO AL PORTAL DOCUMENTAL\n\n' +
+        'LEGAJO' + (d.notaria ? ' — ' + d.notaria : '') + '\n' +
+        'BIENVENIDO A LEGAJO\n\n' +
         _saludo(d) + '\n\n' +
-        'Se abrió tu cuenta en el Portal Documental, que es donde se lleva tu trámite\n' +
+        'Se abrió tu cuenta en Legajo, que es donde se lleva tu trámite\n' +
         'de principio a fin. Abajo están los datos con los que entras.\n\n' +
         (d.carpeta ? 'Tu carpeta es: ' + d.carpeta + '\n\n' : '') +
         '--------------------------------\n' +
@@ -190,7 +190,7 @@ function correoBienvenida(d) {
         'por WhatsApp.\n';
 
     return {
-        asunto: 'Tus datos de acceso al Portal Documental',
+        asunto: 'Tus datos de acceso a Legajo',
         html: _envoltura(cuerpo),
         texto: texto
     };
@@ -206,7 +206,7 @@ function correoCredenciales(d) {
     _franja('Datos de acceso') +
     '<tr><td style="padding:28px 28px 8px;font:400 15px/1.65 ' + CORREO_FUENTE + ';color:' + CORREO.navy + ';">' +
       '<p style="margin:0 0 16px;">' + _saludo(d, true) + '</p>' +
-      '<p style="margin:0 0 16px;">Tu contraseña del Portal Documental fue cambiada. ' +
+      '<p style="margin:0 0 16px;">Tu contraseña de Legajo fue cambiada. ' +
         'Desde ahora entra con los datos que aparecen abajo. La contraseña anterior ya no sirve.</p>' +
       (portal ? '<p style="margin:0 0 4px;">Entra aquí:</p>' + _boton('Entrar al portal', portal) +
         '<p style="margin:0 0 16px;font:400 13px/1.5 ' + CORREO_FUENTE + ';color:' + CORREO.gris + ';">' +
@@ -219,10 +219,10 @@ function correoCredenciales(d) {
     '<tr><td style="padding:8px 28px 26px;"></td></tr>';
 
     const texto =
-        'PORTAL DOCUMENTAL' + (d.notaria ? ' — ' + d.notaria : '') + '\n' +
+        'LEGAJO' + (d.notaria ? ' — ' + d.notaria : '') + '\n' +
         'DATOS DE ACCESO\n\n' +
         _saludo(d) + '\n\n' +
-        'Tu contraseña del Portal Documental fue cambiada. Desde ahora entra con los\n' +
+        'Tu contraseña de Legajo fue cambiada. Desde ahora entra con los\n' +
         'datos que aparecen abajo. La contraseña anterior ya no sirve.\n\n' +
         (portal ? 'Entra aquí: ' + portal + '\n\n' : '') +
         '--------------------------------\n' +
@@ -235,7 +235,7 @@ function correoCredenciales(d) {
         'por WhatsApp.\n';
 
     return {
-        asunto: 'Portal Documental: tus datos de acceso' + (d.usuario ? ' (' + d.usuario + ')' : ''),
+        asunto: 'Legajo: tus datos de acceso' + (d.usuario ? ' (' + d.usuario + ')' : ''),
         html: _envoltura(cuerpo),
         texto: texto
     };
@@ -264,7 +264,7 @@ function correoDocumentos(d) {
     _franja('Tu trámite se lleva por el portal') +
     '<tr><td style="padding:28px 28px 4px;font:400 15px/1.65 ' + CORREO_FUENTE + ';color:' + CORREO.navy + ';">' +
       '<p style="margin:0 0 16px;">' + _saludo(d, true) + '</p>' +
-      '<p style="margin:0 0 12px;"><strong>Todo tu trámite se lleva en el Portal Documental.</strong> ' +
+      '<p style="margin:0 0 12px;"><strong>Todo tu trámite se lleva en Legajo.</strong> ' +
         'Ahí está el expediente completo, los documentos que se van agregando, las audiencias ' +
         'con su fecha y su enlace para conectarte, y en qué etapa va el proceso.</p>' +
       '<p style="margin:0 0 12px;">No se envía nada por separado ni por otro canal: lo que ' +
@@ -311,10 +311,10 @@ function correoDocumentos(d) {
     '<tr><td style="padding:8px 28px 26px;"></td></tr>';
 
     const texto =
-        'PORTAL DOCUMENTAL' + (d.notaria ? ' — ' + d.notaria : '') + '\n' +
+        'LEGAJO' + (d.notaria ? ' — ' + d.notaria : '') + '\n' +
         'TU TRÁMITE SE LLEVA POR EL PORTAL\n\n' +
         _saludo(d) + '\n\n' +
-        'Todo tu trámite se lleva en el Portal Documental. Ahí está el expediente\n' +
+        'Todo tu trámite se lleva en Legajo. Ahí está el expediente\n' +
         'completo, los documentos que se van agregando, las audiencias con su fecha y\n' +
         'su enlace para conectarte, y en qué etapa va el proceso.\n\n' +
         'No se envía nada por separado ni por otro canal: lo que necesites saber de tu\n' +
@@ -336,7 +336,7 @@ function correoDocumentos(d) {
         '  Solo puede estar abierta en un dispositivo a la vez.\n';
 
     return {
-        asunto: 'Tu trámite se lleva en el Portal Documental',
+        asunto: 'Tu trámite se lleva en Legajo',
         html: _envoltura(cuerpo),
         texto: texto
     };

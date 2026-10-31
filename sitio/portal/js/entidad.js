@@ -1,4 +1,4 @@
-/*! Portal Documental · datos de la entidad en la página
+/*! Legajo · datos de la entidad en la página
     Andrés Madrid · andresmadrid.vercel.app */
 // [data-entidad="CORREO"] toma su valor de PORTAL_CONFIG.ENTIDAD; los enlaces mailto/tel también.
 (function () {

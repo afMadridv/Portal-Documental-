@@ -1,4 +1,4 @@
-/*! Portal Documental · Rendimiento (vista del admin)
+/*! Legajo · Rendimiento (vista del admin)
   Usa los tokens --pt-* del portal. 1rem = 10px.
   Colores por cifra: cian visitas, violeta empezados, ámbar enviados,
   rosa portal. Probados con daltonismo y a 3:1 en los dos temas: si se
@@ -12,27 +12,27 @@
     --rd-c-portal: #C2417A;
     --rd-c-resultado: #2E8540;   /* solo en su tarjeta */
 
-    --rd-pista: #E6EEF0;
-    --rd-rejilla: #E9EFF1;
+    --rd-pista: #E8EAE9;
+    --rd-rejilla: #EBEDEC;
 
     /* Escala del embudo y equipos, con el color del texto encima */
-    --rd-e1: #6CB9C9;  --rd-e1-t: #0B0B0B;
-    --rd-e2: #3FA4B8;  --rd-e2-t: #0B0B0B;
-    --rd-e3: #1A8BA0;  --rd-e3-t: #FFFFFF;
-    --rd-e4: #0B6F80;  --rd-e4-t: #FFFFFF;
+    --rd-e1: #E3CFA9;  --rd-e1-t: #1F2321;
+    --rd-e2: #C9A46A;  --rd-e2-t: #1F2321;
+    --rd-e3: #8C6A33;  --rd-e3-t: #FFFFFF;
+    --rd-e4: #5E4519;  --rd-e4-t: #FFFFFF;
 
     /* Mapa de calor: de crema a #FFA700 (máximo). 0 = nada.
        *-t = color del número en la vista de mes. */
-    --rd-k0: #FFF6E6;  --rd-k0-t: #1A1A1A;
-    --rd-k1: #FFE6B8;  --rd-k1-t: #1A1A1A;
-    --rd-k2: #FFD68A;  --rd-k2-t: #1A1A1A;
-    --rd-k3: #FFC65C;  --rd-k3-t: #1A1A1A;
-    --rd-k4: #FFB62E;  --rd-k4-t: #1A1A1A;
-    --rd-k5: #FFA700;  --rd-k5-t: #1A1A1A;
+    --rd-k0: #F7F1E6;  --rd-k0-t: #1A1A1A;
+    --rd-k1: #EEDFC4;  --rd-k1-t: #1A1A1A;
+    --rd-k2: #E2C99D;  --rd-k2-t: #1A1A1A;
+    --rd-k3: #D5B47E;  --rd-k3-t: #1A1A1A;
+    --rd-k4: #C9A46A;  --rd-k4-t: #1A1A1A;
+    --rd-k5: #B08A4F;  --rd-k5-t: #1A1A1A;
 
-    --rd-bien: #157039;      --rd-bien-suave: #DDF3E4;
-    --rd-ojo: #8A4B08;       --rd-ojo-suave: #FCEFD3;
-    --rd-urgente: #B3261E;   --rd-urgente-suave: #FBE3E1;
+    --rd-bien: #2E7D4F;      --rd-bien-suave: #E1F0E6;
+    --rd-ojo: #7A5A26;       --rd-ojo-suave: #F3E8D4;
+    --rd-urgente: #A2452F;   --rd-urgente-suave: #F6E3DD;
 }
 html[data-tema="oscuro"] #vista-rendimiento{
     --rd-c-visitas: #0E95AA;
@@ -41,25 +41,25 @@ html[data-tema="oscuro"] #vista-rendimiento{
     --rd-c-portal: #D9578F;
     --rd-c-resultado: #4CAF62;
 
-    --rd-pista: #262626;
-    --rd-rejilla: #262626;
+    --rd-pista: #2A2F2D;
+    --rd-rejilla: #2A2F2D;
 
-    --rd-e1: #0A5561;  --rd-e1-t: #FFFFFF;
-    --rd-e2: #0B6F80;  --rd-e2-t: #FFFFFF;
-    --rd-e3: #1E98AE;  --rd-e3-t: #FFFFFF;
-    --rd-e4: #5DC2D3;  --rd-e4-t: #0B0B0B;
+    --rd-e1: #4A3C24;  --rd-e1-t: #FFFFFF;
+    --rd-e2: #6E5530;  --rd-e2-t: #FFFFFF;
+    --rd-e3: #A7834C;  --rd-e3-t: #141414;
+    --rd-e4: #DDBE8A;  --rd-e4-t: #141414;
 
     /* En oscuro sube desde el fondo hasta el mismo naranja */
-    --rd-k0: #262626;  --rd-k0-t: #F2F2F2;
-    --rd-k1: #4D3610;  --rd-k1-t: #F2F2F2;
-    --rd-k2: #7A520D;  --rd-k2-t: #F2F2F2;
-    --rd-k3: #B07408;  --rd-k3-t: #141414;
-    --rd-k4: #D48A03;  --rd-k4-t: #141414;
-    --rd-k5: #FFA700;  --rd-k5-t: #141414;
+    --rd-k0: #252A28;  --rd-k0-t: #F2F2F2;
+    --rd-k1: #3A3123;  --rd-k1-t: #F2F2F2;
+    --rd-k2: #54452D;  --rd-k2-t: #F2F2F2;
+    --rd-k3: #7A6238;  --rd-k3-t: #141414;
+    --rd-k4: #A7834C;  --rd-k4-t: #141414;
+    --rd-k5: #DDBE8A;  --rd-k5-t: #141414;
 
-    --rd-bien: #57C98A;      --rd-bien-suave: #14361F;
-    --rd-ojo: #E8A33C;       --rd-ojo-suave: #3A2A0C;
-    --rd-urgente: #EF8078;   --rd-urgente-suave: #3A1714;
+    --rd-bien: #6FC08F;      --rd-bien-suave: #1D3227;
+    --rd-ojo: #DDBE8A;       --rd-ojo-suave: #3A3123;
+    --rd-urgente: #E58B74;   --rd-urgente-suave: #3B2420;
 }
 
 /* Mientras recarga, lo anterior queda tenue */

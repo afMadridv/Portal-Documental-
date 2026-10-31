@@ -1,4 +1,4 @@
-/*! Portal Documental · lógica principal
+/*! Legajo · lógica principal
   Roles: administrador (todo), monitor (ve todo, no cambia nada),
   operador (sus carpetas activas), cliente y acreedor (sus carpetas
   activas, ver y descargar). Los permisos reales los aplica la base.
@@ -435,24 +435,37 @@ function generarClaveEditar() {
     avisar('Contraseña generada: ' + clave + '. Cópiala antes de guardar.');
 }
 
-/* ============ LEYES DE INSOLVENCIA ============
-   Las que se usan en insolvencia de persona natural y conciliación,
-   con enlace al texto oficial. */
+/* ============ LEYES ============
+   Notaría: insolvencia. Centro: conciliación. Con «todas», las dos. */
+const LEY_1564 = { n: 'Ley 1564 de 2012', d: 'Código General del Proceso: insolvencia de la persona natural no comerciante', url: 'http://www.secretariasenado.gov.co/senado/basedoc/ley_1564_2012.html' };
+const LEY_2220 = { n: 'Ley 2220 de 2022', d: 'Estatuto de Conciliación: plazo de 3 meses, actas y constancias', url: 'https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=188766' };
+const DECRETO_1069 = { n: 'Decreto 1069 de 2015', d: 'Reglamento del sector justicia: conciliación e insolvencia', url: 'https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=74174' };
+const DECRETO_0042 = { n: 'Decreto 0042 de 2026', d: 'Modifica el Decreto 1069 en lo que toca a la conciliación', url: 'https://dapre.presidencia.gov.co/normativa/normativa/DECRETO%20No.%200042%20DEL%2021%20DE%20ENERO%20DE%202026.pdf' };
+
 const LEYES_INSOLVENCIA = [
-    { n: 'Ley 1564 de 2012', d: 'Código General del Proceso: insolvencia de la persona natural no comerciante', url: 'http://www.secretariasenado.gov.co/senado/basedoc/ley_1564_2012.html' },
+    LEY_1564,
     { n: 'Ley 2445 de 2025', d: 'Reforma de la insolvencia de persona natural, que incluye al pequeño comerciante', url: 'http://www.secretariasenado.gov.co/senado/basedoc/ley_2445_2025.html' },
-    { n: 'Ley 2220 de 2022', d: 'Estatuto de Conciliación', url: 'https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=188766' },
-    { n: 'Decreto 1069 de 2015', d: 'Reglamento del sector justicia: conciliación e insolvencia', url: 'https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=74174' },
-    { n: 'Decreto 0042 de 2026', d: 'Modifica el Decreto 1069 en lo que toca a la conciliación', url: 'https://dapre.presidencia.gov.co/normativa/normativa/DECRETO%20No.%200042%20DEL%2021%20DE%20ENERO%20DE%202026.pdf' },
+    DECRETO_1069,
     { n: 'Ley 1116 de 2006', d: 'Insolvencia de empresas y comerciantes que no son pequeños', url: 'http://www.secretariasenado.gov.co/senado/basedoc/ley_1116_2006.html' },
     { n: 'Ley 1676 de 2013', d: 'Garantías mobiliarias', url: 'http://www.secretariasenado.gov.co/senado/basedoc/ley_1676_2013.html' }
+];
+
+const LEYES_CONCILIACION = [
+    LEY_2220,
+    DECRETO_1069,
+    DECRETO_0042,
+    { n: 'Ley 1564 de 2012', d: 'Código General del Proceso: la demanda cuando no hay acuerdo', url: LEY_1564.url }
 ];
 
 /* Enlaces en pestaña nueva con noopener. */
 function pintarLeyes() {
     const cont = document.getElementById('lista-leyes');
     if (!cont) return;
-    cont.innerHTML = LEYES_INSOLVENCIA.map(l =>
+    const clase = claseActual();
+    const leyes = clase === 'centro' ? LEYES_CONCILIACION
+        : clase === 'notaria' ? LEYES_INSOLVENCIA
+        : LEYES_INSOLVENCIA.concat(LEYES_CONCILIACION.filter(l => !LEYES_INSOLVENCIA.includes(l) && l.n !== LEY_1564.n));
+    cont.innerHTML = leyes.map(l =>
         '<a class="pt-ley" href="' + l.url + '" target="_blank" rel="noopener noreferrer" title="Abrir el texto oficial en una pestaña nueva">' +
             '<span class="pt-ley__ic">' + icono('documento', 18) + '</span>' +
             '<span class="pt-ley__txt"><strong>' + escaparHtml(l.n) + '</strong>' +
@@ -640,6 +653,89 @@ function notariaActual() {
     return _notariasDisponibles.find(n => String(n.id) === String(_notariaActiva)) || null;
 }
 
+/* ---- Tipo de oficina ----
+   notaria: insolvencia. centro: conciliación. La carpeta toma el de su oficina. */
+const TEXTOS_CLASE = {
+    notaria: {
+        oficina: 'Notaría', tramite: 'Insolvencia',
+        cliente: 'Cliente', acreedor: 'Acreedor',
+        'tab-clientes': 'Clientes', 'tab-acreedores': 'Acreedores',
+        'grupo-clientes': 'Clientes (deudores) que pueden ver la carpeta',
+        'grupo-acreedores': 'Acreedores que pueden ver la carpeta',
+        'filtro-clientes': 'Clientes (deudores)', 'filtro-acreedores': 'Acreedores',
+        'leyes': 'Leyes de insolvencia',
+        'destinatarios': 'Destinatarios (deudor y acreedores del trámite)',
+        'nombre-carpeta': 'Ej.: Insolvencia — Nombre del cliente (Exp. 003-2026)',
+        parte: 'deudor', contrapartes: 'acreedores', contraparte: 'acreedor',
+        plazo: '60 días hábiles', prorroga: '+30 días hábiles', plazoCorto: '60/90'
+    },
+    centro: {
+        oficina: 'Centro de conciliación', tramite: 'Conciliación',
+        cliente: 'Convocante', acreedor: 'Convocado',
+        'tab-clientes': 'Convocantes', 'tab-acreedores': 'Convocados',
+        'grupo-clientes': 'Convocantes que pueden ver la carpeta',
+        'grupo-acreedores': 'Convocados que pueden ver la carpeta',
+        'filtro-clientes': 'Convocantes', 'filtro-acreedores': 'Convocados',
+        'leyes': 'Leyes de conciliación',
+        'destinatarios': 'Destinatarios (convocante y convocados)',
+        'nombre-carpeta': 'Ej.: Conciliación — Nombre del convocante (Exp. 003-2026)',
+        parte: 'convocante', contrapartes: 'convocados', contraparte: 'convocado',
+        plazo: '3 meses', prorroga: '+3 meses', plazoCorto: '3/6 meses'
+    }
+};
+
+/* Con «todas» se ven las dos normativas */
+const TEXTOS_TODAS = { 'leyes': 'Leyes de insolvencia y conciliación' };
+
+const RESULTADOS = {
+    acuerdo_total:   'Acuerdo total',
+    acuerdo_parcial: 'Acuerdo parcial',
+    no_acuerdo:      'Constancia de no acuerdo',
+    inasistencia:    'Inasistencia',
+    desistimiento:   'Desistimiento'
+};
+
+function tipoDeOficina(id) {
+    const n = _notariasDisponibles.find(x => String(x.id) === String(id)) ||
+              _notariasFormulario.find(x => String(x.id) === String(id));
+    return n && n.tipo === 'centro' ? 'centro' : 'notaria';
+}
+
+/* Tipo de la oficina abierta; null con «todas» o sin oficinas */
+function claseActual() {
+    const n = notariaActual();
+    if (!n) return null;
+    return n.tipo === 'centro' ? 'centro' : 'notaria';
+}
+
+/* Tipo de una carpeta (por su oficina) */
+function claseDe(c) {
+    if (c && c.notariaId != null) return tipoDeOficina(c.notariaId);
+    return claseActual() || 'notaria';
+}
+
+const mayuscula = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/* Textos de una carpeta, o de la oficina abierta sin carpeta */
+function textosDe(c) { return TEXTOS_CLASE[c ? claseDe(c) : (claseActual() || 'notaria')]; }
+
+/* Cambia los rótulos que dependen del tipo de oficina */
+function pintarTextosClase() {
+    const clase = claseActual();
+    const t = TEXTOS_CLASE[clase || 'notaria'];
+    document.querySelectorAll('[data-clase]').forEach(el => {
+        const clave = el.dataset.clase;
+        const texto = (!clase && TEXTOS_TODAS[clave]) || t[clave];
+        if (!texto) return;
+        if (el.tagName === 'INPUT') el.placeholder = texto;
+        else el.textContent = texto;
+    });
+    // Cliente y acreedor se llaman convocante y convocado en conciliación
+    ETIQUETAS_ROL.cliente = t.cliente;
+    ETIQUETAS_ROL.acreedor = t.acreedor;
+    pintarLeyes();
+}
+
 /* ¿La carpeta es de la notaría abierta? (con "todas", sí) */
 function esDeNotariaActiva(carpeta) {
     if (_notariaActiva === null) return true;
@@ -742,13 +838,13 @@ function mostrarPantallaNotarias() {
     const texto = document.getElementById('elegir-texto');
     const eti = document.getElementById('elegir-eti');
     if (titulo) titulo.textContent = vacio
-        ? 'Todavía no hay ninguna notaría'
-        : '¿En qué notaría vas a trabajar?';
+        ? 'Todavía no hay ninguna oficina'
+        : '¿En qué oficina vas a trabajar?';
     if (texto) texto.textContent = vacio
-        ? 'El portal necesita al menos una oficina antes de poder crear carpetas. ' +
-          'Créala aquí y entra a ella.'
-        : 'Cada notaría tiene sus propias carpetas y trámites. Puedes cambiar de una ' +
-          'a otra en cualquier momento, sin cerrar sesión.';
+        ? 'El portal necesita al menos una notaría o un centro de conciliación antes de ' +
+          'poder crear carpetas. Créala aquí y entra a ella.'
+        : 'En las notarías se llevan insolvencias y en los centros, conciliaciones. Cada ' +
+          'oficina tiene sus propias carpetas; puedes cambiar sin cerrar sesión.';
     if (eti) eti.textContent = vacio ? 'Sin oficinas' : 'Elige una oficina';
 
     // Sin oficinas no hay botón de entrar
@@ -869,6 +965,7 @@ function tarjetaNotaria(n) {
             '<span class="pt-oficina__tic" aria-hidden="true"></span>' +
         '</span>' +
         '<span class="pt-oficina__nombre">' + escaparHtml(n.nombre) + '</span>' +
+        insigniaTipo(n.tipo) +
         '<span class="pt-oficina__cifras">' +
             cifra(t.carpetas, plural(t.carpetas, 'carpeta activa', 'carpetas activas')) +
             cifra(t.porVencer, 'por vencer', 'pt-oficina__cifra--alerta') +
@@ -876,6 +973,13 @@ function tarjetaNotaria(n) {
         '</span>' +
         lineaEspacioNotaria(t) +
     '</button>';
+}
+
+/* Notaría (insolvencia) o centro (conciliación) */
+function insigniaTipo(tipo) {
+    const centro = tipo === 'centro';
+    return '<span class="pt-oficina__tipo pt-oficina__tipo--' + (centro ? 'centro' : 'notaria') + '">' +
+        (centro ? 'Centro de conciliación' : 'Notaría · insolvencia') + '</span>';
 }
 
 function tarjetaTodasLasNotarias() {
@@ -887,7 +991,7 @@ function tarjetaTodasLasNotarias() {
         : '';
     return '<button class="pt-oficina pt-oficina--todas" data-accion="marcar-notaria" data-notaria="todas">' +
         '<span class="pt-oficina__cab">' +
-            '<span class="pt-oficina__ciudad">Todas las notarías</span>' +
+            '<span class="pt-oficina__ciudad">Todas las oficinas</span>' +
             '<span class="pt-oficina__tic" aria-hidden="true"></span>' +
         '</span>' +
         '<span class="pt-oficina__nombre">Panorama general, solo lectura</span>' +
@@ -919,7 +1023,7 @@ function pintarEspacioNotarias() {
         cuerpo =
             '<div class="pt-elegir__disco' + estado + '">' +
                 '<div class="pt-disco__barra">' +
-                    '<i class="pt-disco__docs" style="width:' + pct(docs) + '%" title="Documentos de las notarías"></i>' +
+                    '<i class="pt-disco__docs" style="width:' + pct(docs) + '%" title="Documentos de las oficinas"></i>' +
                     '<i class="pt-disco__otros" style="width:' + pct(otros) + '%" title="Adjuntos de chat y soporte"></i>' +
                 '</div>' +
                 '<div class="pt-elegir__disco-datos">' +
@@ -964,7 +1068,8 @@ function pintarSeleccionNotaria() {
     }
     boton.disabled = false;
     const n = _notariasDisponibles.find(x => String(x.id) === _notariaMarcada);
-    boton.textContent = n ? 'Entrar a ' + n.ciudad : 'Ver todas las notarías';
+    // Por nombre: en una ciudad puede haber notaría y centro
+    boton.textContent = n ? 'Entrar a ' + n.nombre : 'Ver todas las oficinas';
 }
 
 /* Confirma la oficina marcada */
@@ -1035,20 +1140,21 @@ function cambiarNotaria() {
 
 /* Ciudad junto al nombre del portal y en el título. Botón con varias, etiqueta con una. */
 function pintarNotariaActiva() {
+    pintarTextosClase();
     const caja = document.getElementById('pt-notaria');
     if (!caja) return;
 
     if (!_notariasDisponibles.length) { caja.hidden = true; return; }
 
     const n = notariaActual();
-    const ciudad = n ? n.ciudad : 'Todas las notarías';
+    const ciudad = n ? n.ciudad : 'Todas las oficinas';
     const detalle = n ? n.nombre : 'Panorama general';
     // El admin siempre puede volver a la pantalla de oficinas
     const puedeCambiar = ES_ADMIN || _notariasDisponibles.length > 1;
 
     caja.innerHTML = puedeCambiar
         ? '<button class="pt-notaria__boton" data-accion="cambiar-notaria" ' +
-              'title="Cambiar de notaría">' +
+              'title="Cambiar de oficina">' +
               '<span class="pt-notaria__ciudad">' + escaparHtml(ciudad) + '</span>' +
               '<span class="pt-notaria__nombre">' + escaparHtml(detalle) + '</span>' +
           '</button>'
@@ -1058,7 +1164,7 @@ function pintarNotariaActiva() {
           '</div>';
     caja.hidden = false;
 
-    document.title = 'Portal Documental' + (n ? ' ' + n.ciudad : '') + ' | Carpetas';
+    document.title = 'Legajo' + (n ? ' ' + n.ciudad : '') + ' | Carpetas';
 }
 
 /* ---- Casillas de notaría en el formulario ----
@@ -1095,8 +1201,8 @@ function pintarNotariasDeFormulario(marcadas) {
 
     const varias = rol === 'operador';
     etiqueta.textContent = varias
-        ? 'Notarías donde puede trabajar (puede marcar varias)'
-        : 'Notaría';
+        ? 'Oficinas donde puede trabajar (puede marcar varias)'
+        : 'Oficina';
 
     const yaMarcadas = (marcadas || []).map(String);
     caja.innerHTML = activas.map(n =>
@@ -1104,7 +1210,8 @@ function pintarNotariasDeFormulario(marcadas) {
             '<input type="' + (varias ? 'checkbox' : 'radio') + '" ' +
                    'name="notaria-usuario" value="' + n.id + '"' +
                    (yaMarcadas.includes(String(n.id)) ? ' checked' : '') + '>' +
-            '<span><b>' + escaparHtml(n.ciudad) + '</b> · ' + escaparHtml(n.nombre) + '</span>' +
+            '<span><b>' + escaparHtml(n.ciudad) + '</b> · ' + escaparHtml(n.nombre) +
+                ' <small>' + (n.tipo === 'centro' ? 'centro' : 'notaría') + '</small></span>' +
         '</label>').join('');
 }
 
@@ -1160,6 +1267,7 @@ function pintarFilasGestion() {
         '<div class="pt-elegir__admin-fila' + (n.activa ? '' : ' apagada') + '">' +
             '<span class="pt-elegir__admin-txt">' +
                 '<b>' + escaparHtml(n.ciudad) + '</b> · ' + escaparHtml(n.nombre) +
+                ' <small>' + (n.tipo === 'centro' ? 'centro de conciliación' : 'notaría') + '</small>' +
                 (n.activa ? '' : ' <em>desactivada</em>') +
             '</span>' +
             uso(n.id) +
@@ -1185,11 +1293,19 @@ function volverAlPortal() {
    Un formulario: ciudad, nombre y activa. */
 let _notariaEditando = null;
 
-function abrirModalNotaria(notaria) {
+function abrirModalNotaria(notaria, tipoNuevo) {
     if (!ES_ADMIN) return;
     _notariaEditando = notaria || null;
-    document.getElementById('modal-notaria-titulo').textContent =
-        notaria ? 'Editar notaría' : 'Nueva notaría';
+    const tipo = document.getElementById('notaria-tipo');
+    tipo.value = notaria ? (notaria.tipo || 'notaria') : (tipoNuevo || 'notaria');
+    document.getElementById('notaria-tipo-campo').hidden = !notaria;
+    // Con carpetas el tipo queda fijo (también lo exige el servidor)
+    const conCarpetas = !!notaria && (cifrasDeNotaria(notaria.id).carpetasTotal || 0) > 0;
+    tipo.disabled = conCarpetas;
+    document.getElementById('notaria-tipo-nota').textContent = conCarpetas
+        ? 'Tiene carpetas: el tipo ya no se puede cambiar.'
+        : 'Con carpetas creadas ya no se puede cambiar.';
+    textosModalNotaria();
     document.getElementById('notaria-ciudad').value = notaria ? notaria.ciudad : '';
     document.getElementById('notaria-nombre').value = notaria ? notaria.nombre : '';
     document.getElementById('notaria-activa').checked = notaria ? notaria.activa !== false : true;
@@ -1207,6 +1323,16 @@ function abrirModalNotaria(notaria) {
     document.getElementById('notaria-ciudad').focus();
 }
 
+/* Título y ejemplo según el tipo elegido */
+function textosModalNotaria() {
+    const centro = document.getElementById('notaria-tipo').value === 'centro';
+    const quien = centro ? 'centro de conciliación' : 'notaría';
+    document.getElementById('modal-notaria-titulo').textContent =
+        (_notariaEditando ? 'Editar ' : (centro ? 'Nuevo ' : 'Nueva ')) + quien;
+    document.getElementById('notaria-nombre-eti').textContent = 'Nombre ' + (centro ? 'del centro' : 'de la notaría');
+    document.getElementById('notaria-nombre').placeholder = centro ? 'Centro de Conciliación' : 'Notaría 2';
+}
+
 function cerrarModalNotaria() {
     document.getElementById('modal-notaria').hidden = true;
     _notariaEditando = null;
@@ -1218,27 +1344,30 @@ async function guardarNotaria(evento) {
     const ciudad = document.getElementById('notaria-ciudad').value.trim();
     const nombre = document.getElementById('notaria-nombre').value.trim();
     const activa = document.getElementById('notaria-activa').checked;
+    const tipo = document.getElementById('notaria-tipo').value === 'centro' ? 'centro' : 'notaria';
     if (!ciudad || !nombre) {
-        avisar('La notaría necesita ciudad y nombre.', 'error');
+        avisar('La oficina necesita ciudad y nombre.', 'error');
         return;
     }
     try {
         if (_notariaEditando) {
-            await notariaEditar(_notariaEditando.id, nombre, ciudad, activa);
+            const cambiaTipo = tipo !== (_notariaEditando.tipo || 'notaria') ? tipo : null;
+            await notariaEditar(_notariaEditando.id, nombre, ciudad, activa, cambiaTipo);
             registrarActividad('editar-notaria', ciudad + ' · ' + nombre);
         } else {
-            const id = await notariaCrear(nombre, ciudad);
+            const id = await notariaCrear(nombre, ciudad, tipo);
             registrarActividad('crear-notaria', ciudad + ' · ' + nombre);
             if (!activa) await notariaEditar(id, null, null, false);
         }
     } catch (e) {
-        avisar((e && e.message) || 'No se pudo guardar la notaría.', 'error');
+        avisar((e && e.message) || 'No se pudo guardar la oficina.', 'error');
         return;
     }
+    // Antes de cerrar: cerrar la suelta
+    const era = _notariaEditando;
     cerrarModalNotaria();
 
     // Si se desactivó la abierta, se suelta
-    const era = _notariaEditando;
     _notariasDisponibles = await misNotarias();
     if (era && !activa && String(_notariaActiva) === String(era.id)) {
         _notariaActiva = null;
@@ -1246,10 +1375,11 @@ async function guardarNotaria(evento) {
     }
     pintarNotariaActiva();
     mostrarPantallaNotarias();
-    avisar('Notaría «' + ciudad + ' · ' + nombre + '» guardada.');
+    avisar('«' + ciudad + ' · ' + nombre + '» guardada.');
 }
 
-function nuevaNotariaAccion() { abrirModalNotaria(null); }
+function nuevaNotariaAccion() { abrirModalNotaria(null, 'notaria'); }
+function nuevoCentroAccion() { abrirModalNotaria(null, 'centro'); }
 
 function editarNotariaAccion(id) {
     const n = _notariasFormulario.find(x => String(x.id) === String(id));
@@ -1264,7 +1394,7 @@ async function alternarNotariaAccion(id) {
     if (n.activa && !await confirmarPortal(
         'Al desactivar «' + n.ciudad + ' · ' + n.nombre + '» deja de aparecer al entrar. ' +
         'Sus carpetas no se borran, pero nadie podrá abrirlas hasta reactivarla. ¿Continuar?',
-        'Desactivar notaría')) return;
+        'Desactivar oficina')) return;
     try {
         await notariaEditar(n.id, null, null, !n.activa);
         _notariasDisponibles = await misNotarias();
@@ -1275,9 +1405,9 @@ async function alternarNotariaAccion(id) {
         }
         pintarNotariaActiva();
         mostrarPantallaNotarias();
-        avisar(n.activa ? 'Notaría desactivada.' : 'Notaría activada.');
+        avisar(n.activa ? 'Oficina desactivada.' : 'Oficina activada.');
     } catch (e) {
-        avisar((e && e.message) || 'No se pudo cambiar la notaría.', 'error');
+        avisar((e && e.message) || 'No se pudo cambiar la oficina.', 'error');
     }
 }
 
@@ -1556,7 +1686,7 @@ function pintarVistaAlmacenamiento() {
     const oficina = notariaActual();
     const donde = oficina
         ? escaparHtml((oficina.ciudad ? oficina.ciudad + ' · ' : '') + oficina.nombre)
-        : 'todas las notarías';
+        : 'todas las oficinas';
 
     const bytesDe = (c) => Math.round((Number(c.pesoTotalMb) || 0) * 1048576);
     const total = carpetas.reduce((n, c) => n + bytesDe(c), 0);
@@ -1569,10 +1699,21 @@ function pintarVistaAlmacenamiento() {
             '<div class="pt-panorama__pie">' + pie + '</div>' +
         '</div>';
 
+    // Con «todas»: cuánto es de insolvencia y cuánto de conciliación
+    const deTipo = (tipo) => carpetas.filter(c => claseDe(c) === tipo);
+    const pesoTipo = (tipo) => deTipo(tipo).reduce((n, c) => n + bytesDe(c), 0);
+    const reparto = !oficina && carpetas.length
+        ? caja1('Notarías', formatoEspacio(pesoTipo('notaria')),
+                cuantos(deTipo('notaria').length, 'expediente de insolvencia', 'expedientes de insolvencia')) +
+          caja1('Centros de conciliación', formatoEspacio(pesoTipo('centro')),
+                cuantos(deTipo('centro').length, 'expediente de conciliación', 'expedientes de conciliación'))
+        : '';
+
     const pano = document.getElementById('almacen-panorama');
     pano.hidden = false;
     pano.innerHTML =
-        caja1('Ocupa esta oficina', formatoEspacio(total), donde) +
+        caja1(oficina ? 'Ocupa esta oficina' : 'Ocupan las oficinas', formatoEspacio(total), donde) +
+        reparto +
         caja1('Documentos', docs, 'en ' + carpetas.length +
               (carpetas.length === 1 ? ' expediente' : ' expedientes')) +
         caja1('Promedio por documento', docs ? formatoEspacio(total / docs) : '—',
@@ -1724,8 +1865,13 @@ function pintarPanoramaCarpetas(mostradas) {
               vencidos ? 'pt-panorama__num--alerta' : (porVencer ? 'pt-panorama__num--aviso' : '')) +
         caja1('Documentos', docs,
               ES_SUPERVISION ? mb.toFixed(1) + ' MB en total' : 'en tus carpetas') +
-        caja1('Personas asignadas', personas, 'clientes y acreedores');
+        caja1('Personas asignadas', personas, 'partes de los trámites');
 }
+
+// Ícono de la marca: carpeta kraft con clip
+const ICONO_CARPETA_MARCA = '<svg class="lg-icono" viewBox="0 0 64 64" aria-hidden="true">' +
+    '<rect x="8" y="18" width="48" height="36" rx="5"/><path d="M14 28V12a5 5 0 0 1 10 0v12M19 28V14"/>' +
+    '<rect x="8" y="30" width="48" height="24" rx="5"/></svg>';
 
 /* Una carpeta por fila. "Abrir" visible; el resto en el menú ⋯. */
 /* Tarjeta de carpeta: toda abre el expediente. El menú ⋯ no pasa el clic. */
@@ -1755,7 +1901,7 @@ function filaCarpeta(c, totalArchivos) {
                    'data-accion="abrir-carpeta" data-id="' + c.id + '" ' +
                    'tabindex="0" role="button">' +
         '<div class="pt-tarjeta-carpeta__cab">' +
-            '<span class="pt-tarjeta-carpeta__ic">' + icono('carpeta', 18) + '</span>' +
+            '<span class="pt-tarjeta-carpeta__ic">' + ICONO_CARPETA_MARCA + '</span>' +
             (c.activa ? '' : '<span class="pt-insignia pt-insignia--inactiva">Desactivada</span>') +
             menu +
         '</div>' +
@@ -1788,7 +1934,13 @@ const TIPOS_PROCESO = {
     natural_no_comerciante: 'Persona natural no comerciante',
     pequeno_comerciante:    'Pequeño comerciante'
 };
+/* Conciliación: tipo y, cerrada, su resultado */
 function tipoProcesoEtiqueta(c) {
+    if (claseDe(c) === 'centro') {
+        return '<span class="pt-tarjeta-carpeta__tipo pt-tarjeta-carpeta__tipo--centro">Conciliación' +
+            (c.resultado && RESULTADOS[c.resultado] ? ' · ' + escaparHtml(RESULTADOS[c.resultado]) : '') +
+            '</span>';
+    }
     if (!c.tipoProceso || !TIPOS_PROCESO[c.tipoProceso]) return '';
     return '<span class="pt-tarjeta-carpeta__tipo">' +
         escaparHtml(TIPOS_PROCESO[c.tipoProceso]) + '</span>';
@@ -1864,18 +2016,21 @@ function semaforoEfectivo(p, pausadoCarpeta) {
     return { color: p.semaforo || 'verde', diasRestantes: (p.diasRestantes === undefined ? null : p.diasRestantes) };
 }
 
-/* Conteo del trámite (60/90 días hábiles). */
+/* Conteo del trámite: 60/90 días hábiles o 3/6 meses. El total en días
+   hábiles sirve igual para los dos. */
 function resumenTramite(c) {
     if (c.finalizado) {
         return puntoSemaforo('verde', 10) + ' <strong>Trámite finalizado</strong>' +
             (c.fechaFinTramite ? ' el ' + escaparHtml(formatoFechaDia(c.fechaFinTramite)) : '') +
+            (c.resultado && RESULTADOS[c.resultado] ? ' · ' + escaparHtml(RESULTADOS[c.resultado]) : '') +
             resumenCierre(c);
     }
     if (!c.fechaInicioTramite) return null;
     const total = c.diasHabilesTramite || 60;
     if (c.pausado) {
-        return puntoSemaforo('pausado', 10) + ' Trámite: en pausa · plazo de ' + total +
-            ' días hábiles' + (c.tieneProrroga ? ' (con prórroga)' : '');
+        return puntoSemaforo('pausado', 10) + ' Trámite: en pausa · plazo de ' +
+            (claseDe(c) === 'centro' ? (c.tieneProrroga ? '6 meses' : '3 meses') : total + ' días hábiles') +
+            (c.tieneProrroga ? ' (con prórroga)' : '');
     }
     const restantes = c.fechaVencimientoTramite
         ? contarDiasHabiles(fechaISOLocalHabil(), c.fechaVencimientoTramite) : null;
@@ -2203,7 +2358,7 @@ async function mostrarVistaEstados() {
           (ES_ADMIN ? 'Puedes corregir tiempos y estados: la corrección queda registrada.' : 'Vista de solo lectura.')
         : 'Aquí controlas la etapa de los trámites que tienes a cargo. Los plazos corren en días hábiles colombianos (lun–vie, sin festivos).';
     if (!cacheLeer('carpetas')) {
-        document.getElementById('contenido-estados').innerHTML = esqueletoTabla(['Operador', 'Trámite', 'Proceso actual', 'Semáforo', 'Vencimiento', 'Días hábiles restantes', 'Trámite (60/90)', 'Acciones'], 6);
+        document.getElementById('contenido-estados').innerHTML = esqueletoTabla(['Operador', 'Trámite', 'Proceso actual', 'Semáforo', 'Vencimiento', 'Días hábiles restantes', 'Plazo del trámite', 'Acciones'], 6);
     }
     await cargarYPintarEstados();
     detenerAutoRefrescoEstados();
@@ -2518,14 +2673,15 @@ function tablaEstadosGlobal(carpetas) {
             procesoNombre = escaparHtml(actual.nombre);
             venc = escaparHtml(formatoVencimiento(actual.fechaVencimiento));
             restantes = s.diasRestantes === null ? '—'
-                : s.diasRestantes < 0 ? '<strong style="color:var(--pt-peligro,#ef4444);">' + s.diasRestantes + '</strong>'
+                : s.diasRestantes < 0 ? '<strong style="color:var(--pt-rojo-txt);">' + s.diasRestantes + '</strong>'
                 : String(s.diasRestantes);
         }
-        // Conteo del trámite (60 o 90 con prórroga)
+        // Conteo del trámite (60/90 días hábiles o 3/6 meses, contado en días hábiles)
         let conteo;
         if (c.finalizado) {
             conteo = puntoSemaforo('verde', 10) + ' <strong>finalizado</strong>' +
-                (c.fechaFinTramite ? ' (' + escaparHtml(c.fechaFinTramite) + ')' : '');
+                (c.fechaFinTramite ? ' (' + escaparHtml(c.fechaFinTramite) + ')' : '') +
+                (c.resultado && RESULTADOS[c.resultado] ? '<br><span class="pt-nota">' + escaparHtml(RESULTADOS[c.resultado]) + '</span>' : '');
         } else if (!c.fechaInicioTramite) {
             conteo = '<span class="pt-nota">sin iniciar</span>';
         } else if (c.pausado) {
@@ -2535,7 +2691,7 @@ function tablaEstadosGlobal(carpetas) {
             const rt = c.fechaVencimientoTramite ? contarDiasHabiles(fechaISOLocalHabil(), c.fechaVencimientoTramite) : null;
             const vencidoT = c.fechaVencimientoTramite && c.fechaVencimientoTramite < fechaISOLocalHabil();
             conteo = vencidoT
-                ? '<strong style="color:var(--pt-peligro,#ef4444);">vencido</strong> (' + (c.diasHabilesTramite || 60) + ' días)'
+                ? '<strong style="color:var(--pt-rojo-txt);">vencido</strong> (' + (c.diasHabilesTramite || 60) + ' días)'
                 : '<strong>' + rt + '</strong> de ' + (c.diasHabilesTramite || 60) +
                   (c.tieneProrroga ? ' <span class="pt-nota">(prórroga)</span>' : '');
         }
@@ -2549,7 +2705,8 @@ function tablaEstadosGlobal(carpetas) {
                 (!c.fechaInicioTramite && !c.pausado
                     ? ' <button class="pt-boton pt-boton--primario pt-boton--mini" data-accion="iniciar-tramite" data-id="' + c.id + '">Iniciar plazo</button>' : '') +
                 (c.fechaInicioTramite && !c.tieneProrroga && !c.pausado
-                    ? ' <button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="prorroga-tramite" data-id="' + c.id + '">+30 días</button>' : '') +
+                    ? ' <button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="prorroga-tramite" data-id="' + c.id + '">' +
+                      (claseDe(c) === 'centro' ? '+3 meses' : '+30 días') + '</button>' : '') +
                 (c.pausado
                     ? ' <button class="pt-boton pt-boton--primario pt-boton--mini" data-accion="reactivar-tramite" data-id="' + c.id + '">Reactivar</button>'
                     : ' <button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="pausar-tramite" data-id="' + c.id + '">Pausar</button>') +
@@ -2567,7 +2724,7 @@ function tablaEstadosGlobal(carpetas) {
             '</tr>';
     }).join('');
     return '<div class="pt-tabla-envoltura"><table class="pt-tabla">' +
-        '<thead><tr><th>Operador</th><th>Trámite</th><th>Proceso actual</th><th>Semáforo</th><th>Vencimiento</th><th>Días hábiles restantes</th><th>Trámite (60/90)</th><th>Acciones</th></tr></thead>' +
+        '<thead><tr><th>Operador</th><th>Trámite</th><th>Proceso actual</th><th>Semáforo</th><th>Vencimiento</th><th>Días hábiles restantes</th><th>Plazo del trámite</th><th>Acciones</th></tr></thead>' +
         '<tbody>' + filas + '</tbody></table></div>';
 }
 
@@ -2604,11 +2761,11 @@ function tarjetaEstadoTramite(c) {
         }
         botones += '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="nuevo-proceso" data-id="' + c.id + '">+ Nuevo proceso</button> ';
         if (!c.fechaInicioTramite && !c.pausado) {
-            botones += '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="iniciar-tramite" data-id="' + c.id + '">Iniciar plazo (60 días hábiles)</button> ';
+            botones += '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="iniciar-tramite" data-id="' + c.id + '">Iniciar plazo (' + textosDe(c).plazo + ')</button> ';
         }
         // El operador responsable también aplica la prórroga
         if (c.fechaInicioTramite && !c.tieneProrroga && !c.pausado) {
-            botones += '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="prorroga-tramite" data-id="' + c.id + '">Prórroga: +30 días hábiles</button> ';
+            botones += '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="prorroga-tramite" data-id="' + c.id + '">Prórroga: ' + textosDe(c).prorroga + '</button> ';
         }
         botones += c.pausado
             ? '<button class="pt-boton pt-boton--primario pt-boton--mini" data-accion="reactivar-tramite" data-id="' + c.id + '">Reactivar trámite</button>'
@@ -2767,12 +2924,16 @@ async function reactivarTramiteAccion(carpetaId) {
     await cargarYPintarEstados();
 }
 
-/* ---- Conteo del trámite: iniciar (60) y prórroga (90) ---- */
+/* ---- Conteo del trámite ----
+   Notaría: 60 días hábiles, prórroga a 90. Centro: 3 meses, prórroga de 3 más. */
 async function iniciarTramiteAccion(carpetaId) {
     if (!ES_PERSONAL) return;
     const c = _estadosCarpetas.find(x => x.id === carpetaId);
+    const centro = claseDe(c) === 'centro';
     if (!await confirmarPortal('Confirme el inicio del plazo del trámite' + (c ? ' "' + c.nombre + '"' : '') + '.\n\n' +
-        'Corren 60 días hábiles colombianos desde hoy, saltando fines de semana y festivos. ' +
+        (centro
+            ? 'Corren 3 meses desde hoy para surtir la conciliación (Ley 2220 de 2022). '
+            : 'Corren 60 días hábiles colombianos desde hoy, saltando fines de semana y festivos. ') +
         'Al confirmar se calcula el día exacto en que se cumple.', 'Iniciar plazo')) return;
     try {
         await tramiteIniciar(carpetaId);
@@ -2783,7 +2944,7 @@ async function iniciarTramiteAccion(carpetaId) {
         catch (e) { /* sin fecha si no se puede leer */ }
         avisar(vence
             ? 'Plazo iniciado. El trámite vence el ' + formatoFechaDia(vence) + '.'
-            : 'Plazo iniciado: 60 días hábiles.');
+            : 'Plazo iniciado: ' + (centro ? '3 meses.' : '60 días hábiles.'));
     } catch (e) {
         avisar((e && e.message) || 'No se pudo iniciar el plazo.', 'error');
     }
@@ -2795,12 +2956,18 @@ async function iniciarTramiteAccion(carpetaId) {
 async function finalizarTramiteAccion(carpetaId) {
     if (!ES_ADMIN) return;
     const c = _estadosCarpetas.find(x => x.id === carpetaId);
-    if (!await confirmarPortal('Confirme el FIN del trámite' + (c ? ' "' + c.nombre + '"' : '') + '.\n\n' +
+    // Conciliación: sin resultado no se cierra
+    let resultado = null;
+    if (claseDe(c) === 'centro') {
+        resultado = await pedirResultado(c ? c.nombre : '');
+        if (!resultado) return;
+    } else if (!await confirmarPortal('Confirme el FIN del trámite' + (c ? ' "' + c.nombre + '"' : '') + '.\n\n' +
         'El trámite queda cerrado: se detiene el conteo de días hábiles y ya no se podrán iniciar conteos ni aplicar prórrogas. Esta acción queda registrada.', 'Fin de trámite')) return;
     try {
-        await tramiteFinalizar(carpetaId);
-        registrarActividad('fin-tramite', (c && c.nombre) || String(carpetaId), carpetaId);
-        avisar('Trámite finalizado.');
+        await tramiteFinalizar(carpetaId, resultado);
+        registrarActividad('fin-tramite', ((c && c.nombre) || String(carpetaId)) +
+            (resultado ? ' · ' + RESULTADOS[resultado] : ''), carpetaId);
+        avisar('Trámite finalizado' + (resultado ? ': ' + RESULTADOS[resultado].toLowerCase() : '') + '.');
     } catch (e) {
         avisar((e && e.message) || 'No se pudo finalizar el trámite.', 'error');
     }
@@ -2808,13 +2975,42 @@ async function finalizarTramiteAccion(carpetaId) {
     await cargarYPintarEstados();
 }
 
+/* Elegir cómo terminó la conciliación. null = canceló. */
+function pedirResultado(nombre) {
+    const modal = document.getElementById('modal-resultado');
+    const lista = document.getElementById('resultado-opciones');
+    document.getElementById('resultado-carpeta').textContent = nombre ? '«' + nombre + '»' : '';
+    lista.innerHTML = Object.entries(RESULTADOS).map(([valor, texto], i) =>
+        '<label><input type="radio" name="resultado" value="' + valor + '"' + (i ? '' : ' checked') + '> ' +
+        escaparHtml(texto) + '</label>').join('');
+    modal.hidden = false;
+    return new Promise(resolver => {
+        const form = document.getElementById('form-resultado');
+        const cerrar = (valor) => {
+            modal.hidden = true;
+            form.onsubmit = null;
+            modal.querySelector('[data-cancelar]').onclick = null;
+            resolver(valor);
+        };
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            const marcado = lista.querySelector('input:checked');
+            cerrar(marcado ? marcado.value : null);
+        };
+        modal.querySelector('[data-cancelar]').onclick = () => cerrar(null);
+    });
+}
+
 /* Prórroga: una por trámite (el servidor la rechaza si ya se usó). */
 async function prorrogaTramiteAccion(carpetaId) {
     if (!ES_PERSONAL) return; // admin u operador responsable
     const c = _estadosCarpetas.find(x => x.id === carpetaId);
+    const centro = claseDe(c) === 'centro';
     if (!await confirmarPortal('Confirme la PRÓRROGA del trámite' + (c ? ' "' + c.nombre + '"' : '') + '.\n\n' +
-        'Se añaden 30 días hábiles: el plazo pasa de 60 a 90, contados desde la misma fecha ' +
-        'de inicio. Solo se puede aplicar una vez.', 'Añadir prórroga')) return;
+        (centro
+            ? 'Se añaden 3 meses al vencimiento, por acuerdo de las partes. '
+            : 'Se añaden 30 días hábiles: el plazo pasa de 60 a 90, contados desde la misma fecha de inicio. ') +
+        'Solo se puede aplicar una vez.', 'Añadir prórroga')) return;
     try {
         await tramiteProrroga(carpetaId);
         registrarActividad('prorroga-tramite', (c && c.nombre) || String(carpetaId), carpetaId);
@@ -2823,7 +3019,7 @@ async function prorrogaTramiteAccion(carpetaId) {
         catch (e) { /* sin fecha si no se puede leer */ }
         avisar(nueva
             ? 'Prórroga aplicada. El trámite ahora vence el ' + formatoFechaDia(nueva) + '.'
-            : 'Prórroga aplicada: el trámite ahora tiene 90 días hábiles.');
+            : 'Prórroga aplicada: el trámite ahora tiene ' + (centro ? '6 meses.' : '90 días hábiles.'));
     } catch (e) {
         avisar((e && e.message) || 'No se pudo aplicar la prórroga.', 'error');
     }
@@ -2910,9 +3106,9 @@ function abrirDetalleTramite(carpetaId) {
         acciones = '<div class="pt-celda-acciones" style="margin:.8rem 0;">' +
             '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="nuevo-proceso" data-id="' + c.id + '">+ Nuevo proceso</button> ' +
             (!c.fechaInicioTramite && !c.pausado
-                ? '<button class="pt-boton pt-boton--primario pt-boton--mini" data-accion="iniciar-tramite" data-id="' + c.id + '">Iniciar plazo (60 días hábiles)</button> ' : '') +
+                ? '<button class="pt-boton pt-boton--primario pt-boton--mini" data-accion="iniciar-tramite" data-id="' + c.id + '">Iniciar plazo (' + textosDe(c).plazo + ')</button> ' : '') +
             (c.fechaInicioTramite && !c.tieneProrroga && !c.pausado
-                ? '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="prorroga-tramite" data-id="' + c.id + '">Prórroga: +30 días hábiles</button> ' : '') +
+                ? '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="prorroga-tramite" data-id="' + c.id + '">Prórroga: ' + textosDe(c).prorroga + '</button> ' : '') +
             (c.pausado
                 ? '<button class="pt-boton pt-boton--primario pt-boton--mini" data-accion="reactivar-tramite" data-id="' + c.id + '">Reactivar trámite</button>'
                 : '<button class="pt-boton pt-boton--fantasma pt-boton--mini" data-accion="pausar-tramite" data-id="' + c.id + '">Pausar trámite</button>') +
@@ -2930,7 +3126,8 @@ function abrirDetalleTramite(carpetaId) {
         (lineaTramite
             ? '<p class="pt-nota">' + lineaTramite +
               (c.fechaInicioTramite ? ' · inició el ' + escaparHtml(formatoFechaDia(c.fechaInicioTramite)) : '') + '</p>'
-            : '<p class="pt-nota">Conteo del trámite (60/90 días hábiles): sin iniciar.</p>') +
+            : '<p class="pt-nota">Conteo del trámite (' + textosDe(c).plazoCorto +
+              (claseDe(c) === 'centro' ? '' : ' días hábiles') + '): sin iniciar.</p>') +
         '<p class="pt-nota">Días hábiles totales de los plazos: <strong>' + totales + '</strong>' +
             ' · Procesos completados: <strong>' + completados.length + ' de ' + procesos.length + '</strong>' +
             (restantes === null ? '' : ' · Días hábiles restantes del proceso actual: <strong>' + restantes + '</strong>') + '</p>' +
@@ -3206,7 +3403,9 @@ function pintarCalendarioVenc() {
                     ? ' · Operador responsable: ' + ((m.c.operadores || []).map(o => nombreDe(o)).join(', ') || 'sin asignar')
                     : '';
                 return '<div class="pt-proceso-fila">' + puntoSemaforo(colorMarca(m), 12) +
-                    '<div class="pt-proceso-fila__txt"><strong>Vencimiento del trámite completo (' + (m.c.diasHabilesTramite || 60) + ' días hábiles)</strong>' +
+                    '<div class="pt-proceso-fila__txt"><strong>Vencimiento del trámite completo (' +
+                        (claseDe(m.c) === 'centro' ? (m.c.tieneProrroga ? '6 meses' : '3 meses')
+                            : (m.c.diasHabilesTramite || 60) + ' días hábiles') + ')</strong>' +
                     '<span class="pt-nota">' + escaparHtml(m.c.nombre) + escaparHtml(responsables) + '</span></div></div>';
             }
             // recordatorio privado
@@ -3299,7 +3498,10 @@ function cambiarMesCalVenc(delta) {
 
 /* ============ CHATS DEL TRÁMITE ============
    Cliente: el suyo. Acreedor: el suyo. Operador y admin: ambos. Lo valida RLS. */
-const CANALES_CHAT = { cliente: 'Cliente ↔ operador', acreedor: 'Acreedor ↔ operador' };
+/* «Cliente ↔ operador» o «Convocante ↔ operador», según la carpeta abierta */
+function nombreCanal(canal) {
+    return (textosDe(carpetaAbierta)[canal] || canal) + ' ↔ operador';
+}
 let _canalChat = null;
 
 /* Canales según el rol. El monitor no entra a ninguno (también cerrado
@@ -3359,7 +3561,7 @@ async function pintarChats() {
     tabs.hidden = canales.length < 2;   // con un canal no hace falta barra
     tabs.innerHTML = canales.map(c =>
         '<button class="' + (c === _canalChat ? 'activa' : '') + '" data-accion="chat-canal" data-canal="' + c + '">' +
-        escaparHtml(CANALES_CHAT[c]) + '</button>').join('');
+        escaparHtml(nombreCanal(c)) + '</button>').join('');
     pintarBadgesChats();   // no leídos por canal
 
     await pintarMensajes();
@@ -3393,7 +3595,7 @@ async function pintarSelectorAcreedor() {
     cont.hidden = false;
     cont.innerHTML = '<label class="pt-nota">Conversar con: ' +
         '<select id="select-acreedor-destino">' +
-        '<option value="">Todos los acreedores</option>' +
+        '<option value="">Todos los ' + textosDe(carpetaAbierta).contrapartes + '</option>' +
         acreedores.map(a => '<option value="' + escaparHtml(a.id) + '"' +
             (_acreedorDestino === a.id ? ' selected' : '') + '>' + escaparHtml(a.nombre) + '</option>').join('') +
         '</select></label>';
@@ -3535,7 +3737,7 @@ async function enviarMensaje(evento) {
         await mensajesGuardar(carpetaAbierta.id, _canalChat, texto, archivo || null, destinatario);
         campo.value = '';
         quitarAdjuntoChat();
-        registrarActividad('mensaje-chat', CANALES_CHAT[_canalChat] + ' · ' + carpetaAbierta.nombre +
+        registrarActividad('mensaje-chat', nombreCanal(_canalChat) + ' · ' + carpetaAbierta.nombre +
             (archivo ? ' · adjunto: ' + archivo.name : ''), carpetaAbierta.id);
         await pintarMensajes();
     } catch (e) {
@@ -4855,10 +5057,10 @@ async function descargarConstanciaConsentimiento(indice) {
         lineas.push('Fecha y hora de aceptacion: ' + formatoFecha(c.fecha));
         lineas.push('Version de la politica aceptada: ' + c.version);
         lineas.push('');
-        lineas.push('La aceptacion quedo registrada electronicamente en el Portal Documental');
+        lineas.push('La aceptacion quedo registrada electronicamente en Legajo');
         lineas.push('al primer ingreso del titular (tabla consentimientos).');
 
-        pagina.drawText('Portal Documental', { x: 50, y: 742, size: 16, font: fuenteNegrita });
+        pagina.drawText('Legajo', { x: 50, y: 742, size: 16, font: fuenteNegrita });
         pagina.drawText('Constancia de autorizacion de manejo de datos', { x: 50, y: 720, size: 12, font: fuenteNegrita });
         let y = 690;
         for (const l of lineas) {
@@ -5832,6 +6034,8 @@ async function abrirModalAudiencia(prefijado) {
     document.getElementById('audiencia-hora').value = (prefijado && prefijado.hora) || '';
     document.getElementById('audiencia-enlace').value = (prefijado && prefijado.enlace) || '';
     document.getElementById('audiencia-descripcion').value = (prefijado && prefijado.descripcion) || '';
+    const leyenda = document.querySelector('#modal-audiencia [data-clase="destinatarios"]');
+    if (leyenda) leyenda.textContent = textosDe(carpetaAbierta).destinatarios;
     document.getElementById('modal-audiencia').hidden = false;
 
     try {
@@ -5841,7 +6045,9 @@ async function abrirModalAudiencia(prefijado) {
         return;
     }
     if (_asignadosCache.length === 0) {
-        cont.innerHTML = '<p class="pt-nota">Esta carpeta no tiene deudores ni acreedores asignados.</p>';
+        const t = textosDe(carpetaAbierta);
+        cont.innerHTML = '<p class="pt-nota">Esta carpeta no tiene ' + t['tab-clientes'].toLowerCase() +
+            ' ni ' + t.contrapartes + ' asignados.</p>';
         return;
     }
     cont.innerHTML = _asignadosCache.map(p =>
@@ -6083,6 +6289,7 @@ async function pintarNotifCarpeta(carpeta) {
 
     const deudor = _notifCarpetaCache.filter(e => e.rol === 'cliente').length;
     const acreedores = _notifCarpetaCache.filter(e => e.rol === 'acreedor').length;
+    const t = textosDe(carpetaAbierta);
 
     panel.innerHTML =
         '<div class="pt-audiencias-cab">' +
@@ -6094,9 +6301,9 @@ async function pintarNotifCarpeta(carpeta) {
         // Deudor y acreedores por separado
         '<div class="pt-sub-pestanas" id="sub-pestanas-notif-carpeta">' +
             '<button class="' + (_rolNotifCarpeta === 'cliente' ? 'activa' : '') + '" data-accion="notif-carpeta-rol" data-rol="cliente">' +
-                icono('usuario', 17) + ' Deudor (' + deudor + ')</button>' +
+                icono('usuario', 17) + ' ' + mayuscula(t.parte) + ' (' + deudor + ')</button>' +
             '<button class="' + (_rolNotifCarpeta === 'acreedor' ? 'activa' : '') + '" data-accion="notif-carpeta-rol" data-rol="acreedor">' +
-                icono('banco', 17) + ' Acreedores (' + acreedores + ')</button>' +
+                icono('banco', 17) + ' ' + mayuscula(t.contrapartes) + ' (' + acreedores + ')</button>' +
         '</div>' +
         // La barra de acreedores solo en esa pestaña (pintarListaNotifCarpeta)
         '<div id="barra-acreedores-notif"></div>' +
@@ -6111,8 +6318,9 @@ async function descargarConstanciaAcreedores() {
     const usuarioElegido = sel ? sel.value : '';
     const eventos = _notifCarpetaCache.filter(e =>
         e.rol === 'acreedor' && (!usuarioElegido || e.usuario === usuarioElegido));
+    const t = textosDe(carpetaAbierta);
     if (eventos.length === 0) {
-        avisar('No hay actividad de ' + (usuarioElegido ? 'ese acreedor' : 'acreedores') + ' para la constancia.', 'error');
+        avisar('No hay actividad de ' + (usuarioElegido ? 'ese ' + t.contraparte : t.contrapartes) + ' para la constancia.', 'error');
         return;
     }
     try {
@@ -6129,11 +6337,11 @@ async function descargarConstanciaAcreedores() {
             y -= (tam ? tam + 6 : 15);
         };
 
-        nuevaLinea('Portal Documental', true, 16);
-        nuevaLinea('Constancia de actividad de acreedores en el tramite', true, 12);
+        nuevaLinea('Legajo', true, 16);
+        nuevaLinea('Constancia de actividad de ' + t.contrapartes + ' en el tramite', true, 12);
         nuevaLinea('');
         nuevaLinea('Tramite: ' + carpetaAbierta.nombre, true);
-        nuevaLinea('Alcance: ' + (usuarioElegido ? 'acreedor ' + nombreDe(usuarioElegido) + ' (' + usuarioElegido + ')' : 'todos los acreedores'));
+        nuevaLinea('Alcance: ' + (usuarioElegido ? t.contraparte + ' ' + nombreDe(usuarioElegido) + ' (' + usuarioElegido + ')' : 'todos los ' + t.contrapartes));
         nuevaLinea('Generada: ' + formatoFecha(Date.now()) + ' por ' + (sesion.nombre || sesion.usuario));
         nuevaLinea('Total de eventos: ' + eventos.length);
         nuevaLinea('');
@@ -6148,7 +6356,7 @@ async function descargarConstanciaAcreedores() {
         const url = URL.createObjectURL(blob);
         const enlace = document.createElement('a');
         enlace.href = url;
-        enlace.download = 'constancia_acreedores_' + nombreArchivoSeguro(carpetaAbierta.nombre) + '.pdf';
+        enlace.download = 'constancia_' + t.contrapartes + '_' + nombreArchivoSeguro(carpetaAbierta.nombre) + '.pdf';
         document.body.appendChild(enlace);
         enlace.click();
         enlace.remove();
@@ -6184,13 +6392,14 @@ function pintarListaNotifCarpeta() {
 
     // Selector de acreedor solo en "Acreedores" (el deudor es uno por carpeta).
     const barra = document.getElementById('barra-acreedores-notif');
+    const t = textosDe(carpetaAbierta);
     if (barra) {
         if (_rolNotifCarpeta === 'acreedor') {
             const acreedores = [...new Set(_notifCarpetaCache.filter(e => e.rol === 'acreedor').map(e => e.usuario))];
             barra.hidden = false;
             barra.innerHTML = '<div class="pt-calv-filtros">' +
-                '<label class="pt-nota">Acreedor: <select id="constancia-acreedor">' +
-                    '<option value="">Todos los acreedores</option>' +
+                '<label class="pt-nota">' + mayuscula(t.contraparte) + ': <select id="constancia-acreedor">' +
+                    '<option value="">Todos los ' + t.contrapartes + '</option>' +
                     acreedores.map(u => '<option value="' + escaparHtml(u) + '"' +
                         (_acreedorNotifSel === u ? ' selected' : '') + '>' + escaparHtml(nombreDe(u)) + '</option>').join('') +
                 '</select></label> ' +
@@ -6213,8 +6422,8 @@ function pintarListaNotifCarpeta() {
     }
     if (eventos.length === 0) {
         lista.innerHTML = '<p class="pt-nota" style="padding:.8rem 0;">Todavía no hay actividad ' +
-            (_rolNotifCarpeta === 'cliente' ? 'del deudor'
-                : (_acreedorNotifSel ? 'de ' + escaparHtml(nombreDe(_acreedorNotifSel)) : 'de los acreedores')) +
+            (_rolNotifCarpeta === 'cliente' ? 'del ' + t.parte
+                : (_acreedorNotifSel ? 'de ' + escaparHtml(nombreDe(_acreedorNotifSel)) : 'de los ' + t.contrapartes)) +
             ' en esta carpeta.</p>';
         return;
     }
@@ -7291,6 +7500,18 @@ async function abrirModalCarpeta(carpeta) {
         (carpeta && carpeta.tipoProceso) || 'natural_no_comerciante';
     document.getElementById('carpeta-activa').checked = carpeta ? !!carpeta.activa : true;
 
+    // Rótulos del tipo de la carpeta (desde «todas» puede no ser el abierto)
+    const t = textosDe(carpeta || null);
+    document.querySelectorAll('#modal-carpeta [data-clase]').forEach(el => {
+        const texto = t[el.dataset.clase];
+        if (!texto) return;
+        if (el.tagName === 'INPUT') el.placeholder = texto;
+        else el.textContent = texto;
+    });
+    // El régimen solo existe en insolvencia
+    const centro = claseDe(carpeta || null) === 'centro';
+    document.getElementById('campo-carpeta-tipo').hidden = centro;
+
     // Personas de la notaría de la carpeta (no de la abierta).
     const notariaDeLaCarpeta = carpeta ? (carpeta.notariaId ?? null) : _notariaActiva;
     const usuarios = (await dbTodos('usuarios'))
@@ -7298,24 +7519,26 @@ async function abrirModalCarpeta(carpeta) {
     const filaCheque = (u, marcados) =>
         '<label><input type="checkbox" value="' + escaparHtml(u.usuario) + '"' +
         (marcados.includes(u.usuario) ? ' checked' : '') + '> ' +
-        escaparHtml(u.nombre) + ' <span class="pt-nota">(' + escaparHtml(ETIQUETAS_ROL[u.rol]) +
+        escaparHtml(u.nombre) + ' <span class="pt-nota">(' + escaparHtml(t[u.rol] || ETIQUETAS_ROL[u.rol]) +
         (u.activo === false ? ' · desactivado' : '') + ')</span></label>';
+    const sinNadie = (quienes) => '<p class="pt-nota">No hay ' + quienes + ' en esta oficina. ' +
+        'Créalos desde Usuarios, o dale acceso a esta oficina a alguien que ya exista.</p>';
 
     // Listas por rol
     const operadores = usuarios.filter(u => u.rol === 'operador');
     const operadoresMarcados = carpeta ? (carpeta.operadores || []) : [];
     document.getElementById('carpeta-operadores').innerHTML = operadores.length === 0
-        ? '<p class="pt-nota">No hay operadores en esta notaría. Créalos desde Usuarios, o dale acceso a esta oficina a alguien que ya exista.</p>'
+        ? sinNadie('operadores')
         : operadores.map(u => filaCheque(u, operadoresMarcados)).join('');
 
     const marcados = carpeta ? (carpeta.asignados || []) : [];
     const clientes = usuarios.filter(u => u.rol === 'cliente');
     document.getElementById('carpeta-clientes').innerHTML = clientes.length === 0
-        ? '<p class="pt-nota">No hay clientes en esta notaría. Créalos desde Usuarios, o dale acceso a esta oficina a alguien que ya exista.</p>'
+        ? sinNadie(t['tab-clientes'].toLowerCase())
         : clientes.map(u => filaCheque(u, marcados)).join('');
     const acreedores = usuarios.filter(u => u.rol === 'acreedor');
     document.getElementById('carpeta-acreedores').innerHTML = acreedores.length === 0
-        ? '<p class="pt-nota">No hay acreedores en esta notaría. Créalos desde Usuarios, o dale acceso a esta oficina a alguien que ya exista.</p>'
+        ? sinNadie(t['tab-acreedores'].toLowerCase())
         : acreedores.map(u => filaCheque(u, marcados)).join('');
 
     cambiarTabRolCarpeta('operadores');
@@ -7346,7 +7569,9 @@ async function guardarCarpeta(evento) {
     const nombre = document.getElementById('carpeta-nombre').value.trim();
     if (!nombre) return;
     const descripcion = document.getElementById('carpeta-descripcion').value.trim();
-    const tipoProceso = document.getElementById('carpeta-tipo').value;
+    // Conciliación no lleva régimen
+    const tipoProceso = claseDe(carpetaEditando) === 'centro'
+        ? null : document.getElementById('carpeta-tipo').value;
     const activa = document.getElementById('carpeta-activa').checked;
     const operadores = [...document.querySelectorAll('#carpeta-operadores input:checked')].map(c => c.value);
     const asignados = [
@@ -7361,8 +7586,8 @@ async function guardarCarpeta(evento) {
     } else {
         // Nace en la notaría abierta. Con "todas" hay que elegir una antes.
         if (_notariasDisponibles.length && _notariaActiva === null) {
-            avisar('Abre una notaría concreta para crear la carpeta. ' +
-                   'Desde "Todas las notarías" no se sabe a cuál pertenece.', 'error');
+            avisar('Abre una oficina concreta para crear la carpeta. ' +
+                   'Desde «Todas las oficinas» no se sabe a cuál pertenece.', 'error');
             return;
         }
         const nuevaId = await dbAgregar('carpetas', {
@@ -7507,20 +7732,20 @@ function cambiarFiltroRolUsuario(rol) {
    bordes finos y encabezado fijo con filtro. ExcelJS porque SheetJS
    gratis no escribe estilos. */
 const XL = {
-    navy:       'FF13232E',
-    navy700:    'FF264150',
-    cian:       'FF00A1B8',
-    cianSuave:  'FFD9F1F5',
-    naranja:    'FFFA9B02',
-    banda:      'FFF2F8F9',   // filas pares sombreadas
-    borde:      'FFDCE6E9',
-    rojo:       'FFB3261E',
-    rojoSuave:  'FFFBE3E1',
-    verde:      'FF157039',
-    verdeSuave: 'FFDDF3E4',
-    ambar:      'FF8A4B08',
-    ambarSuave: 'FFFCEFD3',
-    gris:       'FF536068',
+    navy:       'FF2F3431',   // pizarra oscura
+    navy700:    'FF454B48',
+    cian:       'FF7A5A26',   // kraft oscuro
+    cianSuave:  'FFF3E8D4',
+    naranja:    'FFC9A46A',   // kraft
+    banda:      'FFF2F3F3',   // filas pares sombreadas
+    borde:      'FFE2E4E3',
+    rojo:       'FFA2452F',
+    rojoSuave:  'FFF6E3DD',
+    verde:      'FF2E7D4F',
+    verdeSuave: 'FFE1F0E6',
+    ambar:      'FF7A5A26',
+    ambarSuave: 'FFF3E8D4',
+    gris:       'FF5F6562',
     blanco:     'FFFFFFFF'
 };
 
@@ -7534,7 +7759,7 @@ const XL_COLUMNAS = [
     { t: 'Rol',              w: 15 },
     { t: 'Carpetas',         w: 38 },
     { t: 'Correo',           w: 28 },
-    { t: 'Notaría',          w: 30 },
+    { t: 'Oficina',          w: 30 },
     { t: 'Estado',           w: 13 },
     { t: 'Última conexión',  w: 19 },
     { t: 'Clave anotada el', w: 19 },
@@ -7588,7 +7813,7 @@ function xlHojaGente(libro, titulo, gente, ctx, colorPestana) {
             margins: { left: .3, right: .3, top: .5, bottom: .5, header: .2, footer: .2 }
         },
         headerFooter: {
-            oddFooter: '&LPortal Documental · ' + ctx.notaria +
+            oddFooter: '&LLegajo · ' + ctx.notaria +
                        '&CCONTIENE CONTRASEÑAS&R Página &P de &N'
         }
     });
@@ -7643,7 +7868,7 @@ function xlHojaPorCarpeta(libro, ctx) {
             margins: { left: .3, right: .3, top: .5, bottom: .5, header: .2, footer: .2 }
         },
         headerFooter: {
-            oddFooter: '&LPortal Documental · ' + ctx.notaria +
+            oddFooter: '&LLegajo · ' + ctx.notaria +
                        '&CCONTIENE CONTRASEÑAS&R Página &P de &N'
         }
     });
@@ -7655,7 +7880,7 @@ function xlHojaPorCarpeta(libro, ctx) {
     sub.font = { name: XL_FUENTE, size: 10, color: { argb: XL.blanco } };
 
     let fila = 3;
-    const ORDEN_VINCULO = { 'Operador': 0, 'Deudor': 1, 'Acreedor': 2 };
+    const ORDEN_VINCULO = { 'Operador': 0, 'Deudor': 1, 'Convocante': 1, 'Acreedor': 2, 'Convocado': 2 };
 
     // Título de grupo: cian claro con texto oscuro
     const grupo = (texto, fondo) => {
@@ -7744,7 +7969,7 @@ function xlHojaPorCarpeta(libro, ctx) {
         mandos.forEach((u, i) => persona(u.usuario, 'Todas', i % 2 === 1));
     }
 
-    if (fila === 3) vacio('No hay carpetas en esta notaría.');
+    if (fila === 3) vacio('No hay carpetas en esta oficina.');
 
     hoja.views = [{ state: 'frozen', ySplit: 2, showGridLines: false }];
     return hoja;
@@ -7761,7 +7986,7 @@ function xlPortada(libro, ctx, roles) {
     hoja.views = [{ showGridLines: false }];
 
     hoja.getRow(1).height = 10;
-    xlBanda(hoja, 2, ancho, 'PORTAL DOCUMENTAL', XL.navy, 20);
+    xlBanda(hoja, 2, ancho, 'LEGAJO', XL.navy, 20);
     const sub = xlBanda(hoja, 3, ancho, 'CREDENCIALES DE ACCESO', XL.cian, 13);
     sub.font = { name: XL_FUENTE, size: 13, bold: true, color: { argb: XL.blanco } };
     hoja.getRow(4).height = 14;
@@ -7787,7 +8012,7 @@ function xlPortada(libro, ctx, roles) {
         fila++;
     };
 
-    dato('Notaría', ctx.notaria);
+    dato('Oficina', ctx.notaria);
     dato('Generado', ctx.generado);
     dato('Generado por', ctx.generadoPor);
     dato('Dirección del portal', ctx.portal || '(sin determinar)', ctx.portal || undefined);
@@ -7866,7 +8091,7 @@ async function exportarUsuariosExcel() {
         if (boton) { boton.disabled = true; boton.textContent = 'Generando…'; }
         const ExcelJS = await cargarExcelJS();
         const libro = new ExcelJS.Workbook();
-        libro.creator = 'Portal Documental';
+        libro.creator = 'Legajo';
         libro.company = NOMBRE_ENTIDAD;
         libro.created = new Date();
 
@@ -7891,8 +8116,10 @@ async function exportarUsuariosExcel() {
         };
         for (const c of (_carpetasVisibles || [])) {
             for (const u of (c.operadores || [])) anotar(c, u, 'Operador');
+            // Deudor/Acreedor o Convocante/Convocado, según la oficina de la carpeta
+            const t = textosDe(c);
             for (const u of (c.asignados || [])) {
-                anotar(c, u, (porUsuario[u] || {}).rol === 'acreedor' ? 'Acreedor' : 'Deudor');
+                anotar(c, u, mayuscula((porUsuario[u] || {}).rol === 'acreedor' ? t.contraparte : t.parte));
             }
         }
 
@@ -7965,7 +8192,7 @@ async function exportarUsuariosExcel() {
         const ctx = {
             notaria: notariaActual()
                 ? notariaActual().ciudad + ' · ' + notariaActual().nombre
-                : 'Todas las notarías',
+                : 'Todas las oficinas',
             generado: hoy.toLocaleString('es-CO', { dateStyle: 'full', timeStyle: 'short' }),
             generadoPor: (sesion && sesion.nombre) || '',
             portal: enlacePortal(),
@@ -7976,8 +8203,8 @@ async function exportarUsuariosExcel() {
         const roles = [
             ['administrador', 'Administradores', XL.navy700],
             ['operador',      'Operadores',      XL.cian],
-            ['cliente',       'Deudores',        XL.verde],
-            ['acreedor',      'Acreedores',      XL.naranja],
+            ['cliente',       claseActual() === 'centro' ? 'Convocantes' : 'Deudores',   XL.verde],
+            ['acreedor',      claseActual() === 'centro' ? 'Convocados' : 'Acreedores',  XL.naranja],
             ['monitor',       'Monitores',       XL.gris]
         ];
 
@@ -8269,12 +8496,12 @@ const VERBOS_ACCION = {
     'completar-proceso':  { ic: 'activar',        verbo: 'completó el proceso' },
     'eliminar-proceso':   { ic: 'eliminar',       verbo: 'eliminó el proceso' },
     'pausar-tramite':     { ic: 'desactivar',     verbo: 'pausó el trámite' },
-    'iniciar-tramite':    { ic: 'estado',         verbo: 'inició el conteo (60 días) de' },
-    'prorroga-tramite':   { ic: 'estado',         verbo: 'aplicó la prórroga (90 días) a' },
+    'iniciar-tramite':    { ic: 'estado',         verbo: 'inició el conteo del plazo de' },
+    'prorroga-tramite':   { ic: 'estado',         verbo: 'aplicó la prórroga a' },
     'llamada-soporte':    { ic: 'chat',           verbo: 'llamó por soporte a' },
     'fin-tramite':        { ic: 'activar',        verbo: 'dio fin al trámite' },
     'consentimiento':     { ic: 'documento',      verbo: 'aceptó la política de datos' },
-    'constancia-acreedores': { ic: 'descargar',   verbo: 'descargó la constancia de acreedores de' },
+    'constancia-acreedores': { ic: 'descargar',   verbo: 'descargó la constancia de actividad de' },
     'reactivar-tramite':  { ic: 'activar',        verbo: 'reactivó el trámite' },
     'corregir-proceso':   { ic: 'editar',         verbo: 'corrigió el proceso' }
 };
@@ -8375,11 +8602,11 @@ async function crearUsuario(evento) {
 
     // El admin ve todas por rol; los demás necesitan su oficina
     if (rol !== 'administrador' && _notariasDisponibles.length && !notarias.length) {
-        avisar('Elige la notaría donde va a trabajar este usuario.', 'error');
+        avisar('Elige la oficina donde va a trabajar este usuario.', 'error');
         return;
     }
     if (rol !== 'administrador' && rol !== 'operador' && notarias.length > 1) {
-        avisar('Este rol trabaja en una sola notaría.', 'error');
+        avisar('Este rol trabaja en una sola oficina.', 'error');
         return;
     }
 
@@ -8487,14 +8714,15 @@ async function pintarNotariasDeEdicion(usuario) {
 
     const varias = usuario.rol === 'operador';
     etiqueta.textContent = varias
-        ? 'Notarías donde puede trabajar (puede marcar varias)'
-        : 'Notaría';
+        ? 'Oficinas donde puede trabajar (puede marcar varias)'
+        : 'Oficina';
     caja.innerHTML = activas.map(n =>
         '<label class="pt-notaria-casilla">' +
             '<input type="' + (varias ? 'checkbox' : 'radio') + '" ' +
                    'name="notaria-editar" value="' + n.id + '"' +
                    (suyas.includes(String(n.id)) ? ' checked' : '') + '>' +
-            '<span><b>' + escaparHtml(n.ciudad) + '</b> · ' + escaparHtml(n.nombre) + '</span>' +
+            '<span><b>' + escaparHtml(n.ciudad) + '</b> · ' + escaparHtml(n.nombre) +
+                ' <small>' + (n.tipo === 'centro' ? 'centro' : 'notaría') + '</small></span>' +
         '</label>').join('');
 }
 
@@ -8538,7 +8766,7 @@ async function guardarEdicionUsuario(evento) {
             const marcadas = [...document.querySelectorAll('#editar-notarias input:checked')]
                 .map(x => Number(x.value));
             if (!marcadas.length) {
-                avisar('El usuario necesita al menos una notaría.', 'error');
+                avisar('El usuario necesita al menos una oficina.', 'error');
                 return;
             }
             await perfilNotariasFijar(usuarioEditando.usuario, marcadas);
@@ -8569,10 +8797,10 @@ async function guardarEdicionUsuario(evento) {
 
 /* Abre el correo del admin con el aviso redactado (no se envía solo). */
 function notificarClavePorCorreo(datos) {
-    const asunto = 'Portal Documental: tu contraseña fue restablecida';
+    const asunto = 'Legajo: tu contraseña fue restablecida';
     const cuerpo =
         'Hola ' + datos.nombre + ',\n\n' +
-        'El administrador restableció tu contraseña del Portal Documental.\n\n' +
+        'El administrador restableció tu contraseña de Legajo.\n\n' +
         'Usuario: ' + datos.usuario + '\n' +
         'Nueva contraseña: ' + datos.clave + '\n\n' +
         'Ingresa y, por seguridad, cámbiala cuando puedas.\n\n' +
@@ -8674,6 +8902,7 @@ function conectarEventos() {
             case 'cambiar-notaria':   cambiarNotaria(); break;
             case 'volver-al-portal':  volverAlPortal(); break;
             case 'nueva-notaria':     nuevaNotariaAccion(); break;
+            case 'nuevo-centro':      nuevoCentroAccion(); break;
             case 'editar-notaria':    editarNotariaAccion(id); break;
             case 'alternar-notaria':  alternarNotariaAccion(id); break;
             case 'cerrar-lateral':    alternarLateral(false); break;
@@ -8880,6 +9109,8 @@ function conectarEventos() {
     document.getElementById('form-usuario').addEventListener('submit', crearUsuario);
     const formNotaria = document.getElementById('form-notaria');
     if (formNotaria) formNotaria.addEventListener('submit', guardarNotaria);
+    const tipoNotaria = document.getElementById('notaria-tipo');
+    if (tipoNotaria) tipoNotaria.addEventListener('change', textosModalNotaria);
     // Una notaría o varias según el rol
     const selRol = document.getElementById('nuevo-rol');
     if (selRol) {

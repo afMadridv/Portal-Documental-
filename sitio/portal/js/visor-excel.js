@@ -1,4 +1,4 @@
-/*! Portal Documental · hojas de cálculo para visor.html
+/*! Legajo · hojas de cálculo para visor.html
   tabla(): la hoja con cara de Excel. pdf(): la misma hoja en PDF.
   .xlsx con ExcelJS (trae estilos); .xls, .ods y .csv con SheetJS.
   Todo lo que sale del archivo se escapa; enlaces solo http/https/mailto.
@@ -475,8 +475,8 @@
         const { PDFDocument, StandardFonts, rgb, pushGraphicsState, popGraphicsState, rectangle, clip, endPath } = L;
         const doc = await PDFDocument.create();
         doc.setTitle(nombreArchivo);
-        doc.setCreator('Portal Documental');
-        doc.setProducer('Portal Documental');
+        doc.setCreator('Legajo');
+        doc.setProducer('Legajo');
         const F = {
             normal: await doc.embedFont(StandardFonts.Helvetica),
             negrita: await doc.embedFont(StandardFonts.HelveticaBold),

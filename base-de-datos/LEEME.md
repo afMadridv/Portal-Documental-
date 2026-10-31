@@ -84,6 +84,7 @@ El orden importa: cada uno asume el anterior.
 | 29 | `migracion_renombrar_y_tope_300.sql` | El administrador y el operador renombran documentos y videos, y el tope por archivo baja a 300 MB |
 | 30 | `migracion_ajustes_cloud.sql` | search_path fijo en las funciones de ayuda de los avisos y `rls_auto_enable` cerrada a usuarios con sesión |
 | 31 | `migracion_almacenamiento_storage.sql` | Almacenamiento se mide en Storage de Supabase contra el cupo del plan, sin tarea del servidor |
+| 32 | `migracion_centros_conciliacion.sql` | Oficinas de dos tipos: notaría (insolvencia) y centro de conciliación (3 meses prorrogables y resultado al cerrar) |
 
 `limpieza_portal.sql` y `mantenimiento_huerfanos.sql` no entran aquí:
 son herramientas aparte. La primera vacía un portal que ya está en uso;

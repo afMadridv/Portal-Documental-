@@ -1,4 +1,4 @@
-/*! Portal Documental · tema claro/oscuro
+/*! Legajo · tema claro/oscuro
   El <head> de cada página lo aplica antes de pintar; aquí solo el botón.
   Andrés Madrid · andresmadrid.vercel.app */
 (function () {

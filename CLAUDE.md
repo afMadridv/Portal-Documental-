@@ -32,7 +32,7 @@ que el código ya dice, sin « » ni guiones largos. Se ven con «Inspeccionar»
 
 Cada archivo nuevo de sitio/ y de funciones/ empieza con la firma:
 
-    /*! Portal Documental · <qué es>
+    /*! Legajo · <qué es>
         Andrés Madrid · andresmadrid.vercel.app */
 
 y cada página HTML nueva lleva el monograma AM después del <!DOCTYPE>,

@@ -1,4 +1,4 @@
-/*! Portal Documental · pie legal común (ingreso, portal y páginas legales)
+/*! Legajo · pie legal común (ingreso, portal y páginas legales)
   Andrés Madrid · andresmadrid.vercel.app */
 (function () {
     var caja = document.getElementById('pie-legal');
@@ -33,6 +33,6 @@
         '</div>' +
         '<div class="pt-pie__raya">' +
             // Sin el nombre de la entidad: el portal lo usan las notarías.
-            '<span>Portal Documental · ' + new Date().getFullYear() + '</span>' +
+            '<span>Legajo · ' + new Date().getFullYear() + '</span>' +
         '</div>';
 })();

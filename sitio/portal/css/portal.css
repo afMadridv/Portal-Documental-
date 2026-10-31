@@ -1,32 +1,33 @@
-/*! Portal Documental · estilos base del portal
+/*! Legajo · estilos base del portal
   Andrés Madrid · andresmadrid.vercel.app */
 :root{
-    /* Marca: cian #00A1B8 para estructura, naranja #FA9B02 para acento */
-    --pt-tinta: #141414;          /* texto principal */
-    --pt-gris: #595959;           /* texto secundario (sobre blanco) */
-    --pt-marca-cian: #00A1B8;      /* color de marca 1 */
-    --pt-marca-naranja: #FA9B02;   /* color de marca 2 */
-    --pt-navy-900: #0A0A0A;       /* negro de estructura (el nombre es de cuando era azul marino) */
-    --pt-navy-800: #161616;
-    --pt-navy-700: #1F1F1F;       /* negro de encabezado/pestañas/botón */
-    --pt-azul: #FA9B02;           /* acento naranja (hover, enlaces, foco) */
-    --pt-azul-600: #D98500;       /* naranja oscuro */
-    --pt-azul-claro: #A8E4EE;     /* cian claro (texto sobre el chrome) */
-    --pt-fondo: #F2F8F9;
+    /* Archivo Kraft: gris pizarra de estructura, kraft de marca, verde lomo para lo resuelto */
+    --pt-tinta: #1F2321;          /* texto principal */
+    --pt-gris: #5F6562;           /* gris cartón: texto secundario */
+    --pt-marca-cian: #C9A46A;      /* kraft (el nombre es de la marca anterior) */
+    --pt-marca-naranja: #C9A46A;   /* kraft: acento con texto oscuro encima */
+    --pt-kraft-txt: #7A5A26;       /* kraft legible como texto */
+    --pt-navy-900: #454B48;       /* gris pizarra: paneles de marca */
+    --pt-navy-800: #1F2321;
+    --pt-navy-700: #454B48;       /* pizarra de encabezado/pestañas/botón */
+    --pt-azul: #7A5A26;           /* acento kraft oscuro (hover, enlaces, foco) */
+    --pt-azul-600: #5E4519;
+    --pt-azul-claro: #C9CDCB;     /* gris claro: texto sobre la pizarra */
+    --pt-fondo: #F2F3F3;
     --pt-blanco: #fff;             /* blanco real: texto sobre el chrome oscuro */
     --pt-superficie: #fff;         /* fondo de tarjetas/inputs (cambia en tema oscuro) */
-    --pt-superficie-2: #EDF4F4;
-    --pt-borde: #E2EAEC;
-    --pt-verde: #157039;
-    --pt-verde-suave: #DDF3E4;
-    --pt-rojo: #B3261E;
-    --pt-rojo-suave: #FBE3E1;
-    --pt-ambar: #8A4B08;
-    --pt-ambar-suave: #FCEFD3;
+    --pt-superficie-2: #F6F7F6;
+    --pt-borde: #E2E4E3;
+    --pt-verde: #2E7D4F;
+    --pt-verde-suave: #E1F0E6;
+    --pt-rojo: #A2452F;
+    --pt-rojo-suave: #F6E3DD;
+    --pt-ambar: #7A5A26;
+    --pt-ambar-suave: #F3E8D4;
     /* Los mismos tres colores para texto y bordes finos; en oscuro se aclaran. */
-    --pt-verde-txt: #157039;
-    --pt-rojo-txt:  #B3261E;
-    --pt-ambar-txt: #8A4B08;
+    --pt-verde-txt: #2E7D4F;
+    --pt-rojo-txt:  #A2452F;
+    --pt-ambar-txt: #7A5A26;
 
     /* Elevación (sombras suaves, sin bordes duros) */
     --pt-sombra-1: 0 1px 2px rgba(0,0,0,.07), 0 3px 10px rgba(0,0,0,.06);
@@ -43,33 +44,35 @@
     --pt-z-modal: 100;
     --pt-z-toast: 200;
 
-    --pt-fuente-titulos: 'Lora', Georgia, serif;
-    --pt-fuente-texto: 'Krub', Arial, sans-serif;
+    --pt-fuente-titulos: 'Familjen Grotesk', system-ui, sans-serif;
+    --pt-fuente-texto: 'Work Sans', system-ui, sans-serif;
+    --pt-fuente-mono: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
 /* ============ TEMA OSCURO ============
    html[data-tema="oscuro"]. Solo cambia tokens. --pt-blanco sigue blanco
    (texto sobre el chrome negro). */
 html[data-tema="oscuro"]{
-    --pt-tinta: #EDEDED;
-    --pt-gris: #B3B3B3;          /* secundario más claro: legible, sin camuflarse */
-    --pt-navy-900: #050505;
-    --pt-navy-800: #111111;
-    --pt-navy-700: #2A2A2A;      /* chrome (cabecera/botones) */
-    --pt-azul: #FBAE33;          /* acento naranja (más claro para leer en oscuro) */
-    --pt-azul-600: #E79A1A;
-    --pt-azul-claro: #8FCAD6;
-    --pt-fondo: #0B0B0B;
-    --pt-superficie: #161616;
-    --pt-superficie-2: #1F1F1F;
-    --pt-borde: #363636;         /* bordes visibles para separar componentes */
-    --pt-verde-suave: #14361F;
-    --pt-rojo-suave: #3A1714;
-    --pt-ambar-suave: #3A2A0C;
-    /* Semáforo más claro en oscuro: de 2.2:1 a 6:1. Rellenos sólidos igual. */
-    --pt-verde-txt: #57C98A;
-    --pt-rojo-txt:  #EF8078;
-    --pt-ambar-txt: #E8A33C;
+    --pt-tinta: #ECEEED;
+    --pt-gris: #A3A9A6;          /* secundario más claro: legible, sin camuflarse */
+    --pt-kraft-txt: #DDBE8A;
+    --pt-navy-900: #232826;
+    --pt-navy-800: #1A1E1C;
+    --pt-navy-700: #3A403D;      /* chrome (cabecera/botones) */
+    --pt-azul: #DDBE8A;          /* kraft claro para leer en oscuro */
+    --pt-azul-600: #C9A46A;
+    --pt-azul-claro: #A3A9A6;
+    --pt-fondo: #161918;
+    --pt-superficie: #1E2220;
+    --pt-superficie-2: #252A28;
+    --pt-borde: #323835;         /* bordes visibles para separar componentes */
+    --pt-verde-suave: #1D3227;
+    --pt-rojo-suave: #3B2420;
+    --pt-ambar-suave: #3A3123;
+    /* Semáforo más claro en oscuro. Rellenos sólidos igual. */
+    --pt-verde-txt: #6FC08F;
+    --pt-rojo-txt:  #E58B74;
+    --pt-ambar-txt: #DDBE8A;
     --pt-sombra-1: 0 1px 2px rgba(0,0,0,.35), 0 3px 10px rgba(0,0,0,.3);
     --pt-sombra-2: 0 4px 10px rgba(0,0,0,.4), 0 14px 30px rgba(0,0,0,.45);
     --pt-sombra-3: 0 10px 24px rgba(0,0,0,.5), 0 24px 60px rgba(0,0,0,.55);
@@ -98,14 +101,14 @@ html[data-tema="oscuro"] .pt-campo input,
 html[data-tema="oscuro"] .pt-campo select,
 html[data-tema="oscuro"] .pt-campo textarea,
 html[data-tema="oscuro"] .pt-chat-entrada textarea{
-    background-color: #0E0E0E;
-    border-color: #3D3D3D;
+    background-color: #141716;
+    border-color: #3A403D;
 }
 /* Botón fantasma con fondo y borde sutiles */
 html[data-tema="oscuro"] .pt-boton--fantasma{
     color: #E4E4E4;
     background-color: rgba(255, 255, 255, .05);
-    border-color: #454545;
+    border-color: #464D4A;
 }
 html[data-tema="oscuro"] .pt-boton--fantasma:hover{
     background-color: rgba(255, 255, 255, .12);
@@ -149,7 +152,7 @@ body{
 h1, h2, h3{
     font-family: var(--pt-fuente-titulos);
     color: var(--pt-navy-800);
-    letter-spacing: .06rem;
+    letter-spacing: -.01em;
     margin: 0;
     text-wrap: balance;
 }
@@ -157,7 +160,7 @@ button{
     font-family: inherit;
 }
 :focus-visible{
-    outline: 3px solid rgba(21,156,149,.5);
+    outline: 3px solid rgba(201,164,106,.6);
     outline-offset: 2px;
     border-radius: .6rem;
 }
@@ -209,13 +212,13 @@ button{
     border: 1px solid var(--pt-borde);
 }
 .pt-boton--fantasma:hover{
-    background-color: #E7EFF7;
+    background-color: #ECEDEC;
     border-color: var(--pt-azul-claro);
 }
 .pt-boton--peligro{
     background-color: transparent;
     color: var(--pt-rojo-txt);
-    border: 1px solid #EBC7C4;
+    border: 1px solid #E6C4BA;
 }
 .pt-boton--peligro:hover{
     background-color: var(--pt-rojo-suave);
@@ -404,7 +407,7 @@ fieldset.pt-campo{
 }
 .pt-insignia--activa{ background-color: var(--pt-verde-suave); color: var(--pt-verde-txt); }
 .pt-insignia--inactiva{ background-color: var(--pt-ambar-suave); color: var(--pt-ambar-txt); }
-.pt-insignia--rol{ background-color: #E2EBF4; color: var(--pt-navy-700); }
+.pt-insignia--rol{ background-color: #ECEDEC; color: var(--pt-navy-700); }
 .pt-insignia--rol::before{ display: none; }
 
 /* ============ ZONA DE SUBIDA ============ */
@@ -422,7 +425,7 @@ fieldset.pt-campo{
     background-color: var(--pt-superficie-2);
 }
 .pt-zona-subida.arrastrando{
-    background-color: #E3EEF8;
+    background-color: var(--pt-ambar-suave);
     border-color: var(--pt-navy-700);
     border-style: solid;
     box-shadow: var(--pt-sombra-2);
@@ -703,7 +706,7 @@ fieldset.pt-campo{
     overflow: auto;
     border: 1px solid var(--pt-borde);
     border-radius: 10px;
-    background: #EDF1F3;
+    background: #ECEDEC;
     margin: 1.2rem 0 .4rem;
     color-scheme: light;
 }
@@ -785,7 +788,7 @@ fieldset.pt-campo{
     align-items: flex-start;
     gap: 1.3rem;
     padding: 1.4rem 1.8rem;
-    border-bottom: 1px solid #EAF0F6;
+    border-bottom: 1px solid var(--pt-borde);
     animation: pt-aparecer .25s var(--pt-curva) backwards;
 }
 .pt-notif:last-child{
@@ -1312,10 +1315,10 @@ html[data-tema="oscuro"] .pt-cal-prox h4{ color: #E6E6E6; }
     vertical-align: middle;
     box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
 }
-.pt-semaforo--verde{   background: #22c55e; }
-.pt-semaforo--naranja{ background: #f59e0b; }
-.pt-semaforo--rojo{    background: #ef4444; }
-.pt-semaforo--pausado{ background: #8b8b8b; }
+.pt-semaforo--verde{   background: #2E7D4F; }
+.pt-semaforo--naranja{ background: #C9A46A; }
+.pt-semaforo--rojo{    background: #A2452F; }
+.pt-semaforo--pausado{ background: #8A8F8C; }
 
 .pt-semaforo-resumen{
     display: flex;
@@ -1474,7 +1477,7 @@ html[data-tema="oscuro"] .pt-cal-prox h4{ color: #E6E6E6; }
 /* Parpadeo rojo cuando llega un mensaje nuevo */
 @keyframes pt-parpadeo-rojo{
     0%, 100%{ background: var(--pt-navy-700); }
-    50%{ background: #ef4444; }
+    50%{ background: #A2452F; }
 }
 .pt-soporte-burbuja--alerta{ animation: pt-parpadeo-rojo 1s infinite; }
 .pt-soporte-contador{
@@ -1484,7 +1487,7 @@ html[data-tema="oscuro"] .pt-cal-prox h4{ color: #E6E6E6; }
     min-width: 2rem;
     height: 2rem;
     border-radius: 999px;
-    background: #ef4444;
+    background: #A2452F;
     color: #fff;
     font-size: 1.2rem;
     font-weight: 700;
@@ -1555,7 +1558,7 @@ html[data-tema="oscuro"] .pt-cal-prox h4{ color: #E6E6E6; }
     min-width: 1.8rem;
     height: 1.8rem;
     border-radius: 999px;
-    background: #ef4444;
+    background: #A2452F;
     color: #fff;
     font-size: 1.1rem;
     font-weight: 700;
@@ -1656,10 +1659,10 @@ html[data-tema="oscuro"] .pt-cal-prox h4{ color: #E6E6E6; }
     display: inline-block;
     width: 10px; height: 10px;
     border-radius: 50%;
-    background: #8b8b8b;
+    background: #8A8F8C;
     vertical-align: middle;
 }
-.pt-conexion--en-linea{ background: #22c55e; }
+.pt-conexion--en-linea{ background: #2E7D4F; }
 
 /* Recordatorios apilados (una tarjeta a la vez) */
 .pt-pila{ position: relative; }
@@ -1827,11 +1830,11 @@ html[data-tema="oscuro"] .pt-cal-prox h4{ color: #E6E6E6; }
 /* Mic o altavoz silenciado: en rojo y con raya (el trazo lo cambia app.js) */
 .pt-boton-llamada--activo,
 .pt-boton-llamada--activo:hover{
-    background: #ef4444 !important;
-    border-color: #ef4444 !important;
+    background: #A2452F !important;
+    border-color: #A2452F !important;
     color: #fff !important;
 }
-.pt-llamada-mini .pt-boton-llamada--activo{ background: #ef4444 !important; color: #fff !important; }
+.pt-llamada-mini .pt-boton-llamada--activo{ background: #A2452F !important; color: #fff !important; }
 .pt-llamada-mini__estado{ display: inline-flex; align-items: center; gap: .5rem; white-space: nowrap; }
 
 /* ============ CALENDARIO DE CARPETA: RANGOS DE ESTADOS ============

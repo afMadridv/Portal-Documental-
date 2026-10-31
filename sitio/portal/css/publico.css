@@ -1,85 +1,84 @@
-/*! Portal Documental · páginas públicas (legales)
-  Arena de fondo, negro para texto, cian de marca y un solo naranja
-  por pantalla. Reglas de contraste:
-    1. Sobre naranja, texto negro (#111111): con blanco no pasa de 2.1:1.
-    2. Texto de acento en cian profundo #006B7B (5.5:1).
-    3. Un solo botón naranja por pantalla.
+/*! Legajo · páginas públicas (legales)
+  Archivo Kraft: gris pizarra, kraft de marca y verde lomo. Reglas:
+    1. Sobre kraft, texto pizarra (#2F3431): con blanco no se lee.
+    2. Texto de acento en kraft oscuro #7A5A26.
+    3. Un solo botón kraft por pantalla.
   Aquí 1rem = 16px y los tamaños van en px.
   Andrés Madrid · andresmadrid.vercel.app */
 
 :root{
-    --arena:#F6F0E6;
-    --arena-2:#F3ECE0;
-    --crema:#FBF8F2;
+    --arena:#F2F3F3;
+    --arena-2:#ECEDEC;
+    --crema:#F6F7F6;
     --superficie:#FFFFFF;
-    --elegida:#F1FAFB;
+    --elegida:#F3E8D4;
 
-    --linea:#E4D9C6;
-    --linea-2:#EFE6D6;
-    --linea-3:#DCCFB9;
+    --linea:#E2E4E3;
+    --linea-2:#ECEEED;
+    --linea-3:#D5D8D6;
 
-    --tinta:#111111;
-    --texto-2:#4A4A4A;
-    --texto-3:#666666;
+    --tinta:#1F2321;
+    --texto-2:#4F5552;
+    --texto-3:#5F6562;
 
-    --mar:#00A1B8;
-    --mar-prof:#006B7B;
-    --mar-suave:#E2F4F6;
-    --mar-tinta:#111111;
+    --mar:#C9A46A;
+    --mar-prof:#7A5A26;
+    --mar-suave:#F3E8D4;
+    --mar-tinta:#1F2321;
 
-    --sol:#FA9B02;
-    --sol-hover:#FFAA22;
-    --sol-txt:#111111;          /* igual en los dos temas (regla 1) */
+    --sol:#C9A46A;
+    --sol-hover:#D4B37E;
+    --sol-txt:#2F3431;          /* igual en los dos temas (regla 1) */
 
-    --ambar-suave:#FFE9C7;
-    --ambar-tinta:#7A4300;
-    --error:#B42318;
-    --error-suave:#FEF3F2;
+    --ambar-suave:#F3E8D4;
+    --ambar-tinta:#7A5A26;
+    --error:#A2452F;
+    --error-suave:#F6E3DD;
 
-    --oscuro:#111111;            /* botones oscuros y bloque "te quedan" */
-    --oscuro-txt:#F6F0E6;
+    --oscuro:#454B48;            /* botones oscuros y bloque "te quedan" */
+    --oscuro-txt:#F2F3F3;
     --nav-fondo:rgba(0,0,0,.06);
     --hover:rgba(0,0,0,.06);
 
-    --anillo:rgba(0,161,184,.14);
+    --anillo:rgba(201,164,106,.22);
     --sombra-tarjeta:0 24px 60px -36px rgba(0,0,0,.3);
 
-    --titulos:'Bricolage Grotesque', system-ui, sans-serif;
-    --texto:'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --titulos:'Familjen Grotesk', system-ui, sans-serif;
+    --texto:'Work Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --curva:cubic-bezier(.16,1,.3,1);
     --margen:clamp(20px, 8.3vw, 120px);
 }
 
 html[data-tema="oscuro"]{
-    --arena:#0A0A0A;
-    --arena-2:rgba(244,237,225,.07);
-    --crema:rgba(244,237,225,.04);
-    --superficie:#161616;
-    --elegida:rgba(69,201,218,.08);
+    --arena:#161918;
+    --arena-2:rgba(236,238,237,.07);
+    --crema:rgba(236,238,237,.04);
+    --superficie:#1E2220;
+    --elegida:rgba(201,164,106,.10);
 
-    --linea:rgba(244,237,225,.14);
-    --linea-2:rgba(244,237,225,.10);
-    --linea-3:rgba(244,237,225,.24);
+    --linea:rgba(236,238,237,.14);
+    --linea-2:rgba(236,238,237,.10);
+    --linea-3:rgba(236,238,237,.24);
 
-    --tinta:#F4EDE1;
-    --texto-2:#CFCFCF;
-    --texto-3:#A3A3A3;
+    --tinta:#ECEEED;
+    --texto-2:#C9CDCB;
+    --texto-3:#A3A9A6;
 
-    --mar-prof:#45C9DA;
-    --mar-suave:rgba(69,201,218,.14);
-    --mar-tinta:#EDEDED;
+    --mar-prof:#DDBE8A;
+    --mar-suave:rgba(201,164,106,.16);
+    --mar-tinta:#ECEEED;
 
-    --ambar-suave:rgba(250,155,2,.16);
-    --ambar-tinta:#FFC266;
-    --error:#FF8A80;
-    --error-suave:rgba(255,138,128,.10);
+    --ambar-suave:rgba(201,164,106,.16);
+    --ambar-tinta:#DDBE8A;
+    --error:#E58B74;
+    --error-suave:rgba(229,139,116,.10);
 
-    --oscuro:#F4EDE1;
-    --oscuro-txt:#0A0A0A;
-    --nav-fondo:rgba(244,237,225,.07);
-    --hover:rgba(244,237,225,.07);
+    --oscuro:#C9A46A;
+    --oscuro-txt:#1F1A12;
+    --nav-fondo:rgba(236,238,237,.07);
+    --hover:rgba(236,238,237,.07);
 
-    --anillo:rgba(69,201,218,.22);
+    --anillo:rgba(201,164,106,.28);
     --sombra-tarjeta:0 24px 60px -36px rgba(0,0,0,.75);
     color-scheme:dark;
 }
@@ -98,7 +97,7 @@ body{
     line-height:1.5;
 }
 a{ color:var(--mar-prof); text-decoration:underline; text-underline-offset:3px; }
-a:hover{ color:#F2801C; }
+a:hover{ color:#2E7D4F; }
 button{ font:inherit; color:inherit; }
 [hidden]{ display:none !important; }
 :focus-visible{ outline:3px solid var(--mar); outline-offset:2px; }
@@ -171,7 +170,7 @@ button{ font:inherit; color:inherit; }
 .pie__fila{ display:flex; justify-content:space-between; gap:12px 24px; flex-wrap:wrap; }
 .pie__enlaces{ display:flex; gap:10px 22px; flex-wrap:wrap; font-weight:500; }
 .pie__enlaces a{ color:var(--texto-2); text-decoration:none; }
-.pie__enlaces a:hover{ color:#F2801C; text-decoration:underline; }
+.pie__enlaces a:hover{ color:#2E7D4F; text-decoration:underline; }
 .pie__autor a{ color:var(--texto-2); }
 
 /* ---- Botones ---- */
@@ -188,7 +187,7 @@ button{ font:inherit; color:inherit; }
     color:var(--sol-txt);
     font:700 17px/1 var(--texto);
     text-decoration:none;
-    box-shadow:0 10px 24px -10px rgba(242,128,28,.7);
+    box-shadow:0 10px 24px -12px rgba(122,90,38,.45);
     cursor:pointer;
     transition:background .18s var(--curva), transform .18s var(--curva);
 }

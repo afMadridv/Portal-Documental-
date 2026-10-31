@@ -13,7 +13,7 @@
 --   nuevo: las tablas y sus columnas, los índices, las funciones, los
 --   permisos de cada rol (RLS), los disparadores, el bucket de los
 --   documentos, la tarea diaria de los plazos y los festivos hasta 2030.
---   Son las 31 partes de abajo, en orden.
+--   Son las 32 partes de abajo, en orden.
 --
 -- QUÉ NO TRAE: LOS DATOS
 --   Usuarios, notarías, carpetas, documentos, mensajes y cifras no van
@@ -32,12 +32,12 @@
 --   PARTE donde se detuvo y se resuelve antes de seguir. Cada parte va
 --   en su propia transacción, así que lo que ya pasó queda bien hecho.
 --
--- Partes: 31    Huella: 78a15b97967f61e9
+-- Partes: 32    Huella: 651f2003b88f5d05
 -- ============================================================
 
 
 -- ############################################################
--- PARTE 1 DE 31: esquema.sql
+-- PARTE 1 DE 32: esquema.sql
 -- Las tablas, funciones, políticas, el bucket y la publicación de Realtime
 -- ############################################################
 
@@ -2353,7 +2353,7 @@ create index if not exists idx_archivos_subcarpeta on public.archivos (subcarpet
 
 
 -- ############################################################
--- PARTE 2 DE 31: migracion_cierre_y_descargas.sql
+-- PARTE 2 DE 32: migracion_cierre_y_descargas.sql
 -- Cierre de trámite y control de descargas
 -- ############################################################
 
@@ -2531,7 +2531,7 @@ $$;
 
 
 -- ############################################################
--- PARTE 3 DE 31: migracion_subcarpetas.sql
+-- PARTE 3 DE 32: migracion_subcarpetas.sql
 -- Subcarpetas
 -- ############################################################
 
@@ -2590,7 +2590,7 @@ create index if not exists idx_archivos_subcarpeta on public.archivos (subcarpet
 
 
 -- ############################################################
--- PARTE 4 DE 31: migracion_seguridad_2026_08.sql
+-- PARTE 4 DE 32: migracion_seguridad_2026_08.sql
 -- Endurecimiento de permisos
 -- ############################################################
 
@@ -2856,7 +2856,7 @@ revoke execute on function public.tocar_actualizado() from public, anon, authent
 
 
 -- ############################################################
--- PARTE 5 DE 31: migracion_festivos_y_cron.sql
+-- PARTE 5 DE 32: migracion_festivos_y_cron.sql
 -- Festivos hasta 2030 y la tarea diaria
 -- ############################################################
 
@@ -3040,7 +3040,7 @@ select cron.schedule(
 
 
 -- ############################################################
--- PARTE 6 DE 31: migracion_notarias.sql
+-- PARTE 6 DE 32: migracion_notarias.sql
 -- Multi-notaría: reescribe puede_ver_carpeta
 -- ############################################################
 
@@ -3448,7 +3448,7 @@ grant execute on function public.puede_ver_notaria(bigint)  to authenticated;
 
 
 -- ############################################################
--- PARTE 7 DE 31: migracion_avisos_plazo.sql
+-- PARTE 7 DE 32: migracion_avisos_plazo.sql
 -- Avisos del plazo a 4, 3, 2, 1 semanas, 1 día y el mismo día
 -- ############################################################
 
@@ -3767,7 +3767,7 @@ end $$;
 
 
 -- ############################################################
--- PARTE 8 DE 31: migracion_notificaciones_por_notaria.sql
+-- PARTE 8 DE 32: migracion_notificaciones_por_notaria.sql
 -- Los avisos no se mezclan entre oficinas, y el correo obligatorio por rol
 -- ############################################################
 
@@ -4146,7 +4146,7 @@ create trigger exigir_correo
 
 
 -- ############################################################
--- PARTE 9 DE 31: migracion_credenciales.sql
+-- PARTE 9 DE 32: migracion_credenciales.sql
 -- Las contraseñas asignadas, para el Excel
 -- ############################################################
 
@@ -4233,7 +4233,7 @@ grant execute on function public.credencial_fijar(text, text) to authenticated;
 
 
 -- ############################################################
--- PARTE 10 DE 31: migracion_tipo_proceso.sql
+-- PARTE 10 DE 32: migracion_tipo_proceso.sql
 -- El régimen de la carpeta
 -- ############################################################
 
@@ -4275,7 +4275,7 @@ notify pgrst, 'reload schema';
 
 
 -- ############################################################
--- PARTE 11 DE 31: migracion_almacenamiento.sql
+-- PARTE 11 DE 32: migracion_almacenamiento.sql
 -- La barra de espacio lee el disco de verdad
 -- ############################################################
 
@@ -4375,7 +4375,7 @@ end $$;
 
 
 -- ############################################################
--- PARTE 12 DE 31: migracion_tope_archivo.sql
+-- PARTE 12 DE 32: migracion_tope_archivo.sql
 -- 500 MB por archivo, para las grabaciones de audiencias
 -- ############################################################
 
@@ -4417,7 +4417,7 @@ select id, file_size_limit from storage.buckets where id = 'documentos';
 
 
 -- ############################################################
--- PARTE 13 DE 31: migracion_peso_incremental.sql
+-- PARTE 13 DE 32: migracion_peso_incremental.sql
 -- El peso de la carpeta se suma en vez de recontarse en cada archivo
 -- ############################################################
 
@@ -4579,7 +4579,7 @@ order by c.id;
 
 
 -- ############################################################
--- PARTE 14 DE 31: migracion_almacenamiento_ver.sql
+-- PARTE 14 DE 32: migracion_almacenamiento_ver.sql
 -- El portal consulta el disco por una función, no leyendo la tabla
 -- ############################################################
 
@@ -4678,7 +4678,7 @@ select p.proname,
 
 
 -- ############################################################
--- PARTE 15 DE 31: migracion_rls_initplan.sql
+-- PARTE 15 DE 32: migracion_rls_initplan.sql
 -- auth.uid() se evalúa una vez por consulta y no una por fila
 -- ############################################################
 
@@ -4855,7 +4855,7 @@ commit;
 
 
 -- ############################################################
--- PARTE 16 DE 31: migracion_sesion_unica.sql
+-- PARTE 16 DE 32: migracion_sesion_unica.sql
 -- Una sola sesión abierta por cuenta: el último ingreso desplaza al anterior
 -- ############################################################
 
@@ -4994,7 +4994,7 @@ grant execute on function public.sesion_estado(uuid) to authenticated;
 
 
 -- ############################################################
--- PARTE 17 DE 31: migracion_monitor_sin_chat.sql
+-- PARTE 17 DE 32: migracion_monitor_sin_chat.sql
 -- El monitor deja de leer las conversaciones y sus adjuntos
 -- ############################################################
 
@@ -5059,7 +5059,7 @@ end $$;
 
 
 -- ############################################################
--- PARTE 18 DE 31: migracion_endurecimiento_2026_09.sql
+-- PARTE 18 DE 32: migracion_endurecimiento_2026_09.sql
 -- Cierra el acceso anónimo
 -- ############################################################
 
@@ -5250,7 +5250,7 @@ end $$;
 
 
 -- ############################################################
--- PARTE 19 DE 31: migracion_campana_por_persona.sql
+-- PARTE 19 DE 32: migracion_campana_por_persona.sql
 -- Cada campana decide sola: el aviso ya no se salta porque otro lo tenga
 -- ############################################################
 
@@ -5587,7 +5587,7 @@ select 'campana por persona: listo' as resultado;
 
 
 -- ############################################################
--- PARTE 20 DE 31: migracion_tablero_notarias.sql
+-- PARTE 20 DE 32: migracion_tablero_notarias.sql
 -- La pantalla de notarías muestra lo que vence y, al administrador, lo que ocupa cada oficina
 -- ############################################################
 
@@ -5725,7 +5725,7 @@ select p.proname,
 
 
 -- ############################################################
--- PARTE 21 DE 31: migracion_registro_cerrado.sql
+-- PARTE 21 DE 32: migracion_registro_cerrado.sql
 -- Una cuenta que no creó un administrador nace inactiva
 -- ############################################################
 
@@ -5794,7 +5794,7 @@ select u.id, coalesce(u.email, '') as correo, coalesce(u.phone, '') as telefono,
 
 
 -- ############################################################
--- PARTE 22 DE 31: migracion_metricas_web.sql
+-- PARTE 22 DE 32: migracion_metricas_web.sql
 -- El tablero «Rendimiento» del administrador: visitas al ingreso, ingresos al portal y metas del mes
 -- ############################################################
 
@@ -6155,7 +6155,7 @@ commit;
 
 
 -- ############################################################
--- PARTE 23 DE 31: migracion_permisos_internos.sql
+-- PARTE 23 DE 32: migracion_permisos_internos.sql
 -- Vuelve a cerrar _notificar y las demás funciones internas, le quita a anon los permisos sobre tablas y le da a cada llamada de soporte un canal secreto
 -- ############################################################
 
@@ -6299,7 +6299,7 @@ select count(*) as permisos_de_anon_en_tablas
 
 
 -- ############################################################
--- PARTE 24 DE 31: migracion_presencia_privada.sql
+-- PARTE 24 DE 32: migracion_presencia_privada.sql
 -- «En línea» por latido en la base: solo lo ve el administrador
 -- ############################################################
 
@@ -6414,7 +6414,7 @@ select p.proname as funcion,
 
 
 -- ############################################################
--- PARTE 25 DE 31: migracion_anexos.sql
+-- PARTE 25 DE 32: migracion_anexos.sql
 -- Anexos de un documento (1, 1.1, 1.2…) y «mover a otra subcarpeta»
 -- ############################################################
 
@@ -6583,7 +6583,7 @@ select p.proname as funcion,
 
 
 -- ############################################################
--- PARTE 26 DE 31: migracion_intentos_fallidos.sql
+-- PARTE 26 DE 32: migracion_intentos_fallidos.sql
 -- Intentos fallidos de ingreso por cuenta, para el tablero de Rendimiento
 -- ############################################################
 
@@ -6693,7 +6693,7 @@ select p.proname as funcion,
 
 
 -- ############################################################
--- PARTE 27 DE 31: migracion_avisos_push.sql
+-- PARTE 27 DE 32: migracion_avisos_push.sql
 -- Avisos en el celular del administrador y chat de soporte también para el monitor
 -- ############################################################
 
@@ -7397,7 +7397,7 @@ select exists (select 1 from pg_extension where extname = 'pg_net') as pg_net,
 
 
 -- ############################################################
--- PARTE 28 DE 31: migracion_aviso_solicitud_clave.sql
+-- PARTE 28 DE 32: migracion_aviso_solicitud_clave.sql
 -- El aviso de solicitud de clave dice nombre y rol, y se repite si la persona insiste
 -- ############################################################
 
@@ -7540,7 +7540,7 @@ select p.proname as funcion,
 
 
 -- ############################################################
--- PARTE 29 DE 31: migracion_renombrar_y_tope_300.sql
+-- PARTE 29 DE 32: migracion_renombrar_y_tope_300.sql
 -- El administrador y el operador renombran documentos y videos, y el tope por archivo baja a 300 MB
 -- ############################################################
 
@@ -7637,7 +7637,7 @@ select has_function_privilege('authenticated', 'public.archivo_renombrar(bigint,
 
 
 -- ############################################################
--- PARTE 30 DE 31: migracion_ajustes_cloud.sql
+-- PARTE 30 DE 32: migracion_ajustes_cloud.sql
 -- search_path fijo en las funciones de ayuda de los avisos y rls_auto_enable cerrada a usuarios con sesión
 -- ############################################################
 
@@ -7675,7 +7675,7 @@ commit;
 
 
 -- ############################################################
--- PARTE 31 DE 31: migracion_almacenamiento_storage.sql
+-- PARTE 31 DE 32: migracion_almacenamiento_storage.sql
 -- Almacenamiento se mide en Storage de Supabase contra el cupo del plan, sin tarea del servidor
 -- ############################################################
 
@@ -7762,6 +7762,303 @@ revoke execute on function public.almacenamiento_ver()          from public, ano
 grant  execute on function public.almacenamiento_ver()          to authenticated;
 revoke execute on function public.almacenamiento_cupo(numeric)  from public, anon;
 grant  execute on function public.almacenamiento_cupo(numeric)  to authenticated;
+
+notify pgrst, 'reload schema';
+
+commit;
+
+
+-- ############################################################
+-- PARTE 32 DE 32: migracion_centros_conciliacion.sql
+-- Oficinas de dos tipos: notaría (insolvencia) y centro de conciliación (3 meses prorrogables y resultado al cerrar)
+-- ############################################################
+
+-- ============================================================
+-- MIGRACIÓN: centros de conciliación junto a las notarías
+-- ============================================================
+-- Idempotente. Va en una transacción.
+--
+-- QUÉ CAMBIA
+--   Cada oficina tiene un tipo:
+--     notaria  lleva insolvencia (60 días hábiles, 90 con prórroga)
+--     centro   lleva conciliación (3 meses desde la solicitud,
+--              prorrogables 3 más por acuerdo de las partes, Ley 2220
+--              de 2022)
+--   Las carpetas no guardan el tipo: lo toman de su oficina.
+--
+--   mis_notarias() devuelve el tipo, notaria_crear() y notaria_editar()
+--   lo reciben. El tipo de una oficina con carpetas no se cambia: sus
+--   plazos ya se contaron con las reglas del otro tipo.
+--
+--   iniciar_tramite() y aplicar_prorroga() cuentan según el tipo. En
+--   conciliación el vencimiento es una fecha de calendario y
+--   dias_habiles_tramite guarda los días hábiles que caben en ella, para
+--   que la pausa y el semáforo sigan funcionando igual.
+--
+--   carpetas.resultado: cómo terminó la conciliación. Se fija al dar fin
+--   al trámite con finalizar_tramite(carpeta, resultado).
+-- ============================================================
+
+begin;
+
+-- ------------------------------------------------------------
+-- 1) Tipo de oficina
+-- ------------------------------------------------------------
+alter table public.notarias add column if not exists tipo text not null default 'notaria';
+alter table public.notarias drop constraint if exists notarias_tipo_check;
+alter table public.notarias add constraint notarias_tipo_check
+    check (tipo in ('notaria', 'centro'));
+
+comment on column public.notarias.tipo is
+    'notaria = insolvencia; centro = centro de conciliación.';
+
+-- Cambian las columnas que devuelve: hay que borrarla. Dentro de la
+-- transacción el portal no alcanza a verla ausente.
+drop function if exists public.mis_notarias();
+create function public.mis_notarias()
+returns table (id bigint, nombre text, ciudad text, activa boolean, carpetas bigint, tipo text)
+language sql stable security definer set search_path = public
+as $$
+    select n.id, n.nombre, n.ciudad, n.activa,
+           (select count(*) from public.carpetas c
+             where c.notaria_id = n.id and c.activa),
+           n.tipo
+      from public.notarias n
+     where n.id in (select public.notarias_del_usuario())
+       and n.activa
+     order by n.tipo, n.ciudad, n.nombre;
+$$;
+
+drop function if exists public.notaria_crear(text, text);
+create or replace function public.notaria_crear(
+    p_nombre text, p_ciudad text, p_tipo text default 'notaria')
+returns bigint
+language plpgsql security definer set search_path = public
+as $$
+declare
+    nuevo bigint;
+begin
+    if not public.es_admin() then
+        raise exception 'Solo un administrador puede crear oficinas.';
+    end if;
+    insert into public.notarias (nombre, ciudad, tipo)
+         values (trim(p_nombre), trim(p_ciudad), coalesce(nullif(trim(p_tipo), ''), 'notaria'))
+      returning id into nuevo;
+    return nuevo;
+end;
+$$;
+
+drop function if exists public.notaria_editar(bigint, text, text, boolean);
+create or replace function public.notaria_editar(
+    p_id bigint, p_nombre text, p_ciudad text, p_activa boolean, p_tipo text default null)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+declare
+    actual text;
+begin
+    if not public.es_admin() then
+        raise exception 'Solo un administrador puede editar oficinas.';
+    end if;
+    select tipo into actual from public.notarias where id = p_id;
+    if p_tipo is not null and p_tipo <> actual
+       and exists (select 1 from public.carpetas where notaria_id = p_id) then
+        raise exception 'Esta oficina ya tiene carpetas: su tipo no se puede cambiar.';
+    end if;
+    update public.notarias
+       set nombre = coalesce(nullif(trim(p_nombre), ''), nombre),
+           ciudad = coalesce(nullif(trim(p_ciudad), ''), ciudad),
+           activa = coalesce(p_activa, activa),
+           tipo   = coalesce(p_tipo, tipo)
+     where id = p_id;
+end;
+$$;
+
+-- Fecha más n meses; si cae en día no hábil, pasa al siguiente hábil
+create or replace function public.sumar_meses_habil(f date, n int)
+returns date
+language plpgsql stable security definer set search_path = public
+as $$
+declare
+    d date := (f + make_interval(months => n))::date;
+begin
+    while not public.es_dia_habil(d) loop d := d + 1; end loop;
+    return d;
+end;
+$$;
+
+-- Tipo de la oficina de una carpeta
+create or replace function public.clase_de_carpeta(p_carpeta bigint)
+returns text
+language sql stable security definer set search_path = public
+as $$
+    select coalesce(n.tipo, 'notaria')
+      from public.carpetas c
+      left join public.notarias n on n.id = c.notaria_id
+     where c.id = p_carpeta;
+$$;
+
+-- ------------------------------------------------------------
+-- 2) Plazo según el tipo
+-- ------------------------------------------------------------
+-- 60 y 90 eran los únicos valores; en conciliación son los días hábiles
+-- que caben en 3 o 6 meses.
+alter table public.carpetas drop constraint if exists carpetas_dias_habiles_tramite_check;
+alter table public.carpetas add constraint carpetas_dias_habiles_tramite_check
+    check (dias_habiles_tramite between 1 and 400);
+
+create or replace function public.iniciar_tramite(carpeta bigint, p_fecha date default current_date)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+declare
+    c record;
+    f date := coalesce(p_fecha, current_date);
+    vence date;
+begin
+    if not public.puede_subir_a_carpeta(carpeta) then
+        raise exception 'Sin permiso para iniciar el conteo de este trámite';
+    end if;
+    select * into c from public.carpetas where id = carpeta for update;
+    if not found then raise exception 'Carpeta no encontrada'; end if;
+    if c.finalizado then raise exception 'El trámite ya está finalizado'; end if;
+    if c.pausado then raise exception 'El trámite está pausado: reactívalo antes de iniciar el conteo'; end if;
+    if c.fecha_inicio_tramite is not null then
+        raise exception 'El conteo del trámite ya fue iniciado el %', c.fecha_inicio_tramite;
+    end if;
+    vence := case when public.clase_de_carpeta(carpeta) = 'centro'
+                  then public.sumar_meses_habil(f, 3)
+                  else public.calcular_vencimiento_habil(f, 60) end;
+    update public.carpetas
+       set fecha_inicio_tramite = f,
+           dias_habiles_tramite = greatest(public.contar_dias_habiles(f, vence), 1),
+           tiene_prorroga = false,
+           fecha_vencimiento_tramite = vence,
+           dias_restantes_tramite_al_pausar = null
+     where id = carpeta;
+end;
+$$;
+
+create or replace function public.aplicar_prorroga(carpeta bigint)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+declare
+    c record;
+    vence date;
+begin
+    if not public.puede_subir_a_carpeta(carpeta) then
+        raise exception 'Sin permiso para aplicar la prórroga a este trámite';
+    end if;
+    select * into c from public.carpetas where id = carpeta for update;
+    if not found then raise exception 'Carpeta no encontrada'; end if;
+    if c.finalizado then raise exception 'El trámite ya está finalizado'; end if;
+    if c.fecha_inicio_tramite is null then
+        raise exception 'El trámite aún no tiene conteo iniciado: usa iniciar_tramite primero';
+    end if;
+    if c.tiene_prorroga then raise exception 'El trámite ya tiene la prórroga aplicada'; end if;
+    if c.pausado then raise exception 'El trámite está pausado: reactívalo antes de aplicar la prórroga'; end if;
+    -- Conciliación: 3 meses más sobre el vencimiento que tenía
+    vence := case when public.clase_de_carpeta(carpeta) = 'centro'
+                  then public.sumar_meses_habil(coalesce(c.fecha_vencimiento_tramite, c.fecha_inicio_tramite), 3)
+                  else public.calcular_vencimiento_habil(c.fecha_inicio_tramite, 90) end;
+    update public.carpetas
+       set dias_habiles_tramite = greatest(public.contar_dias_habiles(c.fecha_inicio_tramite, vence), 1),
+           tiene_prorroga = true,
+           fecha_vencimiento_tramite = vence
+     where id = carpeta;
+end;
+$$;
+
+-- El aviso de la prórroga ya no dice «90 días hábiles»
+create or replace function public.notif_carpeta_cambio()
+returns trigger
+language plpgsql security definer set search_path = public
+as $$
+begin
+    if new.pausado is distinct from old.pausado then
+        perform public._notificar_admins(case when new.pausado then 'tramite-pausado' else 'tramite-reactivado' end,
+            'El trámite «' || new.nombre || '» fue ' || case when new.pausado then 'pausado' else 'reactivado' end,
+            new.id, null);
+    end if;
+    if new.tiene_prorroga and not old.tiene_prorroga then
+        perform public._notificar_admins('tramite-prorroga',
+            'Se aplicó la prórroga al trámite «' || new.nombre || '»: ahora vence el ' ||
+            to_char(new.fecha_vencimiento_tramite, 'DD/MM/YYYY'),
+            new.id, null);
+    end if;
+
+    -- La fecha de vencimiento se movió (prórroga, o reactivación tras
+    -- una pausa): los avisos viejos ya no valen y además bloquearían
+    -- los nuevos, porque cada hito se manda una sola vez.
+    if new.fecha_vencimiento_tramite is distinct from old.fecha_vencimiento_tramite then
+        delete from public.notificaciones
+         where referencia_id = new.id
+           and tipo in ('plazo-28', 'plazo-21', 'plazo-14', 'plazo-7', 'plazo-1', 'plazo-0');
+    end if;
+
+    return new;
+end;
+$$;
+
+-- ------------------------------------------------------------
+-- 3) Resultado de la conciliación
+-- ------------------------------------------------------------
+alter table public.carpetas add column if not exists resultado text;
+alter table public.carpetas drop constraint if exists carpetas_resultado_check;
+alter table public.carpetas add constraint carpetas_resultado_check
+    check (resultado is null or resultado in
+        ('acuerdo_total', 'acuerdo_parcial', 'no_acuerdo', 'inasistencia', 'desistimiento'));
+
+drop function if exists public.finalizar_tramite(bigint);
+create or replace function public.finalizar_tramite(carpeta bigint, p_resultado text default null)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+declare
+    c record;
+begin
+    if not public.es_admin() then
+        raise exception 'Solo el administrador puede dar fin al trámite';
+    end if;
+    select * into c from public.carpetas where id = carpeta for update;
+    if not found then raise exception 'Carpeta no encontrada'; end if;
+    if c.finalizado then raise exception 'El trámite ya estaba finalizado'; end if;
+    if public.clase_de_carpeta(carpeta) = 'centro' and p_resultado is null then
+        raise exception 'La conciliación necesita un resultado para cerrarse';
+    end if;
+    update public.carpetas
+       set finalizado = true,
+           fecha_fin_tramite = current_date,
+           fecha_desactivacion_programada =
+               public.sumar_dias_habiles(current_date, public.dias_gracia_cierre()),
+           desactivacion_auto_aplicada = false,
+           resultado = p_resultado
+     where id = carpeta;
+end;
+$$;
+
+-- ------------------------------------------------------------
+-- 4) Permisos
+-- ------------------------------------------------------------
+do $$
+declare f record;
+begin
+    for f in
+        select oid::regprocedure as firma
+          from pg_proc
+         where pronamespace = 'public'::regnamespace
+           and proname in ('mis_notarias', 'notaria_crear', 'notaria_editar',
+                           'iniciar_tramite', 'aplicar_prorroga', 'finalizar_tramite')
+    loop
+        execute format('revoke execute on function %s from public, anon, authenticated', f.firma);
+        execute format('grant  execute on function %s to authenticated', f.firma);
+    end loop;
+end $$;
+
+-- Interna: la usan las funciones de arriba, no el portal
+revoke execute on function public.clase_de_carpeta(bigint) from public, anon, authenticated;
+revoke execute on function public.sumar_meses_habil(date, int) from public, anon, authenticated;
 
 notify pgrst, 'reload schema';
 

@@ -1,12 +1,12 @@
-/*! Portal Documental · pie legal (ingreso, portal y formatos)
+/*! Legajo · pie legal (ingreso, portal y formatos)
   Las páginas públicas usan el suyo en publico.css.
   var(--pt-x, respaldo): toma el token del portal si existe.
   Andrés Madrid · andresmadrid.vercel.app */
 .pt-pie{
-    --pie-borde: var(--pt-borde, #E2EAEC);
-    --pie-gris:  var(--pt-gris, #595959);
-    --pie-eti:   var(--pt-navy-700, #1F1F1F);
-    --pie-link:  var(--pt-marca-cian, #00A1B8);
+    --pie-borde: var(--pt-borde, #E2E4E3);
+    --pie-gris:  var(--pt-gris, #5F6562);
+    --pie-eti:   var(--pt-navy-700, #454B48);
+    --pie-link:  var(--pt-kraft-txt, #7A5A26);
 
     margin-top: 4.8rem;
     padding: 2.8rem 0 2rem;
@@ -15,9 +15,9 @@
     color: var(--pie-gris);
 }
 :root[data-tema="oscuro"] .pt-pie{
-    --pie-borde: var(--pt-borde, #363636);
-    --pie-gris:  var(--pt-gris, #B3B3B3);
-    --pie-eti:   var(--pt-azul-claro, #A8E4EE);
+    --pie-borde: var(--pt-borde, #323835);
+    --pie-gris:  var(--pt-gris, #A3A9A6);
+    --pie-eti:   var(--pt-kraft-txt, #DDBE8A);
 }
 
 .pt-pie__cols{
